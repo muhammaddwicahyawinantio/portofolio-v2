@@ -66,12 +66,12 @@
 }
 
 .intro-ring {
-  animation: intro-spin 0.8s linear infinite;
+  animation: intro-spin 0.85s linear infinite;
   transform-origin: center;
 }
 
 /* Failsafe khusus no-JS: tanpa JS, GSAP tidak pernah menutup intro dan seluruh
-   situs ikut tertutup. Sengaja lebih lambat dari failsafe JS (6,5 detik) supaya
+   situs ikut tertutup. Sengaja lebih lambat dari failsafe JS (9 detik) supaya
    jalur normal ditangani JS, yang juga melepas kunci scroll. */
 @keyframes intro-failsafe {
   to {
@@ -80,5 +80,5 @@
 }
 
 .intro-failsafe {
-  animation: intro-failsafe 0s linear 8s forwards;
+  animation: intro-failsafe 0s linear 11s forwards;
 }
