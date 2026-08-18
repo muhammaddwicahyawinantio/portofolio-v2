@@ -1,0 +1,166 @@
+// DwiStudio — MySQL schema.
+// Bilingual fields pakai suffix _en / _id. `order` dipakai untuk drag-sort di CMS.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  description_en String   @db.Text
+  description_id String   @db.Text
+  images         Json // array of URL string
+  category       String
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([order])
+}
+
+model Website {
+  id             String @id @default(cuid())
+  name           String
+  url            String
+  thumbnail      String
+  description_en String @db.Text
+  description_id String @db.Text
+  order          Int    @default(0)
+
+  @@index([order])
+}
+
+model Service {
+  id             String @id @default(cuid())
+  name_en        String
+  name_id        String
+  description_en String @db.Text
+  description_id String @db.Text
+  icon           String
+  order          Int    @default(0)
+
+  @@index([order])
+}
+
+model Testimonial {
+  id         String  @id @default(cuid())
+  clientName String
+  position   String
+  content_en String  @db.Text
+  content_id String  @db.Text
+  photo      String?
+  order      Int     @default(0)
+
+  @@index([order])
+}
+
+model MediaGalleryItem {
+  id         String    @id @default(cuid())
+  fileUrl    String
+  fileType   MediaType @default(IMAGE)
+  caption_en String?
+  caption_id String?
+  order      Int       @default(0)
+
+  @@index([order])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model Gallery3DItem {
+  id             String @id @default(cuid())
+  modelUrl       String
+  thumbnail      String
+  description_en String @db.Text
+  description_id String @db.Text
+  order          Int    @default(0)
+
+  @@index([order])
+}
+
+model MusicItem {
+  id       String @id @default(cuid())
+  title    String
+  audioUrl String
+  cover    String
+  order    Int    @default(0)
+
+  @@index([order])
+}
+
+model FilmItem {
+  id             String @id @default(cuid())
+  title          String
+  videoUrl       String
+  thumbnail      String
+  description_en String @db.Text
+  description_id String @db.Text
+  order          Int    @default(0)
+
+  @@index([order])
+}
+
+// Singleton row (id = "footer") — CMS meng-upsert, tidak pernah create baru.
+model FooterContent {
+  id            String @id @default("footer")
+  text_en       String @db.Text
+  text_id       String @db.Text
+  copyrightText String
+}
+
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String
+  url      String
+  icon     String
+  order    Int    @default(0)
+
+  @@index([order])
+}
+
+model NavigationItem {
+  id       String @id @default(cuid())
+  label_en String
+  label_id String
+  url      String
+  order    Int    @default(0)
+
+  @@index([order])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model VisitorStat {
+  id    String   @id @default(cuid())
+  date  DateTime @unique @db.Date
+  count Int      @default(0)
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  avatar       String?
+  createdAt    DateTime @default(now())
+}
