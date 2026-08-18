@@ -7,6 +7,7 @@ import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import ScrollScrub from "@/components/animations/ScrollScrub";
 import Reveal from "@/components/animations/Reveal";
+import KineticText from "@/components/animations/KineticText";
 import { MEDIUMS } from "@/lib/mediums";
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -29,11 +30,15 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
           <Container>
             {/* Judul dan lead parallax beda kecepatan; selisihnya yang bikin kedalaman. */}
             <ScrollScrub to={{ yPercent: 6 }}>
-              <h1 className="font-display text-[clamp(3rem,11vw,10.5rem)] leading-[0.86] font-extrabold tracking-[-0.045em] uppercase">
-                <span className="block">{hero("line1")}</span>
-                <span className="text-ash block">{hero("line2")}</span>
-                <span className="block">{hero("line3")}</span>
-              </h1>
+              {/* Judulnya tetap <h1> asli di DOM; KineticText hanya menimpanya
+                  dengan canvas kalau perangkatnya sanggup. */}
+              <KineticText>
+                <h1 className="font-display text-[clamp(3rem,11vw,10.5rem)] leading-[0.86] font-extrabold tracking-[-0.045em] uppercase">
+                  <span className="block">{hero("line1")}</span>
+                  <span className="text-ash block">{hero("line2")}</span>
+                  <span className="block">{hero("line3")}</span>
+                </h1>
+              </KineticText>
             </ScrollScrub>
             <ScrollScrub to={{ yPercent: 24 }}>
               <p className="text-silver mt-10 max-w-xl text-base leading-[1.65] text-pretty md:mt-14 md:text-lg">
