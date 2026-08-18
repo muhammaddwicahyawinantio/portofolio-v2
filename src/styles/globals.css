@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  /* Silver-gelatin monochrome — cast dingin, sengaja bukan cream/warm. */
+  --color-ink: #0a0a0b;
+  --color-ink-raised: #141417;
+  --color-graphite: #3a3b40;
+  --color-ash: #7a7c83;
+  --color-silver: #c3c6cc;
+  --color-paper: #edeff2;
+
+  --font-display: var(--font-display-family), Georgia, serif;
+  --font-body: var(--font-body-family), system-ui, sans-serif;
+
+  /* Lebar Value Rail — dipakai sebagai w-rail dan pl-rail. */
+  --spacing-rail: 1.75rem;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-paper);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Label rail dibaca bawah-ke-atas: vertical-rl + rotate-180. */
+@utility text-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}

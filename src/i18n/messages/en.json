@@ -1,0 +1,25 @@
+{
+  "nav": { "about": "About", "projects": "Projects", "contact": "Contact" },
+  "locale": { "en": "EN", "id": "ID", "switchLabel": "Change language" },
+  "hero": {
+    "line1": "One studio.",
+    "line2": "Five",
+    "line3": "mediums.",
+    "lead": "Web, motion, 3D, sound, and film — designed and built by one hand."
+  },
+  "mediums": { "web": "Web", "motion": "Motion", "threeD": "3D", "sound": "Sound", "film": "Film" },
+  "index": {
+    "eyebrow": "Mediums",
+    "web": "Sites that load fast and move well.",
+    "motion": "Type, transitions, and title sequences.",
+    "threeD": "Real-time scenes that run in the browser.",
+    "sound": "Scoring and sound design for picture.",
+    "film": "Short-form direction, shoot through grade."
+  },
+  "cta": {
+    "eyebrow": "Contact",
+    "heading": "Have something to make?",
+    "action": "Start a project"
+  },
+  "footer": { "statement": "Available for select work.", "rights": "All rights reserved." }
+}

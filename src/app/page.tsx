@@ -1,83 +1,65 @@
-import Image from "next/image";
+import clsx from "clsx";
+import Container from "@/components/ui/Container";
+import Section from "@/components/ui/Section";
+import Button from "@/components/ui/Button";
+import { MEDIUMS } from "@/lib/mediums";
+import { messages } from "@/i18n/t";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-center font-mono text-sm/6 sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-mono font-semibold dark:bg-white/[.06]">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-        </ol>
+    <>
+      {/* Hero — tipe adalah tesisnya. Roboto Slab 800, tracking rapat, leading 0.86. */}
+      <section className="flex min-h-screen flex-col justify-end pt-32 pb-20 md:pb-28">
+        <Container>
+          <h1 className="font-display text-[clamp(3rem,11vw,10.5rem)] leading-[0.86] font-extrabold tracking-[-0.045em] uppercase">
+            <span className="block">{messages.hero.line1}</span>
+            <span className="text-ash block">{messages.hero.line2}</span>
+            <span className="block">{messages.hero.line3}</span>
+          </h1>
+          <p className="text-silver mt-10 max-w-xl text-base leading-[1.65] text-pretty md:mt-14 md:text-lg">
+            {messages.hero.lead}
+          </p>
+        </Container>
+      </section>
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="bg-foreground text-background flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm font-medium transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm font-medium transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:w-auto sm:px-5 sm:text-base md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      {/* Medium Index — urutan tonal identik dengan ValueRail. */}
+      <Section id="mediums">
+        <Container>
+          <p className="text-ash mb-14 text-[11px] font-semibold tracking-[0.3em] uppercase md:mb-20">
+            {messages.index.eyebrow}
+          </p>
+          <ul className="border-graphite/50 border-t">
+            {MEDIUMS.map((m) => (
+              <li
+                key={m.key}
+                className="border-graphite/50 flex flex-col gap-4 border-b py-8 md:flex-row md:items-baseline md:gap-12 md:py-10"
+              >
+                <span aria-hidden className={clsx("h-3 w-10 shrink-0 md:mt-2", m.tone)} />
+                <h2 className="font-display w-52 shrink-0 text-3xl leading-none font-extrabold tracking-[-0.03em] md:text-4xl">
+                  {messages.mediums[m.key]}
+                </h2>
+                <p className="text-silver max-w-md text-base leading-[1.6]">
+                  {messages.index[m.key]}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
+      <Section>
+        <Container className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-ash mb-6 text-[11px] font-semibold tracking-[0.3em] uppercase">
+              {messages.cta.eyebrow}
+            </p>
+            <h2 className="font-display max-w-2xl text-[clamp(2.25rem,6vw,5rem)] leading-[0.95] font-extrabold tracking-[-0.04em] text-balance">
+              {messages.cta.heading}
+            </h2>
+          </div>
+          <Button href="/contact">{messages.cta.action}</Button>
+        </Container>
+      </Section>
+    </>
   );
 }
