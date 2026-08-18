@@ -141,7 +141,7 @@ export default function CustomCursor() {
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[60] mix-blend-difference [@media(pointer:coarse)]:hidden"
+      className="pointer-events-none fixed inset-0 z-[80] mix-blend-difference [@media(pointer:coarse)]:hidden"
     />
   );
 }

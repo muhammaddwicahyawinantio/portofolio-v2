@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import ValueRail from "@/components/layout/ValueRail";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import CustomCursor from "@/components/animations/CustomCursor";
+import Intro from "@/components/animations/Intro";
 import { routing } from "@/i18n/routing";
 import "@/styles/globals.css";
 
@@ -58,6 +59,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${display.variable} ${body.variable}`}>
       <body className="bg-ink text-paper font-body">
         <NextIntlClientProvider messages={messages}>
+          <Intro />
           <ValueRail />
           <CustomCursor />
           <SmoothScroll>

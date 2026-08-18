@@ -58,3 +58,27 @@
     cursor: none;
   }
 }
+
+@keyframes intro-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.intro-ring {
+  animation: intro-spin 1.1s linear infinite;
+  transform-origin: center;
+}
+
+/* Failsafe khusus no-JS: tanpa JS, GSAP tidak pernah menutup intro dan seluruh
+   situs ikut tertutup. Sengaja lebih lambat dari failsafe JS (6,5 detik) supaya
+   jalur normal ditangani JS, yang juga melepas kunci scroll. */
+@keyframes intro-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+
+.intro-failsafe {
+  animation: intro-failsafe 0s linear 8s forwards;
+}
