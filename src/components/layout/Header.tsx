@@ -1,43 +1,45 @@
-import { useTranslations } from "next-intl";
+"use client";
+
+import { useEffect, useState } from "react";
+import clsx from "clsx";
 import { Link } from "@/i18n/navigation";
 import Container from "@/components/ui/Container";
 import LocaleSwitch from "@/components/layout/LocaleSwitch";
-
-// Nav statis di Fase 2; sumbernya pindah ke model NavigationItem di Fase 7.
-const NAV = [
-  { key: "about", href: "/about" },
-  { key: "projects", href: "/projects" },
-  { key: "contact", href: "/contact" },
-] as const;
+import MorphMenu from "@/components/animations/MorphMenu";
 
 export default function Header() {
-  const t = useTranslations("nav");
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    // Lenis menggerakkan scroll window sungguhan, jadi scrollY tetap akurat
+    // dan event scroll native tetap terpancar.
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="border-graphite/60 fixed inset-x-0 top-0 z-30 border-b bg-transparent md:pl-[var(--spacing-rail)]">
+    <header
+      className={clsx(
+        "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 md:pl-[var(--spacing-rail)]",
+        scrolled
+          ? "border-graphite/60 bg-ink/55 backdrop-blur-xl"
+          : "border-transparent bg-transparent",
+      )}
+    >
       <Container className="flex h-16 items-center justify-between md:h-20">
         <Link
           href="/"
-          className="font-display text-sm font-extrabold tracking-[-0.02em] uppercase md:text-base"
+          className="font-display relative z-50 text-sm font-extrabold tracking-[-0.02em] uppercase md:text-base"
         >
           Dwi Studio
         </Link>
 
-        <nav className="flex items-center gap-6 md:gap-10">
-          <ul className="hidden items-center gap-6 md:flex md:gap-10">
-            {NAV.map((item) => (
-              <li key={item.key}>
-                <Link
-                  href={item.href}
-                  className="text-silver hover:text-paper text-[11px] font-semibold tracking-[0.2em] uppercase transition-colors duration-300"
-                >
-                  {t(item.key)}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="relative z-50 flex items-center gap-6 md:gap-8">
           <LocaleSwitch />
-        </nav>
+          <MorphMenu />
+        </div>
       </Container>
     </header>
   );

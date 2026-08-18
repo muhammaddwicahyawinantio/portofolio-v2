@@ -3,15 +3,33 @@
     "title": "Dwi Studio — Satu studio, lima medium",
     "description": "Web, motion, 3D, suara, dan film, dirancang dan dibangun satu tangan."
   },
-  "nav": { "about": "Tentang", "projects": "Proyek", "contact": "Kontak" },
-  "locale": { "en": "EN", "id": "ID", "switchLabel": "Ganti bahasa" },
+  "nav": {
+    "about": "Tentang",
+    "projects": "Proyek",
+    "contact": "Kontak"
+  },
+  "menu": {
+    "open": "Buka menu",
+    "close": "Tutup menu"
+  },
+  "locale": {
+    "en": "EN",
+    "id": "ID",
+    "switchLabel": "Ganti bahasa"
+  },
   "hero": {
     "line1": "Satu studio.",
     "line2": "Lima",
     "line3": "medium.",
     "lead": "Web, motion, 3D, suara, dan film — dirancang dan dibangun satu tangan."
   },
-  "mediums": { "web": "Web", "motion": "Motion", "threeD": "3D", "sound": "Suara", "film": "Film" },
+  "mediums": {
+    "web": "Web",
+    "motion": "Motion",
+    "threeD": "3D",
+    "sound": "Suara",
+    "film": "Film"
+  },
   "index": {
     "eyebrow": "Medium",
     "web": "Situs yang ringan dimuat dan mulus bergerak.",
@@ -46,5 +64,8 @@
     "lead": "Tautannya mungkin sudah usang. Kembali ke beranda.",
     "action": "Kembali ke beranda"
   },
-  "footer": { "statement": "Terbuka untuk proyek terpilih.", "rights": "Hak cipta dilindungi." }
+  "footer": {
+    "statement": "Terbuka untuk proyek terpilih.",
+    "rights": "Hak cipta dilindungi."
+  }
 }
