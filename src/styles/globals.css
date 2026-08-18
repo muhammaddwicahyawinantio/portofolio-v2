@@ -49,3 +49,12 @@
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
+
+/* Kursor native hanya disembunyikan setelah kursor custom aktif (class dipasang
+   dari JS), jadi kalau JS gagal pointer tidak ikut hilang. */
+@media (pointer: fine) {
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: none;
+  }
+}
