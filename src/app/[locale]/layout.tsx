@@ -6,6 +6,7 @@ import { Roboto_Slab, Open_Sans } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ValueRail from "@/components/layout/ValueRail";
+import SmoothScroll from "@/components/animations/SmoothScroll";
 import { routing } from "@/i18n/routing";
 import "@/styles/globals.css";
 
@@ -57,11 +58,13 @@ export default async function LocaleLayout({
       <body className="bg-ink text-paper font-body">
         <NextIntlClientProvider messages={messages}>
           <ValueRail />
-          <div className="md:pl-[var(--spacing-rail)]">
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </div>
+          <SmoothScroll>
+            <div className="md:pl-[var(--spacing-rail)]">
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </div>
+          </SmoothScroll>
         </NextIntlClientProvider>
       </body>
     </html>
