@@ -58,6 +58,19 @@
     "title": "Start a project.",
     "lead": "Tell me what you are making and when you need it."
   },
+  "contactForm": {
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending…",
+    "success": "Thanks — your message is in. I read every one and reply myself.",
+    "errorRequired": "Please fill in every field.",
+    "errorEmail": "That email address does not look right.",
+    "errorRate": "Too many messages from this connection. Try again in an hour.",
+    "errorGeneric": "Something went wrong. Please try again."
+  },
   "notFound": {
     "eyebrow": "404",
     "title": "This page does not exist.",

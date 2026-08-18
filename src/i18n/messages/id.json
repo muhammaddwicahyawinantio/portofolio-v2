@@ -58,6 +58,19 @@
     "title": "Mulai proyek.",
     "lead": "Ceritakan apa yang mau kamu buat dan kapan kamu butuh."
   },
+  "contactForm": {
+    "name": "Nama",
+    "email": "Email",
+    "subject": "Subjek",
+    "message": "Pesan",
+    "send": "Kirim pesan",
+    "sending": "Mengirim…",
+    "success": "Terima kasih — pesanmu masuk. Semua saya baca dan saya balas sendiri.",
+    "errorRequired": "Mohon isi semua kolom.",
+    "errorEmail": "Alamat email itu sepertinya keliru.",
+    "errorRate": "Terlalu banyak pesan dari koneksi ini. Coba lagi satu jam lagi.",
+    "errorGeneric": "Terjadi kesalahan. Coba lagi."
+  },
   "notFound": {
     "eyebrow": "404",
     "title": "Halaman ini tidak ada.",
