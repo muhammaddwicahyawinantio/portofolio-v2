@@ -1,6 +1,6 @@
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import { MEDIUMS } from "@/lib/mediums";
-import { messages } from "@/i18n/t";
 
 /**
  * Signature element. Gradasi hitam-putih dipakai sebagai indeks medium,
@@ -8,6 +8,8 @@ import { messages } from "@/i18n/t";
  * aria-hidden karena daftar medium yang sama sudah ada sebagai teks di home.
  */
 export default function ValueRail() {
+  const t = useTranslations("mediums");
+
   return (
     <>
       {/* Desktop: rail vertikal, label dibaca bawah-ke-atas. */}
@@ -20,7 +22,7 @@ export default function ValueRail() {
                 m.label,
               )}
             >
-              {messages.mediums[m.key]}
+              {t(m.key)}
             </span>
           </div>
         ))}

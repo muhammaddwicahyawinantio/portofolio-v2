@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Dwi Studio — Satu studio, lima medium",
+    "description": "Web, motion, 3D, suara, dan film, dirancang dan dibangun satu tangan."
+  },
   "nav": { "about": "Tentang", "projects": "Proyek", "contact": "Kontak" },
   "locale": { "en": "EN", "id": "ID", "switchLabel": "Ganti bahasa" },
   "hero": {
@@ -20,6 +24,27 @@
     "eyebrow": "Kontak",
     "heading": "Punya sesuatu untuk dibuat?",
     "action": "Mulai proyek"
+  },
+  "about": {
+    "eyebrow": "Tentang",
+    "title": "Studio satu orang.",
+    "lead": "Dwi Studio bekerja lintas web, motion, 3D, suara, dan film. Setiap proyek dirancang dan dibangun tangan yang sama, dari awal sampai akhir."
+  },
+  "projects": {
+    "eyebrow": "Karya",
+    "title": "Karya terpilih.",
+    "lead": "Studi kasus muncul di sini begitu diterbitkan."
+  },
+  "contact": {
+    "eyebrow": "Kontak",
+    "title": "Mulai proyek.",
+    "lead": "Ceritakan apa yang mau kamu buat dan kapan kamu butuh."
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "title": "Halaman ini tidak ada.",
+    "lead": "Tautannya mungkin sudah usang. Kembali ke beranda.",
+    "action": "Kembali ke beranda"
   },
   "footer": { "statement": "Terbuka untuk proyek terpilih.", "rights": "Hak cipta dilindungi." }
 }

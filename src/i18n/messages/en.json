@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Dwi Studio — One studio, five mediums",
+    "description": "Web, motion, 3D, sound, and film, designed and built by one hand."
+  },
   "nav": { "about": "About", "projects": "Projects", "contact": "Contact" },
   "locale": { "en": "EN", "id": "ID", "switchLabel": "Change language" },
   "hero": {
@@ -20,6 +24,27 @@
     "eyebrow": "Contact",
     "heading": "Have something to make?",
     "action": "Start a project"
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "A studio of one.",
+    "lead": "Dwi Studio works across web, motion, 3D, sound, and film. Every project is designed and built by the same hand, start to finish."
+  },
+  "projects": {
+    "eyebrow": "Work",
+    "title": "Selected work.",
+    "lead": "Case studies appear here as they are published."
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Start a project.",
+    "lead": "Tell me what you are making and when you need it."
+  },
+  "notFound": {
+    "eyebrow": "404",
+    "title": "This page does not exist.",
+    "lead": "The link may be out of date. Head back to the homepage.",
+    "action": "Back to home"
   },
   "footer": { "statement": "Available for select work.", "rights": "All rights reserved." }
 }
