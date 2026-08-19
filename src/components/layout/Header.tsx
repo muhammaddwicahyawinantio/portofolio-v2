@@ -48,7 +48,7 @@ export default function Header() {
               supaya emblem, bahasa, dan tombol menu tidak berdesakan. */}
           <Link
             href="/contact"
-            className="hover:bg-paper hover:text-ink hidden rounded-full border border-white/40 px-5 py-2.5 text-[10px] font-semibold tracking-[0.2em] uppercase transition-colors hover:border-white sm:inline-block"
+            className="hover:bg-paper hover:text-ink hidden rounded-full border border-white/40 bg-white/[0.03] px-5 py-2.5 text-[10px] font-semibold tracking-[0.2em] uppercase backdrop-blur-sm transition-colors hover:border-white sm:inline-block"
           >
             {t("getInTouch")}
           </Link>

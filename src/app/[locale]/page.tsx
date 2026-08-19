@@ -65,11 +65,14 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
         </ScrollScrub>
 
         <Container className="text-ash flex items-end justify-between gap-6 text-[10px] font-medium tracking-[0.2em] uppercase">
-          <p>
-            {hero("scroll")}
-            <br />
-            <span className="text-graphite">{hero("scrollHint")}</span>
-          </p>
+          <div className="flex items-center gap-3">
+            <span aria-hidden className="bg-graphite h-px w-8" />
+            <p>
+              {hero("scroll")}
+              <br />
+              <span className="text-graphite">{hero("scrollHint")}</span>
+            </p>
+          </div>
           <p className="hidden text-right sm:block">{footer("statement")}</p>
         </Container>
       </section>
