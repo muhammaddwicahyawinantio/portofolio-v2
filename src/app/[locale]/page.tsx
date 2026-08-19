@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import ScrollScrub from "@/components/animations/ScrollScrub";
 import Reveal from "@/components/animations/Reveal";
 import { MEDIUMS } from "@/lib/mediums";
+import ServiceGrid from "@/components/sections/ServiceGrid";
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
@@ -17,6 +18,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const mediums = useTranslations("mediums");
   const index = useTranslations("index");
   const cta = useTranslations("cta");
+  const services = useTranslations("services");
   const footer = useTranslations("footer");
 
   return (
@@ -96,6 +98,19 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                 ))}
               </ul>
             </Reveal>
+          </Container>
+        </Section>
+
+        <Section id="services" className="border-graphite/40 border-t">
+          <Container>
+            <p className="text-ash mb-14 text-[11px] font-semibold tracking-[0.3em] uppercase md:mb-20">
+              {services("eyebrow")}
+            </p>
+            <ServiceGrid
+              locale={locale}
+              priceFromLabel={services("priceFrom")}
+              inquireLabel={services("inquire")}
+            />
           </Container>
         </Section>
 
