@@ -36,7 +36,10 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
               {/* Judulnya tetap <h1> asli di DOM; KineticText hanya menimpanya
                   dengan canvas kalau perangkatnya sanggup. */}
               <KineticText>
-                <h1 className="font-display mx-auto max-w-5xl text-[clamp(2.25rem,6.5vw,5.8rem)] leading-[1.05] font-extrabold tracking-[-0.02em] uppercase">
+                <h1
+                  data-headline
+                  className="font-display mx-auto max-w-5xl text-[clamp(2.25rem,6.5vw,5.8rem)] leading-[1.05] font-extrabold tracking-[-0.02em] uppercase"
+                >
                   <span className="block">{hero("line1")}</span>
                   <span className="text-ash block">
                     {hero("line2")} {hero("line3")}

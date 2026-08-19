@@ -70,7 +70,19 @@ export default function Intro() {
     const main = document.querySelector("main");
     const header = document.querySelector("header");
     const rails = Array.from(document.querySelectorAll("[data-rail]"));
-    const revealTargets = [main, header, ...rails].filter(Boolean) as Element[];
+    // heroBg = host canvas LiquidBackground, berperan sebagai "foto latar
+    // belakang" di spesifikasi. headline = judul halaman yang sedang aktif,
+    // apa pun rute yang pertama kali dibuka pengunjung.
+    const heroBg = document.querySelector<HTMLElement>("[data-hero-bg]");
+    const headline = document.querySelector<HTMLElement>("[data-headline]");
+    // headline SENGAJA tidak masuk sini. Ia adalah elemen <h1> yang sama
+    // dipakai KineticText, yang menulis visibility:hidden langsung ke DOM di
+    // luar sepengetahuan GSAP. clearProps:"all" pada gsap.set() yang berdiri
+    // sendiri (bukan sambungan tween) menghapus SELURUH inline style elemen,
+    // bukan cuma yang disentuh Intro — itu akan membongkar visibility:hidden
+    // KineticText dan menampakkan <h1> asli tepat di belakang kanvasnya,
+    // dobel teks. headline dibersihkan terpisah di bawah, khusus transform.
+    const revealTargets = [main, header, heroBg, ...rails].filter(Boolean) as Element[];
 
     const tl = gsap.timeline({ paused: true });
 
@@ -92,6 +104,10 @@ export default function Intro() {
       // Wajib: kalau failsafe menyela di tengah, elemen-elemen ini bisa
       // tertinggal pada opacity 0 dan seluruh halaman jadi tak terlihat.
       if (revealTargets.length) gsap.set(revealTargets, { clearProps: "all" });
+      // Dibersihkan terpisah dan hanya "transform": satu-satunya properti
+      // yang pernah disentuh Intro di elemen ini, jadi visibility milik
+      // KineticText tidak ikut terhapus.
+      if (headline) gsap.set(headline, { clearProps: "transform" });
     };
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -114,7 +130,9 @@ export default function Intro() {
     const divider = q("[data-divider]");
     const dwi = q("[data-word='dwi'] > span");
     const studio = q("[data-word='studio'] > span");
-    const panels = root.querySelectorAll("[data-panel]");
+    // Array, bukan NodeList: tiap panel butuh delay sendiri (0 / 0.1 / 0.2s),
+    // jadi diindeks satu-satu alih-alih di-stagger seragam.
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
 
     // Reset eksplisit ke keadaan awal. Wajib untuk replay: setelah satu putaran
     // semua elemen tertinggal di keadaan akhir, jadi tween berikutnya tidak
@@ -137,9 +155,13 @@ export default function Intro() {
     gsap.set(stage, { autoAlpha: 1, scale: 1 });
     gsap.set(panels, { scaleY: 1 });
 
-    gsap.set(main, { autoAlpha: 0, scale: 1.1 });
-    gsap.set(header, { autoAlpha: 0, y: -10 });
+    // Fase 7 disusun sebagai tiga gerak independen, bukan satu <main> yang
+    // di-scale sekaligus: background zoom, navbar slide, headline slide.
+    gsap.set(main, { autoAlpha: 0 });
+    gsap.set(header, { autoAlpha: 0, y: -15 });
     gsap.set(rails, { autoAlpha: 0 });
+    if (heroBg) gsap.set(heroBg, { scale: 1.18 });
+    if (headline) gsap.set(headline, { y: 30 });
 
     /**
      * Geser panggung supaya emblem tepat di tengah layar selama teks masih
@@ -167,11 +189,17 @@ export default function Intro() {
       // terasa tumbuh tanpa satu pun animasi properti layout.
       .to(stage, { x: 0, duration: 1.6, ease: FLUID }, 0.6)
       .to(stage, { autoAlpha: 0, scale: 0.96, duration: 0.8, ease: FLUID }, 2.8)
-      .to(panels, { scaleY: 0, duration: 1.2, stagger: 0.12, ease: SHUTTER }, 3.3)
-      // Zoom-out halaman berjalan 2,2 detik dan mulai bersamaan tirai — jauh
-      // lebih panjang dari fade isinya, itu yang bikin terasa sinematik.
-      .to(main, { scale: 1, duration: 2.2, ease: FLUID }, 3.3)
+      // Fase 6 — shutter: tiga kolom membuka bergantian arah (top/bottom/top
+      // lewat transform-origin di JSX), delay 0 / 0.1 / 0.2s, bukan menyusut
+      // seragam ke tengah.
+      .to(panels[0]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.3)
+      .to(panels[1]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.4)
+      .to(panels[2]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.5)
+      // Fase 7 — hero reveal: background zoom-out 1.18 -> 1 (2,2 detik, mulai
+      // bersamaan tirai), navbar turun dari -15px, headline naik dari 30px.
+      .to(heroBg, { scale: 1, duration: 2.2, ease: FLUID }, 3.3)
       .to(header, { autoAlpha: 1, y: 0, duration: 1, ease: FLUID }, 3.7)
+      .to(headline, { y: 0, duration: 1, ease: FLUID }, 3.8)
       .to(main, { autoAlpha: 1, duration: 1.2, ease: FLUID }, 3.9)
       .to(rails, { autoAlpha: 1, duration: 1, ease: FLUID }, 4.1);
 
@@ -201,17 +229,16 @@ export default function Intro() {
       // menimbulkan scrollbar horizontal di layar sempit.
       className="intro-failsafe fixed inset-0 z-[70] flex items-center justify-center overflow-hidden bg-black"
     >
-      {/* Tiga panel tirai. Jahitan hairline wajib: panel hitam yang membuka di
-          atas halaman yang juga hitam tidak akan terlihat tanpa garis pemisah
-          yang ikut menyusut bersamanya. */}
+      {/* Tiga panel tirai arsitektural. Bergantian arah, bukan menyusut ke
+          tengah: kolom 1 & 3 origin-top (ditarik ke atas), kolom 2 origin-bottom
+          (ditarik ke bawah) — origin diatur lewat transform-origin CSS biasa,
+          properti yang tidak disentuh xPercent/scale GSAP, jadi aman digabung.
+          Jahitan hairline wajib: panel hitam yang membuka di atas halaman yang
+          juga hitam tidak akan terlihat tanpa garis pemisah yang ikut menyusut. */}
       <div className="absolute inset-0 flex divide-x divide-white/10">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            data-panel
-            className="h-full flex-1 origin-center bg-black will-change-transform"
-          />
-        ))}
+        <span data-panel className="h-full flex-1 origin-top bg-black will-change-transform" />
+        <span data-panel className="h-full flex-1 origin-bottom bg-black will-change-transform" />
+        <span data-panel className="h-full flex-1 origin-top bg-black will-change-transform" />
       </div>
 
       <div data-stage className="relative z-10 flex items-center will-change-transform">

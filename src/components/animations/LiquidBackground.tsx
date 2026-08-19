@@ -159,5 +159,12 @@ export default function LiquidBackground() {
     };
   }, []);
 
-  return <div ref={hostRef} aria-hidden className="pointer-events-none fixed inset-0 -z-10" />;
+  return (
+    <div
+      ref={hostRef}
+      data-hero-bg
+      aria-hidden
+      className="pointer-events-none fixed inset-0 -z-10"
+    />
+  );
 }

@@ -11,7 +11,10 @@ export default function NotFound() {
         <p className="text-ash mb-8 text-[11px] font-semibold tracking-[0.3em] uppercase">
           {t("eyebrow")}
         </p>
-        <h1 className="font-display max-w-3xl text-[clamp(2.25rem,7vw,5.5rem)] leading-[0.9] font-extrabold tracking-[-0.045em] text-balance">
+        <h1
+          data-headline
+          className="font-display max-w-3xl text-[clamp(2.25rem,7vw,5.5rem)] leading-[0.9] font-extrabold tracking-[-0.045em] text-balance"
+        >
           {t("title")}
         </h1>
         <p className="text-silver mt-8 max-w-lg text-base leading-[1.65] text-pretty">
