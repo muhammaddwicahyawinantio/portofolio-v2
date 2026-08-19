@@ -5,6 +5,9 @@ import { alternates } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
 import PageHeader from "@/components/ui/PageHeader";
+import Section from "@/components/ui/Section";
+import Container from "@/components/ui/Container";
+import ProjectList from "@/components/sections/ProjectList";
 
 export async function generateMetadata({
   params,
@@ -27,5 +30,14 @@ export default function ProjectsPage({ params }: { params: Promise<{ locale: str
 
   const t = useTranslations("projects");
 
-  return <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />;
+  return (
+    <>
+      <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
+      <Section className="pt-0">
+        <Container>
+          <ProjectList locale={locale} />
+        </Container>
+      </Section>
+    </>
+  );
 }
