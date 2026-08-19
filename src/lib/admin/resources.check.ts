@@ -85,4 +85,32 @@ assert.throws(
 // 6. Angka yang bukan angka jatuh ke 0, tidak pernah NaN masuk database.
 assert.equal(parseFields(projects, form({ ...valid, order: "abc" })).order, 0);
 
-console.log("parseFields: 6 cek lolos");
+// 7. Field baru services: list dua-bahasa kepisah, image jadi string opsional.
+const services = getResource("services");
+assert.ok(services, "resource services harus ada");
+const serviceForm = {
+  name_en: "Landing Page",
+  name_id: "Landing Page",
+  description_en: "A focused page.",
+  description_id: "Halaman fokus.",
+  icon: "🚀",
+  priceLabel: "Rp1.500.000 – Rp4.000.000",
+  features_en: " 1 page \n\n Responsive \n",
+  features_id: "1 halaman\nResponsive",
+  benefits_en: "More leads",
+  benefits_id: "Leads lebih banyak",
+  image: "",
+  order: "1",
+};
+const parsedService = parseFields(services, form(serviceForm));
+assert.deepEqual(
+  parsedService.features_en,
+  ["1 page", "Responsive"],
+  "list dua-bahasa dipisah per baris seperti field list lain",
+);
+assert.equal(parsedService.image, null, "image kosong harus null, bukan string kosong");
+
+const withImage = parseFields(services, form({ ...serviceForm, image: "/uploads/a.jpg" }));
+assert.equal(withImage.image, "/uploads/a.jpg", "image terisi disimpan apa adanya");
+
+console.log("parseFields: 7 cek lolos");

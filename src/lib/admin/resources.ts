@@ -1,4 +1,4 @@
-export type FieldType = "text" | "textarea" | "number" | "url" | "list" | "select";
+export type FieldType = "text" | "textarea" | "number" | "url" | "list" | "select" | "image";
 
 export type Field = {
   name: string;
@@ -63,10 +63,16 @@ export const RESOURCES: Resource[] = [
     fields: [
       ...bilingual("name", "Name", "text"),
       ...bilingual("description", "Description"),
-      { name: "icon", label: "Icon", type: "text", required: true },
+      { name: "icon", label: "Icon (emoji)", type: "text", required: true },
+      { name: "priceLabel", label: "Price", type: "text", required: true },
+      { name: "features_en", label: "Features (EN, one per line)", type: "list" },
+      { name: "features_id", label: "Features (ID, one per line)", type: "list" },
+      { name: "benefits_en", label: "Benefits (EN, one per line)", type: "list" },
+      { name: "benefits_id", label: "Benefits (ID, one per line)", type: "list" },
+      { name: "image", label: "Photo", type: "image" },
       orderField,
     ],
-    columns: ["name_en", "icon", "order"],
+    columns: ["name_en", "priceLabel", "order"],
     orderBy: { order: "asc" },
   },
   {
