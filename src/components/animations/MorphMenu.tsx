@@ -103,14 +103,21 @@ export default function MorphMenu() {
                     href={item.href}
                     ref={i === 0 ? firstLinkRef : undefined}
                     onClick={() => setOpen(false)}
-                    // Stagger lewat transition-delay: masuk berurutan, keluar serempak.
-                    style={{ transitionDelay: open ? `${140 + i * 70}ms` : "0ms" }}
-                    className={clsx(
-                      "font-display hover:text-ash block py-6 text-[clamp(2.5rem,9vw,6.5rem)] leading-[0.95] font-extrabold tracking-[-0.04em] uppercase transition-all duration-500 ease-out md:py-8",
-                      open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-                    )}
+                    className="font-display hover:text-ash block overflow-hidden py-6 text-[clamp(2.5rem,9vw,6.5rem)] leading-[0.95] font-extrabold tracking-[-0.04em] uppercase md:py-8"
                   >
-                    {nav(item.key)}
+                    {/* Reveal text: baris ditutup overflow-hidden di Link, span di
+                        dalamnya digeser penuh satu tinggi baris lalu ditarik naik —
+                        tirai terbuka, bukan pudar. Stagger lewat transition-delay:
+                        masuk berurutan, keluar serempak. */}
+                    <span
+                      style={{ transitionDelay: open ? `${140 + i * 70}ms` : "0ms" }}
+                      className={clsx(
+                        "block transition-transform duration-500 ease-out",
+                        open ? "translate-y-0" : "translate-y-full",
+                      )}
+                    >
+                      {nav(item.key)}
+                    </span>
                   </Link>
                 </Magnetic>
               </li>
