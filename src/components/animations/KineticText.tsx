@@ -105,28 +105,54 @@ export default function KineticText({ children }: { children: ReactNode }) {
         canvas.width = Math.max(1, Math.round(rect.width * dpr));
         canvas.height = Math.max(1, Math.round(rect.height * dpr));
 
-        const cs = getComputedStyle(source);
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, rect.width, rect.height);
-        ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
         ctx.textBaseline = "top";
-        // letterSpacing baru ada di Chrome/Safari terbaru; tanpa itu tracking
-        // rapatnya hilang, tapi teksnya tetap benar.
-        if ("letterSpacing" in ctx) ctx.letterSpacing = cs.letterSpacing;
 
         const lines = Array.from(source.children) as HTMLElement[];
         const targets = lines.length ? lines : [source];
 
+        // Canvas fillText selalu rata-kiri dari titik x yang diberikan — ia
+        // tidak tahu apa-apa soal text-align CSS. Tiap baris (block penuh
+        // lebar induknya) diukur lebarnya sendiri, lalu titik x-nya dipilih
+        // sesuai text-align supaya glyph benar-benar mendarat di tempat CSS
+        // akan menaruhnya, bukan selalu menempel di tepi kiri kotak.
         for (const line of targets) {
           const lineStyle = getComputedStyle(line);
+          const text = applyTransform(line.textContent ?? "", lineStyle.textTransform);
+          const baseSize = parseFloat(lineStyle.fontSize);
+
+          ctx.font = `${lineStyle.fontWeight} ${baseSize}px ${lineStyle.fontFamily}`;
+          // letterSpacing baru ada di Chrome/Safari terbaru; tanpa itu tracking
+          // rapatnya hilang, tapi teksnya tetap benar.
+          if ("letterSpacing" in ctx) ctx.letterSpacing = lineStyle.letterSpacing;
+
+          // fillText TIDAK PERNAH membungkus baris — beda dari CSS, yang akan
+          // memecah teks ke baris baru kalau tidak muat. Untuk wordmark besar
+          // ini artinya glyph bisa lebih lebar dari boksnya sendiri dan
+          // terpotong diam-diam di tepi kanvas. Diukur dulu, dan kalau
+          // melebihi lebar boks, font diperkecil proporsional sampai pas —
+          // supaya string apa pun panjangnya (locale lain, kata lebih panjang)
+          // tetap satu baris utuh, bukan angka ukuran yang ditebak manual.
+          const measured = ctx.measureText(text).width;
+          if (measured > line.offsetWidth && line.offsetWidth > 0) {
+            const scale = line.offsetWidth / measured;
+            ctx.font = `${lineStyle.fontWeight} ${Math.floor(baseSize * scale)}px ${lineStyle.fontFamily}`;
+          }
+
           ctx.fillStyle = lineStyle.color;
-          // fillText memakai textContent apa adanya: text-transform CSS harus
-          // diterapkan sendiri, kalau tidak judul uppercase jadi sentence case.
-          ctx.fillText(
-            applyTransform(line.textContent ?? "", lineStyle.textTransform),
-            line.offsetLeft - source.offsetLeft,
-            line.offsetTop - source.offsetTop,
-          );
+          const align = lineStyle.textAlign;
+          ctx.textAlign = align === "center" ? "center" : align === "right" ? "right" : "left";
+
+          const left = line.offsetLeft - source.offsetLeft;
+          const x =
+            align === "center"
+              ? left + line.offsetWidth / 2
+              : align === "right"
+                ? left + line.offsetWidth
+                : left;
+
+          ctx.fillText(text, x, line.offsetTop - source.offsetTop);
         }
 
         texture.needsUpdate = true;

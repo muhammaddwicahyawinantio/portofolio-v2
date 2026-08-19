@@ -75,13 +75,16 @@ export default function Intro() {
     // apa pun rute yang pertama kali dibuka pengunjung.
     const heroBg = document.querySelector<HTMLElement>("[data-hero-bg]");
     const headline = document.querySelector<HTMLElement>("[data-headline]");
-    // headline SENGAJA tidak masuk sini. Ia adalah elemen <h1> yang sama
-    // dipakai KineticText, yang menulis visibility:hidden langsung ke DOM di
-    // luar sepengetahuan GSAP. clearProps:"all" pada gsap.set() yang berdiri
-    // sendiri (bukan sambungan tween) menghapus SELURUH inline style elemen,
-    // bukan cuma yang disentuh Intro — itu akan membongkar visibility:hidden
-    // KineticText dan menampakkan <h1> asli tepat di belakang kanvasnya,
-    // dobel teks. headline dibersihkan terpisah di bawah, khusus transform.
+    // headline SENGAJA tidak masuk sini, dibersihkan terpisah di bawah lewat
+    // clearProps:"transform" saja. clearProps:"all" pada gsap.set() yang
+    // berdiri sendiri (bukan sambungan tween) menghapus SELURUH inline style
+    // elemen, bukan cuma yang disentuh Intro. Pelajaran dari bug nyata: waktu
+    // headline masih dibungkus KineticText (kini dipindah ke footer),
+    // clearProps:"all" di sini membongkar visibility:hidden yang ditulis
+    // KineticText langsung ke DOM, menampakkan <h1> asli di belakang
+    // kanvasnya, dobel teks. Aturannya tetap dipertahankan: elemen manapun
+    // yang inline style-nya juga dikelola sistem lain di luar Intro tidak
+    // boleh kena clearProps:"all" yang menyapu semuanya.
     const revealTargets = [main, header, heroBg, ...rails].filter(Boolean) as Element[];
 
     const tl = gsap.timeline({ paused: true });

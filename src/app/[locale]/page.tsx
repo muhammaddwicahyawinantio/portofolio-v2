@@ -7,7 +7,6 @@ import Section from "@/components/ui/Section";
 import Button from "@/components/ui/Button";
 import ScrollScrub from "@/components/animations/ScrollScrub";
 import Reveal from "@/components/animations/Reveal";
-import KineticText from "@/components/animations/KineticText";
 import { MEDIUMS } from "@/lib/mediums";
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -33,19 +32,15 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
         <ScrollScrub to={{ opacity: 0.16, scale: 0.97 }} start="clamp(top top)">
           <Container className="text-center">
             <ScrollScrub to={{ yPercent: 6 }}>
-              {/* Judulnya tetap <h1> asli di DOM; KineticText hanya menimpanya
-                  dengan canvas kalau perangkatnya sanggup. */}
-              <KineticText>
-                <h1
-                  data-headline
-                  className="font-display mx-auto max-w-5xl text-[clamp(2.25rem,6.5vw,5.8rem)] leading-[1.05] font-extrabold tracking-[-0.02em] uppercase"
-                >
-                  <span className="block">{hero("line1")}</span>
-                  <span className="text-ash block">
-                    {hero("line2")} {hero("line3")}
-                  </span>
-                </h1>
-              </KineticText>
+              <h1
+                data-headline
+                className="font-display mx-auto max-w-5xl text-[clamp(2.25rem,6.5vw,5.8rem)] leading-[1.05] font-extrabold tracking-[-0.02em] uppercase"
+              >
+                <span className="block">{hero("line1")}</span>
+                <span className="text-ash block">
+                  {hero("line2")} {hero("line3")}
+                </span>
+              </h1>
             </ScrollScrub>
 
             {/* Daftar medium menggantikan baris peran di referensi: isi yang
