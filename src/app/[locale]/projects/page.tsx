@@ -1,7 +1,25 @@
+import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import { alternates } from "@/lib/seo";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
 import PageHeader from "@/components/ui/PageHeader";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "projects" });
+
+  return {
+    title: t("title"),
+    description: t("lead"),
+    alternates: alternates(locale, "/projects"),
+  };
+}
 
 export default function ProjectsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);

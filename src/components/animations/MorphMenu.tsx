@@ -17,6 +17,7 @@ export default function MorphMenu() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const t = useTranslations("menu");
   const nav = useTranslations("nav");
@@ -28,15 +29,35 @@ export default function MorphMenu() {
   // Tutup sendiri saat rute berubah, supaya overlay tidak menutupi halaman baru.
   useEffect(() => setOpen(false), [pathname]);
 
-  // ponytail: Escape + pemindahan fokus saja, belum focus trap penuh — Tab masih
-  // bisa keluar ke elemen di belakang overlay. Dijadwalkan di Fase 9 (audit a11y).
   useEffect(() => {
     if (!open) return;
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      setOpen(false);
-      buttonRef.current?.focus();
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      // Focus trap. Tombol hamburger sengaja ikut dalam lingkaran, supaya cara
+      // menutup menu selalu terjangkau keyboard tanpa perlu Escape.
+      const focusables = [
+        ...Array.from(overlayRef.current?.querySelectorAll<HTMLElement>("a[href]") ?? []),
+        buttonRef.current,
+      ].filter((el): el is HTMLElement => Boolean(el));
+      if (focusables.length === 0) return;
+
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
 
     document.addEventListener("keydown", onKey);
@@ -60,6 +81,7 @@ export default function MorphMenu() {
 
   const overlay = (
     <div
+      ref={overlayRef}
       id="menu-overlay"
       role="dialog"
       aria-modal="true"

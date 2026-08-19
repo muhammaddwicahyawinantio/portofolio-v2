@@ -11,6 +11,7 @@ import CustomCursor from "@/components/animations/CustomCursor";
 import Intro from "@/components/animations/Intro";
 import LiquidBackground from "@/components/animations/LiquidBackground";
 import { routing } from "@/i18n/routing";
+import { SITE_URL, alternates, localePath } from "@/lib/seo";
 import "@/styles/globals.css";
 
 const display = Roboto_Slab({
@@ -39,7 +40,20 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
 
-  return { title: t("title"), description: t("description") };
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: t("title"), template: "%s — Dwi Studio" },
+    description: t("description"),
+    alternates: alternates(locale),
+    openGraph: {
+      type: "website",
+      siteName: "Dwi Studio",
+      title: t("title"),
+      description: t("description"),
+      locale: locale === "id" ? "id_ID" : "en_US",
+      url: localePath(locale),
+    },
+  };
 }
 
 export default async function LocaleLayout({

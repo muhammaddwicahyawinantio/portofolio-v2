@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { canRunHeavyEffects, renderScale } from "@/lib/webgl";
+import { canRunHeavyEffects } from "@/lib/webgl";
 
 const VERTEX = /* glsl */ `
   varying vec2 vUv;
@@ -89,7 +89,9 @@ export default function LiquidBackground() {
       if (disposed) return;
 
       const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
-      renderer.setPixelRatio(renderScale());
+      // Latar kabur: piksel ekstra tidak terlihat tapi biaya fill rate-nya
+      // nyata di layar besar. Dikunci 1.
+      renderer.setPixelRatio(1);
       host.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
