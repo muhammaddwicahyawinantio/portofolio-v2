@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, type ChangeEvent } from "react";
 import { saveRecord, type FormState } from "@/lib/admin/actions";
 import type { Field, Resource } from "@/lib/admin/resources";
 
@@ -30,6 +30,10 @@ function Control({ field, record }: { field: Field; record?: Record<string, unkn
     );
   }
 
+  if (field.type === "image") {
+    return <ImageControl field={field} record={record} />;
+  }
+
   if (field.type === "textarea" || field.type === "list") {
     return (
       <textarea
@@ -48,6 +52,54 @@ function Control({ field, record }: { field: Field; record?: Record<string, unkn
       defaultValue={defaultValue}
       className={INPUT}
     />
+  );
+}
+
+function ImageControl({ field, record }: { field: Field; record?: Record<string, unknown> | null }) {
+  const initial = typeof record?.[field.name] === "string" ? (record[field.name] as string) : "";
+  const [url, setUrl] = useState(initial);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+
+    const body = new FormData();
+    body.set("file", file);
+    const res = await fetch("/api/admin/upload", { method: "POST", body });
+    const data = (await res.json()) as { url?: string; error?: string };
+
+    setUploading(false);
+    if (!res.ok) {
+      setError(data.error ?? "Upload failed.");
+      return;
+    }
+    setUrl(data.url ?? "");
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <input type="hidden" name={field.name} value={url} readOnly />
+      {url ? (
+        // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase (local public/ URLs only)
+        <img src={url} alt="" className="border-graphite/60 h-32 w-32 border object-cover" />
+      ) : (
+        <div className="border-graphite/60 text-graphite flex h-32 w-32 items-center justify-center border border-dashed text-[10px] uppercase">
+          No image
+        </div>
+      )}
+      <input type="file" accept="image/*" onChange={onFileChange} className={INPUT} />
+      {uploading ? <p className="text-ash text-xs">Uploading…</p> : null}
+      {error ? (
+        <p role="alert" className="text-sm text-red-400">
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }
 
