@@ -34,7 +34,7 @@ export default async function ServiceGrid({
 
   return (
     <Reveal>
-      <div className="border-graphite/40 bg-graphite/40 grid gap-px border sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-col gap-6 md:gap-8">
         {services.map((service) => (
           <ServiceCard key={service.id} service={service} />
         ))}
