@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { gsap } from "@/lib/gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { INTRO_REPLAY_EVENT, replayIntro } from "@/lib/intro";
@@ -31,6 +32,7 @@ let hasPlayed = false;
  *   1.6  "DWI" meluncur keluar dari balik emblem, di balik mask
  *   2.2  garis pemisah memanjang (scaleY)
  *   2.7  "STUDIO" meluncur keluar di kanan garis
+ *   3.0  tagline (hero.line1-3) fade-up di bawah lockup
  *   3.8  seluruh lockup fade-out + micro scale-down
  *   4.3  tirai 3 panel membuka dari tengah, stagger 120ms
  *        halaman menyusul: zoom-out 1.1 -> 1.0, header, lalu Value Rail
@@ -42,6 +44,7 @@ let hasPlayed = false;
 export default function Intro() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [runId, setRunId] = useState(0);
+  const hero = useTranslations("hero");
 
   // Dibaca saat render supaya panel tidak sempat terlihat satu frame saat
   // berpindah halaman. Return-nya di bawah, setelah semua hook dipanggil.
@@ -133,6 +136,7 @@ export default function Intro() {
     const divider = q("[data-divider]");
     const dwi = q("[data-word='dwi'] > span");
     const studio = q("[data-word='studio'] > span");
+    const tagline = q("[data-tagline]");
     // Array, bukan NodeList: tiap panel butuh delay sendiri (0 / 0.1 / 0.2s),
     // jadi diindeks satu-satu alih-alih di-stagger seragam.
     const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
@@ -155,6 +159,7 @@ export default function Intro() {
     gsap.set(emblem, { autoAlpha: 0, scale: 0.4 });
     gsap.set([dwi, studio], { xPercent: -105, autoAlpha: 0 });
     gsap.set(divider, { scaleY: 0, autoAlpha: 0 });
+    gsap.set(tagline, { autoAlpha: 0, y: 8 });
     gsap.set(stage, { autoAlpha: 1, scale: 1 });
     gsap.set(panels, { scaleY: 1 });
 
@@ -188,6 +193,7 @@ export default function Intro() {
       .to(dwi, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: FLUID }, 0.6)
       .to(divider, { scaleY: 1, autoAlpha: 1, duration: 0.5, ease: FLUID }, 1.2)
       .to(studio, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: FLUID }, 1.7)
+      .to(tagline, { autoAlpha: 1, y: 0, duration: 0.6, ease: FLUID }, 2.0)
       // Panggung kembali ke tengah sepanjang teks tersingkap, jadi lockup
       // terasa tumbuh tanpa satu pun animasi properti layout.
       .to(stage, { x: 0, duration: 1.6, ease: FLUID }, 0.6)
@@ -275,6 +281,15 @@ export default function Intro() {
           <span className="block text-[13px] font-medium tracking-[0.35em] whitespace-nowrap text-white/90 uppercase opacity-0 will-change-transform">
             Studio
           </span>
+        </span>
+
+        {/* absolute + top-full: tidak ikut lebar stage, jadi centerOffset()
+            yang mengukur lockup logo+teks tidak terpengaruh baris ini. */}
+        <span
+          data-tagline
+          className="absolute top-full left-1/2 mt-4 -translate-x-1/2 text-[8px] font-semibold tracking-[0.5em] whitespace-nowrap text-white/40 uppercase opacity-0 will-change-transform"
+        >
+          {hero("line1")} {hero("line2")} {hero("line3")}
         </span>
       </div>
     </div>
