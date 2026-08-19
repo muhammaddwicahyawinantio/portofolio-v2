@@ -1,12 +1,14 @@
 import { randomUUID } from "node:crypto";
 
-export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
 const ALLOWED_TYPES: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
   "image/gif": "gif",
+  "video/mp4": "mp4",
+  "video/webm": "webm",
 };
 
 /**

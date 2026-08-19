@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return NextResponse.json({ error: "File too large (max 5MB)." }, { status: 400 });
+    return NextResponse.json({ error: "File too large (max 20MB)." }, { status: 400 });
   }
 
   const filename = randomUploadName(file.type);
