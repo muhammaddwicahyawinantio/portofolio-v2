@@ -55,7 +55,12 @@
   "projects": {
     "eyebrow": "Work",
     "title": "Selected work.",
-    "lead": "Case studies appear here as they are published."
+    "lead": "Case studies appear here as they are published.",
+    "role": "Role",
+    "year": "Year",
+    "client": "Client",
+    "visitSite": "Visit live site",
+    "back": "Back to projects"
   },
   "contact": {
     "eyebrow": "Contact",

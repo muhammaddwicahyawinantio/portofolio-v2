@@ -55,7 +55,12 @@
   "projects": {
     "eyebrow": "Karya",
     "title": "Karya terpilih.",
-    "lead": "Studi kasus muncul di sini begitu diterbitkan."
+    "lead": "Studi kasus muncul di sini begitu diterbitkan.",
+    "role": "Peran",
+    "year": "Tahun",
+    "client": "Klien",
+    "visitSite": "Kunjungi situs",
+    "back": "Kembali ke proyek"
   },
   "contact": {
     "eyebrow": "Kontak",
