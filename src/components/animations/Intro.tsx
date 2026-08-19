@@ -118,8 +118,17 @@ export default function Intro() {
 
     // Reset eksplisit ke keadaan awal. Wajib untuk replay: setelah satu putaran
     // semua elemen tertinggal di keadaan akhir, jadi tween berikutnya tidak
-    // punya jarak untuk bergerak. Kelas Tailwind tetap dipakai sebagai keadaan
-    // awal SSR supaya tidak ada kedipan sebelum efek jalan.
+    // punya jarak untuk bergerak.
+    //
+    // JSX sengaja TIDAK memakai kelas Tailwind translate-x-[...]/scale-[...]/
+    // scale-y-0 pada elemen yang di-tween GSAP. Tailwind v4 menulis translate
+    // dan scale ke properti CSS `translate`/`scale` yang terpisah dari
+    // `transform`, sementara xPercent/scale/scaleY GSAP menulis ke `transform`.
+    // Keduanya menumpuk (CSS translate + transform, bukan saling menggantikan),
+    // jadi elemen akan tertahan di posisi tersembunyi selamanya walau GSAP
+    // sudah selesai animasi ke 0 — persis bug "teks DWI STUDIO tidak terlihat".
+    // opacity-0 tetap dipakai sebagai fallback SSR karena opacity satu
+    // properti tunggal; GSAP autoAlpha menimpanya langsung, tidak menumpuk.
     root.style.display = "";
     gsap.set(spinner, { autoAlpha: 1, scale: 1 });
     gsap.set(emblem, { autoAlpha: 0, scale: 0.4 });
@@ -216,24 +225,24 @@ export default function Intro() {
 
           {/* Emblem yang sama dengan yang dipakai header, jadi intro menyerah
               terima ke lockup identik, bukan memotong ke logo lain. */}
-          <span data-emblem className="scale-[0.4] opacity-0 will-change-transform">
+          <span data-emblem className="opacity-0 will-change-transform">
             <Emblem className="h-8 w-8" />
           </span>
         </span>
 
         <span data-word="dwi" className="ml-3.5 overflow-hidden">
-          <span className="block translate-x-[-105%] text-[13px] font-semibold tracking-[0.35em] whitespace-nowrap text-white uppercase opacity-0 will-change-transform">
+          <span className="block text-[13px] font-semibold tracking-[0.35em] whitespace-nowrap text-white uppercase opacity-0 will-change-transform">
             Dwi
           </span>
         </span>
 
         <span
           data-divider
-          className="mx-4 h-4 w-px origin-center scale-y-0 bg-white/40 opacity-0 will-change-transform"
+          className="mx-4 h-4 w-px origin-center bg-white/40 opacity-0 will-change-transform"
         />
 
         <span data-word="studio" className="overflow-hidden">
-          <span className="block translate-x-[-105%] text-[13px] font-medium tracking-[0.35em] whitespace-nowrap text-white/90 uppercase opacity-0 will-change-transform">
+          <span className="block text-[13px] font-medium tracking-[0.35em] whitespace-nowrap text-white/90 uppercase opacity-0 will-change-transform">
             Studio
           </span>
         </span>
