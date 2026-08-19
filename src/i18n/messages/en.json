@@ -6,6 +6,7 @@
   "nav": {
     "about": "About",
     "projects": "Projects",
+    "services": "Services",
     "contact": "Contact",
     "getInTouch": "Get in touch"
   },
@@ -60,6 +61,13 @@
     "eyebrow": "Contact",
     "title": "Start a project.",
     "lead": "Tell me what you are making and when you need it."
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Packages & pricing.",
+    "lead": "Five ways to work together, from a wedding invitation to a fully custom system.",
+    "priceFrom": "Starting from",
+    "inquire": "Start a project"
   },
   "contactForm": {
     "name": "Name",

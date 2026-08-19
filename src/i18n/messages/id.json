@@ -6,6 +6,7 @@
   "nav": {
     "about": "Tentang",
     "projects": "Proyek",
+    "services": "Layanan",
     "contact": "Kontak",
     "getInTouch": "Hubungi saya"
   },
@@ -60,6 +61,13 @@
     "eyebrow": "Kontak",
     "title": "Mulai proyek.",
     "lead": "Ceritakan apa yang mau kamu buat dan kapan kamu butuh."
+  },
+  "services": {
+    "eyebrow": "Layanan",
+    "title": "Paket & harga.",
+    "lead": "Lima cara bekerja sama, mulai dari undangan pernikahan sampai sistem custom.",
+    "priceFrom": "Mulai dari",
+    "inquire": "Mulai proyek"
   },
   "contactForm": {
     "name": "Nama",
