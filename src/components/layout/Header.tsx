@@ -1,60 +1,71 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import clsx from "clsx";
 import { Link } from "@/i18n/navigation";
-import Container from "@/components/ui/Container";
 import LocaleSwitch from "@/components/layout/LocaleSwitch";
-import MorphMenu from "@/components/animations/MorphMenu";
-import Emblem from "@/components/ui/Emblem";
+import { NAV } from "@/lib/nav";
 
+/**
+ * Melayang tanpa background maupun border — tidak ada state scroll, tidak ada
+ * backdrop-blur. Wordmark di kiri, navigasi di tengah, dan seluruh tautan
+ * terlihat di semua ukuran layar (tidak ada hamburger).
+ */
 export default function Header() {
   const t = useTranslations("nav");
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    // Lenis menggerakkan scroll window sungguhan, jadi scrollY tetap akurat
-    // dan event scroll native tetap terpancar.
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
-    <header
-      className={clsx(
-        "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 md:pl-[var(--spacing-rail)]",
-        scrolled
-          ? "border-graphite/60 bg-ink/55 backdrop-blur-xl"
-          : "border-transparent bg-transparent",
-      )}
-    >
-      <Container className="flex h-16 items-center justify-between md:h-20">
-        {/* Lockup yang sama persis dengan penutup intro — emblem, lalu wordmark
-            bertracking lebar. Intro tidak memotong ke logo berbeda; ia menyerah
-            terima ke elemen yang sama. */}
-        <Link href="/" className="relative z-50 flex items-center gap-3">
-          <Emblem className="h-6 w-6" />
-          <span className="text-[11px] font-semibold tracking-[0.25em] uppercase md:text-xs">
-            Dwi Studio
-          </span>
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <div className="mx-auto flex w-full max-w-[92rem] flex-col items-center gap-3 px-6 py-5 md:flex-row md:justify-between md:gap-6 md:px-12 md:py-7 lg:px-20">
+        <Link
+          href="/"
+          className="pointer-events-auto text-[11px] font-semibold tracking-[0.3em] whitespace-nowrap uppercase md:text-xs"
+        >
+          Dwi Studio
         </Link>
 
-        <div className="relative z-50 flex items-center gap-5 md:gap-6">
-          <LocaleSwitch />
-          {/* Pil kontak seperti referensi. Disembunyikan di layar tersempit
-              supaya emblem, bahasa, dan tombol menu tidak berdesakan. */}
-          <Link
-            href="/contact"
-            className="hover:bg-paper hover:text-ink hidden rounded-full border border-white/40 bg-white/[0.03] px-5 py-2.5 text-[10px] font-semibold tracking-[0.2em] uppercase backdrop-blur-sm transition-colors hover:border-white sm:inline-block"
-          >
-            {t("getInTouch")}
-          </Link>
-          <MorphMenu />
-        </div>
-      </Container>
+        {/* Di desktop benar-benar di tengah viewport, bukan sekadar di tengah
+            sisa ruang: absolute + translate membuat posisinya tidak bergeser
+            saat lebar wordmark berubah karena bahasa. */}
+        <nav className="pointer-events-auto md:absolute md:left-1/2 md:-translate-x-1/2">
+          <ul className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1 sm:gap-x-2">
+            <li>
+              <LocaleSwitch />
+            </li>
+            {NAV.map((item) => (
+              <li key={item.key}>
+                <NavLink href={item.href}>{t(item.key)}</NavLink>
+              </li>
+            ))}
+            <li>
+              <NavLink href="/contact">{t("getInTouch")}</NavLink>
+            </li>
+          </ul>
+        </nav>
+
+        {/* Penyeimbang lebar wordmark supaya nav yang absolute tidak pernah
+            bertabrakan dengannya di layar sedang. */}
+        <span aria-hidden className="hidden text-[11px] tracking-[0.3em] uppercase md:invisible md:block md:text-xs">
+          Dwi Studio
+        </span>
+      </div>
     </header>
+  );
+}
+
+/**
+ * Fill on hover: blok solid menyapu naik dari dasar (scale-y-0 -> 100 dengan
+ * origin-bottom) dan teks membalik jadi gelap. Blok di belakang teks lewat
+ * -z-10 pada elemen absolute, jadi tidak perlu mengubah urutan DOM.
+ */
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="group hover:text-ink relative isolate inline-block px-2.5 py-1.5 text-[10px] font-semibold tracking-[0.2em] whitespace-nowrap uppercase transition-colors duration-300 md:px-3 md:text-[11px]"
+    >
+      <span
+        aria-hidden
+        className="bg-paper absolute inset-0 -z-10 origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100"
+      />
+      {children}
+    </Link>
   );
 }

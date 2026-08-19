@@ -11,9 +11,6 @@
 
   --font-display: var(--font-display-family), Georgia, serif;
   --font-body: var(--font-body-family), system-ui, sans-serif;
-
-  /* Lebar Value Rail — dipakai sebagai w-rail dan pl-rail. */
-  --spacing-rail: 1.75rem;
 }
 
 @layer base {
@@ -54,12 +51,6 @@
       scroll-behavior: auto !important;
     }
   }
-}
-
-/* Label rail dibaca bawah-ke-atas: vertical-rl + rotate-180. */
-@utility text-vertical {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
 }
 
 /* Kursor native hanya disembunyikan setelah kursor custom aktif (class dipasang

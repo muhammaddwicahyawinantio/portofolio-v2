@@ -16,17 +16,52 @@ async function main() {
     },
   });
 
+  await prisma.project.deleteMany({});
   await prisma.project.createMany({
-    skipDuplicates: true,
-    data: Array.from({ length: 6 }, (_, i) => ({
-      title: `Project ${String(i + 1).padStart(2, "0")}`,
-      slug: `project-${i + 1}`,
-      description_en: `A monochrome study in form and motion — case study ${i + 1}.`,
-      description_id: `Studi monokrom tentang bentuk dan gerak — studi kasus ${i + 1}.`,
-      images: [`/images/placeholder-${(i % 3) + 1}.jpg`],
-      category: CATEGORIES[i % CATEGORIES.length]!,
-      order: i,
-    })),
+    data: [
+      {
+        title_en: "Mosh Madness (Brand Clothing)",
+        title_id: "Mosh Madness (Brand Clothing)",
+        slug: "mosh-madness",
+        description_en:
+          "Mosh Madness\n\nWhere dark cinematic art meets premium streetwear. High-fidelity clothing engineered with raw expression, featuring exclusive artwork by Ilham.\n\nTech Stack\nFrontend: Next.js (React) & Tailwind CSS v4\nMotion & Animation: GSAP & Lenis Smooth Scroll\nBackend & Database: Prisma ORM & MySQL",
+        description_id:
+          "Mosh Madness\n\nTempat seni dark cinematic menyatu dengan streetwear premium. Pakaian berkualitas tinggi yang dirancang dengan ekspresi murni, menampilkan karya seni eksklusif oleh Ilham.\n\nTech Stack\nFrontend: Next.js (React) & Tailwind CSS v4\nMotion & Animation: GSAP & Lenis Smooth Scroll\nBackend & Database: Prisma ORM & MySQL",
+        caseStudy_en:
+          "Mosh Madness — Brand Website & Admin CMS\n\nMosh Madness is a dark-artistic streetwear brand based in Banjarmasin, Indonesia, established on May 16, 2024. As the sole developer on this project, I handled everything end-to-end — design research, system architecture, and deployment — as a full-stack solo build.\n\nChallenge: The brand needed more than a simple storefront. The owner wanted full control over the site's content — products, hero imagery, sponsor logos, section copy, and media assets — through a custom admin panel, with zero need to touch code. The other challenge was delivering an aggressive, grunge-editorial visual identity that felt distinctive rather than templated, while staying performant across devices.\n\nSolution & Stack: Built on Next.js (App Router) with strict TypeScript for a safe, scalable foundation, paired with Tailwind CSS and Framer Motion for a custom design and animation system, and Lenis for premium smooth scrolling. All product and content data is fully database-driven through MySQL and Prisma (running in engine-free mode), with NextAuth v5 handling admin authentication. Asset storage runs on local project storage backed by a Railway Volume — a leaner, self-contained alternative to third-party CDN services. The whole stack is containerized with Docker and deployed on Railway.\n\nVisual Identity: A dark color palette with a crimson accent (#b60025), a radius-0 brutalist grid, and a layered typography system — Death Stinger for display type, Bebas Neue for headlines, Hanken Grotesk for body copy, and JetBrains Mono for technical/data elements — creating a tone that's intense, exclusive, and still highly functional.\n\nKey Features: A full CMS with CRUD for products, hero content, sponsors, section text, contact messages, and a media library; a cinematic About section with scroll-triggered video transitions and typewriter text; and a fully database-driven product catalog with no hardcoded content.",
+        caseStudy_id:
+          "Mosh Madness — Website Brand & Admin CMS\n\nMosh Madness adalah brand streetwear dark-artistic asal Banjarmasin yang berdiri 16 Mei 2024. Sebagai satu-satunya developer di proyek ini, aku menangani seluruh proses dari riset desain, arsitektur sistem, hingga deployment — full-stack, solo.\n\nTantangan: Brand ini butuh lebih dari sekadar storefront. Owner ingin platform yang bisa dia kelola sendiri tanpa sentuh kode — mulai dari produk, hero section, logo sponsor, teks tiap bagian halaman, sampai media library — semuanya lewat panel admin custom. Tantangan lain adalah menghadirkan identitas visual yang agresif dan \"grunge-editorial\" tanpa terasa generik atau templated, sekaligus tetap ringan dan performa terjaga di semua device.\n\nSolusi & Stack: Dibangun dengan Next.js (App Router) dan TypeScript strict mode untuk fondasi yang aman dan scalable, Tailwind CSS dan Framer Motion untuk sistem desain serta animasi custom, dan Lenis untuk smooth scroll premium. Data produk dan konten sepenuhnya database-driven lewat MySQL + Prisma (mode engine-free), dengan NextAuth v5 untuk autentikasi admin. Untuk penyimpanan aset, sistem menggunakan local storage berbasis Railway Volume — pendekatan yang lebih sederhana dan mandiri dibanding layanan CDN pihak ketiga. Seluruh aplikasi di-containerize dengan Docker dan di-deploy ke Railway.\n\nIdentitas Visual: Palet warna gelap dengan aksen crimson (#b60025), grid brutalist tanpa radius, dan sistem tipografi berlapis — Death Stinger untuk display, Bebas Neue untuk headline, Hanken Grotesk untuk body copy, dan JetBrains Mono untuk elemen data/teknikal — menghasilkan tone yang intens, eksklusif, dan tetap fungsional.\n\nFitur Utama: CMS penuh dengan CRUD untuk produk, hero, sponsor, teks section, pesan kontak, dan media library; section \"About\" sinematik dengan transisi video dan teks typewriter yang di-trigger scroll; serta katalog produk yang seluruhnya dikelola dari database, bukan hardcode.",
+        category: "Web Design",
+        role: "Full Stack Developer",
+        year: "2026",
+        client: "Muhammad Ilham",
+        link: "https://moshmadness-production.up.railway.app/",
+        coverImage: "/images/placeholder-1.jpg",
+        images: ["/images/placeholder-1.jpg", "/images/placeholder-2.jpg"],
+        featured: true,
+        archived: false,
+        order: 0,
+      },
+      ...Array.from({ length: 5 }, (_, i) => ({
+        title_en: `Project ${String(i + 1).padStart(2, "0")}`,
+        title_id: `Proyek ${String(i + 1).padStart(2, "0")}`,
+        slug: `project-${i + 1}`,
+        description_en: `A monochrome study in form and motion — case study ${i + 1}.`,
+        description_id: `Studi monokrom tentang bentuk dan gerak — studi kasus ${i + 1}.`,
+        caseStudy_en: "Full case study coming soon.",
+        caseStudy_id: "Studi kasus lengkap segera hadir.",
+        category: CATEGORIES[i % CATEGORIES.length]!,
+        role: "Full Stack Developer",
+        year: "2026",
+        client: null,
+        link: null,
+        coverImage: null,
+        images: [`/images/placeholder-${(i % 3) + 1}.jpg`],
+        featured: false,
+        archived: false,
+        order: i + 1,
+      })),
+    ],
   });
 
   await prisma.website.createMany({

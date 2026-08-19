@@ -5,11 +5,9 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { Roboto_Slab, Open_Sans } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import ValueRail from "@/components/layout/ValueRail";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import CustomCursor from "@/components/animations/CustomCursor";
 import Intro from "@/components/animations/Intro";
-import LiquidBackground from "@/components/animations/LiquidBackground";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, alternates, localePath } from "@/lib/seo";
 import "@/styles/globals.css";
@@ -74,16 +72,15 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${display.variable} ${body.variable}`}>
       <body className="bg-ink text-paper font-body">
         <NextIntlClientProvider messages={messages}>
-          <LiquidBackground />
-          <Intro />
-          <ValueRail />
           <CustomCursor />
+          {/* Intro wajib di dalam SmoothScroll: ia memanggil useLenis() untuk
+              menghentikan smooth-scroll selama tirai masih tertutup, dan hook
+              itu hanya mengembalikan instance di dalam context ReactLenis. */}
           <SmoothScroll>
-            <div className="md:pl-[var(--spacing-rail)]">
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </div>
+            <Intro />
+            <Header />
+            <main>{children}</main>
+            <Footer />
           </SmoothScroll>
         </NextIntlClientProvider>
       </body>

@@ -12,12 +12,22 @@ datasource db {
 
 model Project {
   id             String   @id @default(cuid())
-  title          String
+  title_en       String
+  title_id       String
   slug           String   @unique
   description_en String   @db.Text
   description_id String   @db.Text
-  images         Json // array of URL string
+  caseStudy_en   String   @db.Text
+  caseStudy_id   String   @db.Text
   category       String
+  role           String
+  year           String
+  client         String?
+  link           String?
+  coverImage     String?
+  images         Json // array of image/video URL strings; type inferred by extension
+  featured       Boolean  @default(false)
+  archived       Boolean  @default(false)
   order          Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useLenis } from "lenis/react";
 import { gsap } from "@/lib/gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { INTRO_REPLAY_EVENT, replayIntro } from "@/lib/intro";
@@ -44,11 +45,26 @@ let hasPlayed = false;
 export default function Intro() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [runId, setRunId] = useState(0);
+  const [playing, setPlaying] = useState(false);
   const hero = useTranslations("hero");
+  const lenis = useLenis();
 
   // Dibaca saat render supaya panel tidak sempat terlihat satu frame saat
   // berpindah halaman. Return-nya di bawah, setelah semua hook dipanggil.
   const skip = hasPlayed;
+
+  /**
+   * Kunci scroll lapis kedua. overflow:hidden saja tidak cukup: Lenis membaca
+   * wheel/touch sendiri dan menggerakkan scroll secara programatik, jadi tanpa
+   * stop() halaman masih bisa digulir di balik tirai yang belum membuka.
+   * Efek terpisah karena instance Lenis bisa datang setelah timeline dimulai —
+   * memasukkannya ke dependency timeline akan mengulang intro dari awal.
+   */
+  useEffect(() => {
+    if (!playing || !lenis) return;
+    lenis.stop();
+    return () => lenis.start();
+  }, [playing, lenis]);
 
   useEffect(() => {
     const onReplay = () => {
@@ -72,10 +88,8 @@ export default function Intro() {
 
     const main = document.querySelector("main");
     const header = document.querySelector("header");
-    const rails = Array.from(document.querySelectorAll("[data-rail]"));
-    // heroBg = host canvas LiquidBackground, berperan sebagai "foto latar
-    // belakang" di spesifikasi. headline = judul halaman yang sedang aktif,
-    // apa pun rute yang pertama kali dibuka pengunjung.
+    // heroBg = pembungkus foto hero. headline = judul halaman yang sedang
+    // aktif, apa pun rute yang pertama kali dibuka pengunjung.
     const heroBg = document.querySelector<HTMLElement>("[data-hero-bg]");
     const headline = document.querySelector<HTMLElement>("[data-headline]");
     // headline SENGAJA tidak masuk sini, dibersihkan terpisah di bawah lewat
@@ -88,7 +102,7 @@ export default function Intro() {
     // kanvasnya, dobel teks. Aturannya tetap dipertahankan: elemen manapun
     // yang inline style-nya juga dikelola sistem lain di luar Intro tidak
     // boleh kena clearProps:"all" yang menyapu semuanya.
-    const revealTargets = [main, header, heroBg, ...rails].filter(Boolean) as Element[];
+    const revealTargets = [main, header, heroBg].filter(Boolean) as Element[];
 
     const tl = gsap.timeline({ paused: true });
 
@@ -107,6 +121,8 @@ export default function Intro() {
       tl.kill();
       root.style.display = "none";
       document.documentElement.style.overflow = "";
+      // Melepas kunci Lenis lewat efek pendamping di atas.
+      setPlaying(false);
       // Wajib: kalau failsafe menyela di tengah, elemen-elemen ini bisa
       // tertinggal pada opacity 0 dan seluruh halaman jadi tak terlihat.
       if (revealTargets.length) gsap.set(revealTargets, { clearProps: "all" });
@@ -126,6 +142,7 @@ export default function Intro() {
 
     hasPlayed = true;
     document.documentElement.style.overflow = "hidden";
+    setPlaying(true);
     window.scrollTo(0, 0);
 
     const q = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel);
@@ -167,7 +184,6 @@ export default function Intro() {
     // di-scale sekaligus: background zoom, navbar slide, headline slide.
     gsap.set(main, { autoAlpha: 0 });
     gsap.set(header, { autoAlpha: 0, y: -15 });
-    gsap.set(rails, { autoAlpha: 0 });
     if (heroBg) gsap.set(heroBg, { scale: 1.18 });
     if (headline) gsap.set(headline, { y: 30 });
 
@@ -209,8 +225,7 @@ export default function Intro() {
       .to(heroBg, { scale: 1, duration: 2.2, ease: FLUID }, 3.3)
       .to(header, { autoAlpha: 1, y: 0, duration: 1, ease: FLUID }, 3.7)
       .to(headline, { y: 0, duration: 1, ease: FLUID }, 3.8)
-      .to(main, { autoAlpha: 1, duration: 1.2, ease: FLUID }, 3.9)
-      .to(rails, { autoAlpha: 1, duration: 1, ease: FLUID }, 4.1);
+      .to(main, { autoAlpha: 1, duration: 1.2, ease: FLUID }, 3.9);
 
     // Ring berputar sampai font benar-benar siap: menyingkap wordmark sebelum
     // font termuat akan terlihat berganti bentuk, dan offset tengahnya meleset.
@@ -242,11 +257,16 @@ export default function Intro() {
           tengah: kolom 1 & 3 origin-top (ditarik ke atas), kolom 2 origin-bottom
           (ditarik ke bawah) — origin diatur lewat transform-origin CSS biasa,
           properti yang tidak disentuh xPercent/scale GSAP, jadi aman digabung.
-          Jahitan hairline wajib: panel hitam yang membuka di atas halaman yang
-          juga hitam tidak akan terlihat tanpa garis pemisah yang ikut menyusut. */}
-      <div className="absolute inset-0 flex divide-x divide-white/10">
+          Tanpa garis jahitan: sekarang yang tersingkap adalah foto hero, bukan
+          halaman hitam, jadi tepi tiap panel sudah terbaca dari kontrasnya
+          sendiri. -mx-px pada panel tengah menutup celah sub-pixel yang bisa
+          muncul saat lebar viewport ganjil. */}
+      <div className="absolute inset-0 flex">
         <span data-panel className="h-full flex-1 origin-top bg-black will-change-transform" />
-        <span data-panel className="h-full flex-1 origin-bottom bg-black will-change-transform" />
+        <span
+          data-panel
+          className="-mx-px h-full flex-1 origin-bottom bg-black will-change-transform"
+        />
         <span data-panel className="h-full flex-1 origin-top bg-black will-change-transform" />
       </div>
 

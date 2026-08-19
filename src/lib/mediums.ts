@@ -1,7 +1,7 @@
 /**
  * Lima medium studio, dipetakan ke satu tangga nilai monokrom (gelap -> terang).
- * Dipakai bersama oleh ValueRail (rail kiri) dan Medium Index di home,
- * supaya urutan tonal di rail selalu sama dengan urutan di konten.
+ * Dipakai Medium Index di home; `label` menyimpan warna teks yang kontras di
+ * atas `tone` masing-masing.
  */
 export const MEDIUMS = [
   { key: "web", tone: "bg-ink-raised", label: "text-silver" },
