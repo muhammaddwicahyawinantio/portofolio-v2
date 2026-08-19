@@ -1,4 +1,13 @@
-export type FieldType = "text" | "textarea" | "number" | "url" | "list" | "select" | "image";
+export type FieldType =
+  | "text"
+  | "textarea"
+  | "number"
+  | "url"
+  | "list"
+  | "select"
+  | "image"
+  | "boolean"
+  | "gallery";
 
 export type Field = {
   name: string;
@@ -32,14 +41,22 @@ export const RESOURCES: Resource[] = [
     label: "Projects",
     group: "content",
     fields: [
-      { name: "title", label: "Title", type: "text", required: true },
+      ...bilingual("title", "Title", "text"),
       { name: "slug", label: "Slug", type: "text", required: true },
       ...bilingual("description", "Description"),
-      { name: "images", label: "Images (one URL per line)", type: "list" },
+      ...bilingual("caseStudy", "Case Study Details"),
       { name: "category", label: "Category", type: "text", required: true },
+      { name: "role", label: "Role", type: "text", required: true },
+      { name: "year", label: "Year", type: "text", required: true },
+      { name: "client", label: "Client", type: "text" },
+      { name: "link", label: "Link", type: "url" },
+      { name: "coverImage", label: "Cover Image (Image/Video)", type: "image" },
+      { name: "images", label: "Project Media (Images/Videos)", type: "gallery" },
+      { name: "featured", label: "Feature on Homepage", type: "boolean" },
+      { name: "archived", label: "Archive Project", type: "boolean" },
       orderField,
     ],
-    columns: ["title", "category", "order"],
+    columns: ["title_en", "category", "featured", "order"],
     orderBy: { order: "asc" },
   },
   {
@@ -215,6 +232,27 @@ export function parseFields(resource: Resource, form: FormData): Record<string, 
     if (field.type === "number") {
       const n = Number(value);
       data[field.name] = Number.isFinite(n) ? Math.trunc(n) : 0;
+      continue;
+    }
+
+    if (field.type === "boolean") {
+      // Checkbox native: hadir di FormData ("on") kalau tercentang, absen kalau tidak.
+      data[field.name] = form.get(field.name) === "on";
+      continue;
+    }
+
+    if (field.type === "gallery") {
+      // Nilai datang sebagai JSON array (lihat GalleryControl), bukan baris per URL.
+      let items: string[] = [];
+      try {
+        const parsed = JSON.parse(value || "[]");
+        if (Array.isArray(parsed)) {
+          items = parsed.filter((v): v is string => typeof v === "string");
+        }
+      } catch {
+        items = [];
+      }
+      data[field.name] = items;
       continue;
     }
 

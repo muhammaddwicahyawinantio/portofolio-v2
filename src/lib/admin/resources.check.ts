@@ -18,24 +18,27 @@ function form(entries: Record<string, string>) {
 }
 
 const valid = {
-  title: "  Judul  ",
+  title_en: "  Title  ",
+  title_id: "  Judul  ",
   slug: "judul",
   description_en: "EN copy",
   description_id: "Teks ID",
-  images: " /a.jpg \n\n /b.jpg \n",
+  caseStudy_en: "EN case study",
+  caseStudy_id: "Studi kasus ID",
   category: "Web Design",
+  role: "Full Stack Developer",
+  year: "2026",
+  client: "",
+  link: "",
+  coverImage: "",
+  images: " /a.jpg \n\n /b.jpg \n",
   order: "7",
 };
 
 // 1. Nilai dipangkas dan tipenya dipaksa benar.
 const parsed = parseFields(projects, form(valid));
-assert.equal(parsed.title, "Judul", "spasi di tepi harus dibuang");
+assert.equal(parsed.title_en, "Title", "spasi di tepi harus dibuang");
 assert.equal(parsed.order, 7, "order harus jadi number");
-assert.deepEqual(
-  parsed.images,
-  ["/a.jpg", "/b.jpg"],
-  "list dipisah per baris, baris kosong dibuang",
-);
 
 // 2. Field yang tidak dideklarasikan resource tidak boleh lolos.
 const injected = parseFields(projects, form({ ...valid, passwordHash: "x", id: "spoofed" }));
@@ -44,8 +47,8 @@ assert.ok(!("id" in injected), "id tidak boleh bisa ditimpa lewat form");
 
 // 3. Field wajib yang kosong ditolak, bukan disimpan sebagai string kosong.
 assert.throws(
-  () => parseFields(projects, form({ ...valid, title: "   " })),
-  /Title is required/,
+  () => parseFields(projects, form({ ...valid, title_en: "   " })),
+  /Title \(EN\) is required/,
   "field wajib yang kosong harus melempar",
 );
 
@@ -113,4 +116,29 @@ assert.equal(parsedService.image, null, "image kosong harus null, bukan string k
 const withImage = parseFields(services, form({ ...serviceForm, image: "/uploads/a.jpg" }));
 assert.equal(withImage.image, "/uploads/a.jpg", "image terisi disimpan apa adanya");
 
-console.log("parseFields: 7 cek lolos");
+// 8. Boolean: checkbox hadir di FormData -> true, absen -> false (semantik native checkbox).
+function formWithCheckbox(entries: Record<string, string>, checked: boolean) {
+  const data = form(entries);
+  if (checked) data.set("featured", "on");
+  return data;
+}
+const checkedParsed = parseFields(projects, formWithCheckbox(valid, true));
+assert.equal(checkedParsed.featured, true, "checkbox tercentang harus jadi true");
+const uncheckedParsed = parseFields(projects, formWithCheckbox(valid, false));
+assert.equal(uncheckedParsed.featured, false, "checkbox absen dari FormData harus jadi false");
+
+// 9. Gallery: JSON array di hidden input diteruskan sebagai string[]; input rusak jadi [].
+const galleryForm = form({ ...valid, images: JSON.stringify(["/a.jpg", "/b.mp4"]) });
+assert.deepEqual(
+  parseFields(projects, galleryForm).images,
+  ["/a.jpg", "/b.mp4"],
+  "gallery mem-parse JSON array, bukan split baris",
+);
+const brokenGalleryForm = form({ ...valid, images: "not json" });
+assert.deepEqual(
+  parseFields(projects, brokenGalleryForm).images,
+  [],
+  "JSON rusak di gallery harus jatuh ke array kosong, bukan melempar",
+);
+
+console.log("parseFields: 9 cek lolos");
