@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { INTRO_REPLAY_EVENT, replayIntro } from "@/lib/intro";
+import Emblem from "@/components/ui/Emblem";
 
 gsap.registerPlugin(CustomEase);
 
@@ -145,8 +146,11 @@ export default function Intro() {
 
     gsap.set(stage, { x: centerOffset });
 
-    tl.to(spinner, { autoAlpha: 0, scale: 0.4, duration: 0.45, ease: FLUID }, 0)
-      .to(emblem, { autoAlpha: 1, scale: 1, duration: 0.55, ease: FLUID }, 0.05)
+    // Posisi dan durasi disamakan persis dengan referensi. Angkanya dikurangi
+    // 1 detik dari waktu absolut referensi, karena detik pertama sudah dipakai
+    // gerbang "ring berputar sampai font siap".
+    tl.to(spinner, { autoAlpha: 0, scale: 0.4, duration: 0.4, ease: FLUID }, 0)
+      .to(emblem, { autoAlpha: 1, scale: 1, duration: 0.5, ease: FLUID }, 0)
       .to(dwi, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: FLUID }, 0.6)
       .to(divider, { scaleY: 1, autoAlpha: 1, duration: 0.5, ease: FLUID }, 1.2)
       .to(studio, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: FLUID }, 1.7)
@@ -155,9 +159,12 @@ export default function Intro() {
       .to(stage, { x: 0, duration: 1.6, ease: FLUID }, 0.6)
       .to(stage, { autoAlpha: 0, scale: 0.96, duration: 0.8, ease: FLUID }, 2.8)
       .to(panels, { scaleY: 0, duration: 1.2, stagger: 0.12, ease: SHUTTER }, 3.3)
+      // Zoom-out halaman berjalan 2,2 detik dan mulai bersamaan tirai — jauh
+      // lebih panjang dari fade isinya, itu yang bikin terasa sinematik.
+      .to(main, { scale: 1, duration: 2.2, ease: FLUID }, 3.3)
       .to(header, { autoAlpha: 1, y: 0, duration: 1, ease: FLUID }, 3.7)
-      .to(main, { autoAlpha: 1, scale: 1, duration: 1.6, ease: FLUID }, 3.7)
-      .to(rails, { autoAlpha: 1, duration: 1, ease: FLUID }, 4.2);
+      .to(main, { autoAlpha: 1, duration: 1.2, ease: FLUID }, 3.9)
+      .to(rails, { autoAlpha: 1, duration: 1, ease: FLUID }, 4.1);
 
     // Ring berputar sampai font benar-benar siap: menyingkap wordmark sebelum
     // font termuat akan terlihat berganti bentuk, dan offset tengahnya meleset.
@@ -207,17 +214,10 @@ export default function Intro() {
             <span className="intro-ring block h-7 w-7 rounded-full border-2 border-white/15 border-t-white" />
           </span>
 
-          <span
-            data-emblem
-            className="flex h-8 w-8 scale-[0.4] items-center justify-center rounded-full bg-white opacity-0 will-change-transform"
-          >
-            {/* Tiga batang menaik: gema dari tiga panel tirai dan tangga nilai
-                situs. Geometris murni supaya tetap tajam di 18px. */}
-            <svg viewBox="0 0 18 18" className="h-[18px] w-[18px]" fill="#000000" aria-hidden>
-              <rect x="3" y="9" width="3" height="6" rx="0.5" />
-              <rect x="7.5" y="6" width="3" height="9" rx="0.5" />
-              <rect x="12" y="3" width="3" height="12" rx="0.5" />
-            </svg>
+          {/* Emblem yang sama dengan yang dipakai header, jadi intro menyerah
+              terima ke lockup identik, bukan memotong ke logo lain. */}
+          <span data-emblem className="scale-[0.4] opacity-0 will-change-transform">
+            <Emblem className="h-8 w-8" />
           </span>
         </span>
 

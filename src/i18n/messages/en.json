@@ -6,7 +6,8 @@
   "nav": {
     "about": "About",
     "projects": "Projects",
-    "contact": "Contact"
+    "contact": "Contact",
+    "getInTouch": "Get in touch"
   },
   "menu": {
     "open": "Open menu",
@@ -21,7 +22,9 @@
     "line1": "One studio.",
     "line2": "Five",
     "line3": "mediums.",
-    "lead": "Web, motion, 3D, sound, and film — designed and built by one hand."
+    "lead": "Web, motion, 3D, sound, and film — designed and built by one hand.",
+    "scroll": "Scroll down",
+    "scrollHint": "To begin the story"
   },
   "mediums": {
     "web": "Web",

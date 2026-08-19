@@ -18,35 +18,60 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const mediums = useTranslations("mediums");
   const index = useTranslations("index");
   const cta = useTranslations("cta");
+  const footer = useTranslations("footer");
 
   return (
     <>
-      {/* Hero sticky: tetap di tempat sementara section berikutnya menutupinya.
-          Overlap-nya murni CSS position:sticky — GSAP hanya untuk parallax. */}
-      <section className="sticky top-0 flex h-screen flex-col justify-end overflow-hidden pt-32 pb-20 md:pb-28">
+      {/* Hero satu layar penuh dengan tiga baris: kosong di atas, judul di
+          tengah, penunjuk gulir di bawah — justify-between yang menempatkannya,
+          bukan angka margin. Tetap sticky supaya section berikutnya menutupinya. */}
+      <section className="sticky top-0 flex h-screen flex-col justify-between overflow-hidden pt-24 pb-8 md:pt-28 md:pb-10">
+        <div aria-hidden />
+
         {/* Meredup saat lapisan berikutnya menutupinya. Tanpa ini, potongan
             sticky terbaca sebagai teks terpotong, bukan lapisan di belakang. */}
         <ScrollScrub to={{ opacity: 0.16, scale: 0.97 }} start="clamp(top top)">
-          <Container>
-            {/* Judul dan lead parallax beda kecepatan; selisihnya yang bikin kedalaman. */}
+          <Container className="text-center">
             <ScrollScrub to={{ yPercent: 6 }}>
               {/* Judulnya tetap <h1> asli di DOM; KineticText hanya menimpanya
                   dengan canvas kalau perangkatnya sanggup. */}
               <KineticText>
-                <h1 className="font-display text-[clamp(3rem,11vw,10.5rem)] leading-[0.86] font-extrabold tracking-[-0.045em] uppercase">
+                <h1 className="font-display mx-auto max-w-5xl text-[clamp(2.25rem,6.5vw,5.8rem)] leading-[1.05] font-extrabold tracking-[-0.02em] uppercase">
                   <span className="block">{hero("line1")}</span>
-                  <span className="text-ash block">{hero("line2")}</span>
-                  <span className="block">{hero("line3")}</span>
+                  <span className="text-ash block">
+                    {hero("line2")} {hero("line3")}
+                  </span>
                 </h1>
               </KineticText>
             </ScrollScrub>
+
+            {/* Daftar medium menggantikan baris peran di referensi: isi yang
+                sama dengan Value Rail, dipisah titik. */}
             <ScrollScrub to={{ yPercent: 24 }}>
-              <p className="text-silver mt-10 max-w-xl text-base leading-[1.65] text-pretty md:mt-14 md:text-lg">
-                {hero("lead")}
-              </p>
+              <ul className="text-ash mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] font-medium tracking-[0.25em] uppercase md:mt-8">
+                {MEDIUMS.map((m, i) => (
+                  <li key={m.key} className="flex items-center gap-4">
+                    {i > 0 ? (
+                      <span aria-hidden className="text-graphite">
+                        •
+                      </span>
+                    ) : null}
+                    {mediums(m.key)}
+                  </li>
+                ))}
+              </ul>
             </ScrollScrub>
           </Container>
         </ScrollScrub>
+
+        <Container className="text-ash flex items-end justify-between gap-6 text-[10px] font-medium tracking-[0.2em] uppercase">
+          <p>
+            {hero("scroll")}
+            <br />
+            <span className="text-graphite">{hero("scrollHint")}</span>
+          </p>
+          <p className="hidden text-right sm:block">{footer("statement")}</p>
+        </Container>
       </section>
 
       {/* Lapisan yang menutupi hero — butuh bg opaque, kalau transparan hero tembus. */}

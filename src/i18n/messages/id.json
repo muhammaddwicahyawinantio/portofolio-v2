@@ -6,7 +6,8 @@
   "nav": {
     "about": "Tentang",
     "projects": "Proyek",
-    "contact": "Kontak"
+    "contact": "Kontak",
+    "getInTouch": "Hubungi saya"
   },
   "menu": {
     "open": "Buka menu",
@@ -21,7 +22,9 @@
     "line1": "Satu studio.",
     "line2": "Lima",
     "line3": "medium.",
-    "lead": "Web, motion, 3D, suara, dan film — dirancang dan dibangun satu tangan."
+    "lead": "Web, motion, 3D, suara, dan film — dirancang dan dibangun satu tangan.",
+    "scroll": "Gulir ke bawah",
+    "scrollHint": "Untuk memulai ceritanya"
   },
   "mediums": {
     "web": "Web",

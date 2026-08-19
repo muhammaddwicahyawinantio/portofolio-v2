@@ -31,7 +31,11 @@ const valid = {
 const parsed = parseFields(projects, form(valid));
 assert.equal(parsed.title, "Judul", "spasi di tepi harus dibuang");
 assert.equal(parsed.order, 7, "order harus jadi number");
-assert.deepEqual(parsed.images, ["/a.jpg", "/b.jpg"], "list dipisah per baris, baris kosong dibuang");
+assert.deepEqual(
+  parsed.images,
+  ["/a.jpg", "/b.jpg"],
+  "list dipisah per baris, baris kosong dibuang",
+);
 
 // 2. Field yang tidak dideklarasikan resource tidak boleh lolos.
 const injected = parseFields(projects, form({ ...valid, passwordHash: "x", id: "spoofed" }));
