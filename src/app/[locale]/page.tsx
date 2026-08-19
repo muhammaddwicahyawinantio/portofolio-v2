@@ -9,6 +9,7 @@ import ScrollScrub from "@/components/animations/ScrollScrub";
 import Reveal from "@/components/animations/Reveal";
 import { MEDIUMS } from "@/lib/mediums";
 import ServiceGrid from "@/components/sections/ServiceGrid";
+import ProjectShowcase from "@/components/sections/ProjectShowcase";
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
@@ -19,6 +20,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const index = useTranslations("index");
   const cta = useTranslations("cta");
   const services = useTranslations("services");
+  const projects = useTranslations("projects");
   const footer = useTranslations("footer");
 
   return (
@@ -114,6 +116,15 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
               priceFromLabel={services("priceFrom")}
               inquireLabel={services("inquire")}
             />
+          </Container>
+        </Section>
+
+        <Section id="projects" className="border-graphite/40 border-t">
+          <Container>
+            <p className="text-ash mb-14 text-[11px] font-semibold tracking-[0.3em] uppercase md:mb-20">
+              {projects("eyebrow")}
+            </p>
+            <ProjectShowcase locale={locale} />
           </Container>
         </Section>
 
