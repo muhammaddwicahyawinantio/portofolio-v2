@@ -44,6 +44,12 @@ model Service {
   description_en String @db.Text
   description_id String @db.Text
   icon           String
+  priceLabel     String
+  features_en    Json
+  features_id    Json
+  benefits_en    Json
+  benefits_id    Json
+  image          String?
   order          Int    @default(0)
 
   @@index([order])
