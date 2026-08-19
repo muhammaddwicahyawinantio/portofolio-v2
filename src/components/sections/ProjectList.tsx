@@ -1,14 +1,11 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { Link } from "@/i18n/navigation";
+import { isVideoUrl } from "@/lib/media";
 import Reveal from "@/components/animations/Reveal";
 
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
-}
-
-function isVideoUrl(url: string): boolean {
-  return /\.(mp4|webm)$/i.test(url);
 }
 
 export default async function ProjectList({ locale }: { locale: string }) {

@@ -92,7 +92,7 @@ export const ExpandingCards = React.forwardRef<HTMLUListElement, ExpandingCardsP
                 <h3 className="font-display text-xl font-extrabold tracking-[-0.02em] text-paper opacity-0 transition-all duration-300 delay-150 ease-out group-data-[active=true]:opacity-100">
                   {item.title}
                 </h3>
-                <p className="text-silver w-full max-w-xs text-sm opacity-0 transition-all duration-300 delay-225 ease-out group-data-[active=true]:opacity-100">
+                <p className="text-silver line-clamp-3 w-full max-w-xs text-sm opacity-0 transition-all duration-300 delay-225 ease-out group-data-[active=true]:opacity-100">
                   {item.description}
                 </p>
               </Link>

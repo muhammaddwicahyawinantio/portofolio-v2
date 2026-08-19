@@ -21,7 +21,7 @@ async function main() {
     data: [
       {
         title_en: "Mosh Madness (Brand Clothing)",
-        title_id: "Mosh Madness (Brand Clotching)",
+        title_id: "Mosh Madness (Brand Clothing)",
         slug: "mosh-madness",
         description_en:
           "Mosh Madness\n\nWhere dark cinematic art meets premium streetwear. High-fidelity clothing engineered with raw expression, featuring exclusive artwork by Ilham.\n\nTech Stack\nFrontend: Next.js (React) & Tailwind CSS v4\nMotion & Animation: GSAP & Lenis Smooth Scroll\nBackend & Database: Prisma ORM & MySQL",

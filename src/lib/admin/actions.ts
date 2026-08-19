@@ -54,6 +54,10 @@ export async function saveRecord(_prev: FormState, form: FormData): Promise<Form
   }
 
   revalidatePath(`/admin/${key}`);
+  // Halaman publik di-prerender statis, jadi tanpa ini perubahan CMS (mis.
+  // toggle "Archive Project" atau "Feature on Homepage") tidak pernah sampai
+  // ke situs live sampai redeploy berikutnya.
+  revalidatePath("/", "layout");
   redirect(`/admin/${key}?saved=1`);
 }
 
@@ -67,6 +71,9 @@ export async function deleteRecord(form: FormData) {
 
   await delegate.delete({ where: { id } });
   revalidatePath(`/admin/${key}`);
+  // Sama seperti saveRecord: halaman publik di-prerender statis, jadi hapus
+  // record lewat CMS juga harus meng-invalidate rute publik, bukan cuma admin.
+  revalidatePath("/", "layout");
 }
 
 export async function toggleMessageRead(form: FormData) {

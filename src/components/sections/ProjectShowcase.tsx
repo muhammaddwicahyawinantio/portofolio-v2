@@ -1,15 +1,12 @@
 import "server-only";
 import { ArrowUpRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { isVideoUrl } from "@/lib/media";
 import Reveal from "@/components/animations/Reveal";
 import { ExpandingCards, type CardItem } from "@/components/ui/expanding-cards";
 
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
-}
-
-function isVideoUrl(url: string): boolean {
-  return /\.(mp4|webm)$/i.test(url);
 }
 
 export default async function ProjectShowcase({ locale }: { locale: string }) {

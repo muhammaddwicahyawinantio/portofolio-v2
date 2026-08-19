@@ -141,4 +141,19 @@ assert.deepEqual(
   "JSON rusak di gallery harus jatuh ke array kosong, bukan melempar",
 );
 
-console.log("parseFields: 9 cek lolos");
+// 10. Field url divalidasi skemanya server-side — <input type="url"> hanya
+// validasi di client, dan ProjectDetail merender field ini ke <a href> publik.
+const validUrl = parseFields(projects, form({ ...valid, link: "https://example.com" }));
+assert.equal(validUrl.link, "https://example.com", "https:// yang valid harus lolos apa adanya");
+assert.throws(
+  () => parseFields(projects, form({ ...valid, link: "javascript:alert(1)" })),
+  /must start with http/,
+  "skema di luar http(s)\\:\\/\\/ atau relatif harus ditolak",
+);
+assert.equal(
+  parseFields(projects, form({ ...valid, link: "" })).link,
+  null,
+  "url opsional yang dikosongkan harus null, bukan string kosong",
+);
+
+console.log("parseFields: 10 cek lolos");

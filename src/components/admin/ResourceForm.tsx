@@ -3,6 +3,7 @@
 import { useActionState, useState, type ChangeEvent } from "react";
 import { saveRecord, type FormState } from "@/lib/admin/actions";
 import type { Field, Resource } from "@/lib/admin/resources";
+import { isVideoUrl } from "@/lib/media";
 
 const INPUT =
   "border-graphite/60 focus:border-paper bg-ink text-paper w-full border px-4 py-2.5 text-sm outline-none transition-colors";
@@ -13,10 +14,6 @@ function initialValue(field: Field, record?: Record<string, unknown> | null) {
   // Field list disimpan sebagai Json array, ditampilkan satu URL per baris.
   if (field.type === "list") return Array.isArray(value) ? value.join("\n") : String(value);
   return String(value);
-}
-
-function isVideoUrl(url: string): boolean {
-  return /\.(mp4|webm)$/i.test(url);
 }
 
 function Control({ field, record }: { field: Field; record?: Record<string, unknown> | null }) {
@@ -166,8 +163,22 @@ function GalleryControl({ field, record }: { field: Field; record?: Record<strin
   return (
     <div className="flex flex-col gap-3">
       <input type="hidden" name={field.name} value={JSON.stringify(urls)} readOnly />
+      {/*
+        Input file ditaruh sebelum grid preview di DOM supaya dia jadi
+        labelable descendant PERTAMA dalam <label> pembungkus field ini —
+        kalau tidak, klik teks label akan jatuh ke <button>Remove</button>
+        item pertama alih-alih membuka file picker. Urutan visual tetap sama
+        (preview dulu, input di bawahnya) lewat utility `order`.
+      */}
+      <input
+        type="file"
+        accept="image/*,video/mp4,video/webm"
+        multiple
+        onChange={onFilesChange}
+        className={`${INPUT} order-2`}
+      />
       {urls.length > 0 ? (
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+        <div className="order-1 grid grid-cols-3 gap-3 sm:grid-cols-4">
           {urls.map((url) => (
             <div key={url} className="group relative">
               {isVideoUrl(url) ? (
@@ -187,20 +198,13 @@ function GalleryControl({ field, record }: { field: Field; record?: Record<strin
           ))}
         </div>
       ) : (
-        <div className="border-graphite/60 text-graphite flex h-24 w-full items-center justify-center border border-dashed text-[10px] uppercase">
+        <div className="border-graphite/60 text-graphite order-1 flex h-24 w-full items-center justify-center border border-dashed text-[10px] uppercase">
           No media
         </div>
       )}
-      <input
-        type="file"
-        accept="image/*,video/mp4,video/webm"
-        multiple
-        onChange={onFilesChange}
-        className={INPUT}
-      />
-      {uploading ? <p className="text-ash text-xs">Uploading…</p> : null}
+      {uploading ? <p className="text-ash order-3 text-xs">Uploading…</p> : null}
       {error ? (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="order-3 text-sm text-red-400">
           {error}
         </p>
       ) : null}

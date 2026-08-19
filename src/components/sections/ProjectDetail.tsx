@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { Link } from "@/i18n/navigation";
+import { isVideoUrl } from "@/lib/media";
 import Container from "@/components/ui/Container";
 import Section from "@/components/ui/Section";
 
@@ -15,10 +16,6 @@ function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
 }
 
-function isVideoUrl(url: string): boolean {
-  return /\.(mp4|webm)$/i.test(url);
-}
-
 export default async function ProjectDetail({ locale, slug }: { locale: string; slug: string }) {
   const row = await getProject(slug);
   if (!row) notFound();
@@ -27,8 +24,9 @@ export default async function ProjectDetail({ locale, slug }: { locale: string; 
   const title = locale === "id" ? row.title_id : row.title_en;
   const description = locale === "id" ? row.description_id : row.description_en;
   const caseStudy = locale === "id" ? row.caseStudy_id : row.caseStudy_en;
-  const gallery = toStringArray(row.images);
-  const cover = row.coverImage ?? gallery[0] ?? "/images/placeholder-1.jpg";
+  const images = toStringArray(row.images);
+  const cover = row.coverImage ?? images[0] ?? "/images/placeholder-1.jpg";
+  const gallery = images.filter((u) => u !== cover);
 
   return (
     <>
@@ -49,7 +47,7 @@ export default async function ProjectDetail({ locale, slug }: { locale: string; 
           >
             {title}
           </h1>
-          <p className="text-silver mt-10 max-w-xl text-base leading-[1.65] text-pretty md:text-lg">
+          <p className="text-silver mt-10 max-w-xl text-base leading-[1.65] text-pretty whitespace-pre-line md:text-lg">
             {description}
           </p>
 

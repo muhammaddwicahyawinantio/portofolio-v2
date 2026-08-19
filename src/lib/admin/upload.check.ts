@@ -8,6 +8,7 @@
  */
 import assert from "node:assert/strict";
 import { MAX_UPLOAD_BYTES, randomUploadName } from "./upload";
+import { ALLOWED_TYPES, isVideoUrl } from "../media";
 
 // 1. MIME type yang didukung menghasilkan nama file dengan ekstensi yang benar.
 const jpgName = randomUploadName("image/jpeg");
@@ -31,4 +32,13 @@ assert.notEqual(randomUploadName("image/png"), randomUploadName("image/png"));
 // 5. Batas ukuran cukup untuk klip video case-study pendek, bukan file besar sembarang.
 assert.equal(MAX_UPLOAD_BYTES, 20 * 1024 * 1024, "batas 20MB");
 
-console.log("upload: 6 cek lolos");
+// 6. isVideoUrl tidak boleh melenceng diam-diam dari ALLOWED_TYPES: tiap ekstensi
+// video di whitelist harus dikenali, dan ekstensi gambar tidak boleh ikut kena.
+for (const [mime, ext] of Object.entries(ALLOWED_TYPES)) {
+  if (mime.startsWith("video/")) {
+    assert.ok(isVideoUrl(`/uploads/x.${ext}`), `isVideoUrl harus mengenali .${ext} dari ${mime}`);
+  }
+}
+assert.equal(isVideoUrl("/uploads/x.jpg"), false, "ekstensi gambar tidak boleh dianggap video");
+
+console.log("upload: 7 cek lolos");

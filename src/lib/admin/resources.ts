@@ -272,6 +272,25 @@ export function parseFields(resource: Resource, form: FormData): Record<string, 
       continue;
     }
 
+    if (field.type === "url") {
+      // <input type="url"> hanya validasi di client. Field ini kadang dirender
+      // ke <a href> publik (mis. ProjectDetail), jadi tanpa cek skema di sini
+      // nilai seperti "javascript:..." yang disimpan lewat CMS bisa jadi
+      // stored XSS di halaman publik.
+      if (!value) {
+        if (field.required) {
+          throw new Error(`${field.label} is required.`);
+        }
+        data[field.name] = null;
+        continue;
+      }
+      if (!/^(https?:\/\/|\/)/.test(value)) {
+        throw new Error(`${field.label} must start with http://, https://, or /.`);
+      }
+      data[field.name] = value;
+      continue;
+    }
+
     if (field.required && !value) {
       throw new Error(`${field.label} is required.`);
     }
