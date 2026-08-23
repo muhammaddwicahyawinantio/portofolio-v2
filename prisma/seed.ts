@@ -700,6 +700,84 @@ async function main() {
     });
   }
 
+  // Undangan contoh. deleteMany dulu supaya seed idempoten; nomor rekening palsu.
+  await prisma.weddingInvitation.deleteMany({ where: { slug: "rizky-dinda" } });
+  await prisma.weddingInvitation.create({
+    data: {
+      title: "Rizky & Dinda",
+      slug: "rizky-dinda",
+      status: "published",
+      templateSlug: "classic-elegant",
+      brideName: "Dinda",
+      groomName: "Rizky",
+      brideFullName: "Dinda Ayu Lestari",
+      groomFullName: "Rizky Pratama",
+      brideParents: "Putri dari Bapak Sutrisno & Ibu Wahyuni",
+      groomParents: "Putra dari Bapak Hendra & Ibu Kartika",
+      bridePhoto: "/images/hero.jpg",
+      groomPhoto: "/images/hero.jpg",
+      openingText:
+        "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.",
+      quoteText:
+        "“Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya.”",
+      storyTitle: "Cerita Kami",
+      storyText:
+        "Berawal dari satu kelas kuliah di tahun 2019, pertemanan kami tumbuh perlahan menjadi sesuatu yang lebih dalam. Setelah lima tahun melewati suka dan duka bersama, kami memutuskan untuk melangkah ke jenjang yang lebih serius.",
+      coverImage: "/images/hero.jpg",
+      publishedAt: new Date(),
+      events: {
+        create: [
+          {
+            title: "Akad Nikah",
+            date: new Date("2026-11-08T02:00:00.000Z"),
+            startTime: "09:00",
+            endTime: "10:30",
+            venueName: "Masjid Raya Sabilal Muhtadin",
+            venueAddress: "Jl. Jend. Sudirman No.1, Banjarmasin",
+            mapsUrl: "https://maps.google.com/?q=Masjid+Raya+Sabilal+Muhtadin",
+            order: 0,
+          },
+          {
+            title: "Resepsi",
+            date: new Date("2026-11-08T05:00:00.000Z"),
+            startTime: "12:00",
+            endTime: "15:00",
+            venueName: "Ballroom Hotel Rattan Inn",
+            venueAddress: "Jl. A. Yani KM 5, Banjarmasin",
+            mapsUrl: "https://maps.google.com/?q=Hotel+Rattan+Inn+Banjarmasin",
+            order: 1,
+          },
+        ],
+      },
+      gallery: {
+        create: Array.from({ length: 4 }, (_, i) => ({
+          imageUrl: `/images/placeholder-${(i % 3) + 1}.jpg`,
+          caption: `Momen ${i + 1}`,
+          order: i,
+        })),
+      },
+      gifts: {
+        create: [
+          {
+            type: "bank",
+            providerName: "Bank Central Asia",
+            accountNumber: "1234567890",
+            accountName: "Dinda Ayu Lestari",
+            notes: "Amplop digital sebagai tanda kasih.",
+            order: 0,
+          },
+        ],
+      },
+      messages: {
+        create: [
+          { guestName: "Keluarga Santoso", message: "Selamat menempuh hidup baru! Barakallah.", isVisible: true },
+          { guestName: "Rani & Doni", message: "Semoga menjadi keluarga sakinah, mawaddah, warahmah.", isVisible: true },
+          { guestName: "Teman Kampus", message: "Akhirnya! Selamat ya kalian berdua ❤️", isVisible: true },
+        ],
+      },
+    },
+  });
+
   console.log("Seed selesai ✓");
 }
 
