@@ -1,6 +1,14 @@
 import { notFound } from "next/navigation";
 import { getPublishedInvitation } from "@/lib/wedding/queries";
+import { getTemplate } from "@/lib/wedding/template-registry";
 import { cleanText } from "@/lib/wedding/validation";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const inv = await getPublishedInvitation(slug);
+  if (!inv) return { title: "Undangan" };
+  return { title: `${inv.brideName} & ${inv.groomName} — Undangan Pernikahan` };
+}
 
 export default async function InvitationPage({
   params,
@@ -15,17 +23,6 @@ export default async function InvitationPage({
   if (!invitation) notFound();
 
   const guestName = to ? cleanText(to, 100) || null : null;
-
-  // Replaced by the template render in Task 6.
-  return (
-    <main style={{ padding: 40, fontFamily: "system-ui" }}>
-      <p>
-        {invitation.brideName} &amp; {invitation.groomName}
-      </p>
-      <p>Guest: {guestName ?? "(none)"}</p>
-      <p>
-        Events: {invitation.events.length} · Gallery: {invitation.gallery.length}
-      </p>
-    </main>
-  );
+  const Template = getTemplate(invitation.templateSlug).component;
+  return <Template invitation={invitation} guestName={guestName} />;
 }
