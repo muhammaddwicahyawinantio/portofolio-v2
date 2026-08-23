@@ -132,6 +132,30 @@ export const SCROLL_PRESETS = new Set([
 /** Values the renderer treats as interaction effects rather than entrance. */
 export const INTERACTION_PRESETS = new Set(["copy-pulse"]);
 
+// Preset value → whole-section entrance CSS class (see wedding-motion.css).
+// Scroll/interaction/none presets map to null (no entrance wrapper animation).
+const ENTRANCE_CLASS: Record<string, string> = {
+  "fade-up": "fade-up",
+  "soft-rise": "fade-up",
+  "form-reveal": "fade-up",
+  "soft-reveal": "fade-up",
+  "fade-up-stagger": "fade-up",
+  "card-reveal": "fade-up",
+  "gallery-reveal": "fade-up",
+  "message-cascade": "fade-up",
+  "number-rise": "fade-up",
+  "cinematic-opening": "cinematic",
+  "zoom-reveal": "zoom",
+  "soft-zoom": "zoom",
+  "split-reveal": "split",
+  "soft-bloom": "bloom",
+  "timeline-reveal": "timeline",
+};
+
+export function entranceClass(preset: string): string | null {
+  return ENTRANCE_CLASS[preset] ?? null;
+}
+
 export type AnimationSettings = {
   global: {
     smoothScroll: boolean;
