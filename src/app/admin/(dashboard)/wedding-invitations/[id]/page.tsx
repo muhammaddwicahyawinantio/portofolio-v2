@@ -1,8 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getInvitationForEdit } from "@/lib/wedding/queries";
+import { deleteEvent, deleteGalleryItem, deleteGift } from "@/lib/wedding/actions";
 import EditorTabs from "@/components/wedding/admin/EditorTabs";
 import InvitationSectionForm from "@/components/wedding/admin/InvitationSectionForm";
+import EventForm from "@/components/wedding/admin/EventForm";
+import GalleryForm from "@/components/wedding/admin/GalleryForm";
+import GiftForm from "@/components/wedding/admin/GiftForm";
+import ChildList from "@/components/wedding/admin/ChildList";
 import {
   Field,
   TextInput,
@@ -21,10 +26,10 @@ export default async function EditInvitationPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ tab?: string; saved?: string }>;
+  searchParams: Promise<{ tab?: string; saved?: string; child?: string }>;
 }) {
   const { id } = await params;
-  const { tab = "main", saved } = await searchParams;
+  const { tab = "main", saved, child } = await searchParams;
   const record = await getInvitationForEdit(id);
   if (!record) notFound();
 
@@ -168,6 +173,63 @@ export default async function EditInvitationPage({
               <Checkbox name="isGuestbookEnabled" defaultChecked={record.isGuestbookEnabled} />
             </Field>
           </InvitationSectionForm>
+        ) : tab === "events" ? (
+          <>
+            <EventForm
+              key={child ?? "new"}
+              invitationId={id}
+              record={record.events.find((e) => e.id === child) ?? null}
+            />
+            <ChildList
+              rows={record.events}
+              tab="events"
+              invitationId={id}
+              deleteAction={deleteEvent}
+              columns={[
+                { label: "Title", get: (e) => e.title },
+                { label: "Date", get: (e) => new Date(e.date).toLocaleDateString("id-ID") },
+                { label: "Order", get: (e) => String(e.order) },
+              ]}
+            />
+          </>
+        ) : tab === "gallery" ? (
+          <>
+            <GalleryForm
+              key={child ?? "new"}
+              invitationId={id}
+              record={record.gallery.find((g) => g.id === child) ?? null}
+            />
+            <ChildList
+              rows={record.gallery}
+              tab="gallery"
+              invitationId={id}
+              deleteAction={deleteGalleryItem}
+              columns={[
+                { label: "Image", get: (g) => g.imageUrl.slice(0, 40) },
+                { label: "Caption", get: (g) => g.caption ?? "—" },
+                { label: "Order", get: (g) => String(g.order) },
+              ]}
+            />
+          </>
+        ) : tab === "gifts" ? (
+          <>
+            <GiftForm
+              key={child ?? "new"}
+              invitationId={id}
+              record={record.gifts.find((g) => g.id === child) ?? null}
+            />
+            <ChildList
+              rows={record.gifts}
+              tab="gifts"
+              invitationId={id}
+              deleteAction={deleteGift}
+              columns={[
+                { label: "Type", get: (g) => g.type },
+                { label: "Provider", get: (g) => g.providerName ?? "—" },
+                { label: "Order", get: (g) => String(g.order) },
+              ]}
+            />
+          </>
         ) : (
           <p className="text-ink-soft text-sm">This tab ships in a later phase.</p>
         )}
