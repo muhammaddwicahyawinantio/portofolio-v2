@@ -12,7 +12,7 @@ import Rsvp from "./sections/Rsvp";
 import Guestbook from "./sections/Guestbook";
 import Closing from "./sections/Closing";
 
-export default function ClassicElegant({ invitation, guestName }: TemplateProps) {
+export default function ClassicElegant({ invitation, guestName, preview = false }: TemplateProps) {
   const style = {
     "--w-primary": invitation.primaryColor,
     "--w-secondary": invitation.secondaryColor,
@@ -27,7 +27,7 @@ export default function ClassicElegant({ invitation, guestName }: TemplateProps)
       style={style}
       className="min-h-screen bg-[var(--w-bg)] font-[family-name:var(--w-font-body)] text-[#2E2A26] antialiased"
     >
-      <Cover invitation={invitation} guestName={guestName} />
+      <Cover invitation={invitation} guestName={guestName} preview={preview} />
       <Couple invitation={invitation} />
       <Countdown date={invitation.events[0]?.date ?? null} />
       <Events events={invitation.events} />

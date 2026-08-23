@@ -11,10 +11,12 @@ import type { WeddingPreviewData } from "@/components/wedding/types";
 export default function WeddingTemplateRenderer({
   invitation,
   guestName,
+  preview = false,
 }: {
   invitation: WeddingPreviewData;
   guestName: string | null;
+  preview?: boolean;
 }) {
   const Template = getTemplate(invitation.templateSlug).component;
-  return <Template invitation={invitation} guestName={guestName} />;
+  return <Template invitation={invitation} guestName={guestName} preview={preview} />;
 }

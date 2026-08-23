@@ -2,7 +2,13 @@ import type { ComponentType } from "react";
 import type { WeddingPreviewData } from "@/components/wedding/types";
 import ClassicElegant from "@/components/wedding/templates/classic-elegant";
 
-export type TemplateProps = { invitation: WeddingPreviewData; guestName: string | null };
+export type TemplateProps = {
+  invitation: WeddingPreviewData;
+  guestName: string | null;
+  /** Admin preview: render the cover inline (no fixed overlay / scroll-lock),
+   *  never autoplay music. Off (public route) = full-screen gated cover. */
+  preview?: boolean;
+};
 
 type TemplateEntry = { label: string; thumbnail: string; component: ComponentType<TemplateProps> };
 
