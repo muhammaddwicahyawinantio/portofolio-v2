@@ -8,6 +8,8 @@ import Events from "./sections/Events";
 import LoveStory from "./sections/LoveStory";
 import Gallery from "./sections/Gallery";
 import Gift from "./sections/Gift";
+import Rsvp from "./sections/Rsvp";
+import Guestbook from "./sections/Guestbook";
 import Closing from "./sections/Closing";
 
 export default function ClassicElegant({ invitation, guestName }: TemplateProps) {
@@ -34,6 +36,12 @@ export default function ClassicElegant({ invitation, guestName }: TemplateProps)
       ) : null}
       <Gallery items={invitation.gallery} />
       <Gift gifts={invitation.gifts} />
+      {invitation.isRsvpEnabled ? (
+        <Rsvp invitationId={invitation.id} defaultName={guestName} />
+      ) : null}
+      {invitation.isGuestbookEnabled ? (
+        <Guestbook invitationId={invitation.id} messages={invitation.messages} />
+      ) : null}
       <Closing invitation={invitation} />
     </main>
   );
