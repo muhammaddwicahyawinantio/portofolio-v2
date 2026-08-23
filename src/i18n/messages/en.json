@@ -7,6 +7,7 @@
     "about": "About",
     "projects": "Projects",
     "services": "Services",
+    "products": "Products",
     "contact": "Contact",
     "getInTouch": "Get in touch"
   },
@@ -27,30 +28,47 @@
     "scroll": "Scroll down",
     "scrollHint": "To begin the story"
   },
-  "mediums": {
-    "web": "Web",
-    "motion": "Motion",
-    "threeD": "3D",
-    "sound": "Sound",
-    "film": "Film"
-  },
-  "index": {
-    "eyebrow": "Mediums",
-    "web": "Sites that load fast and move well.",
-    "motion": "Type, transitions, and title sequences.",
-    "threeD": "Real-time scenes that run in the browser.",
-    "sound": "Scoring and sound design for picture.",
-    "film": "Short-form direction, shoot through grade."
-  },
   "cta": {
     "eyebrow": "Contact",
     "heading": "Have something to make?",
-    "action": "Start a project"
+    "action": "Start a project",
+    "ready": "Ready to begin?"
   },
   "about": {
     "eyebrow": "About",
-    "title": "A studio of one.",
-    "lead": "Dwi Studio works across web, motion, 3D, sound, and film. Every project is designed and built by the same hand, start to finish."
+    "title": "About Me",
+    "lead": "Dwi Studio works across web, motion, 3D, sound, and film. Every project is designed and built by the same hands, start to finish.",
+    "storyTitle": "The Journey",
+    "workTitle": "Work Experience",
+    "educationTitle": "Education",
+    "periodLabel": "Period",
+    "roleLabel": "Role",
+    "institutionLabel": "Institution",
+    "skillsTitle": "Skills & Tools",
+    "certificationsTitle": "Certifications",
+    "valuesTitle": "How I Work",
+    "cvPreview": "View CV",
+    "cvDownload": "Download CV",
+    "cvLoading": "Loading CV…",
+    "cvError": "The CV failed to load.",
+    "cvClose": "Close preview",
+    "values": {
+      "one": {
+        "title": "Read before writing",
+        "body": "I trace the whole path before touching the keyboard. The fastest fix in the wrong place is just a second bug."
+      },
+      "two": {
+        "title": "As small as it goes",
+        "body": "The smallest change that actually holds beats a tidy abstraction nobody needed yet."
+      },
+      "three": {
+        "title": "Hand over something you can run",
+        "body": "Every project ships with its own CMS. You never need to call me to change a sentence."
+      }
+    },
+    "mediaTitle": "Music & Film",
+    "musicTitle": "Music",
+    "filmTitle": "Film"
   },
   "projects": {
     "eyebrow": "Work",
@@ -60,19 +78,40 @@
     "year": "Year",
     "client": "Client",
     "visitSite": "Visit live site",
-    "back": "Back to projects"
+    "back": "Back to projects",
+    "openHint": "Click the open panel to open its case study",
+    "readMore": "Read more"
   },
   "contact": {
     "eyebrow": "Contact",
     "title": "Start a project.",
-    "lead": "Tell me what you are making and when you need it."
+    "lead": "Tell me what you are making and when you need it.",
+    "breadcrumb": "Contact / Consultation",
+    "point1": "Tell me the project goal and who it is for",
+    "point2": "I reply with a clear scope, timeline, and number",
+    "point3": "You receive the site plus a CMS you can run yourself",
+    "trustedBy": "What clients say",
+    "privacy": "By submitting this form you agree your details are stored only to answer this message. They are not shared with anyone else, and never used for marketing.",
+    "infoSocialTitle": "Elsewhere",
+    "infoLocationTitle": "Location & status",
+    "infoReplyTitle": "Response time",
+    "infoReplyBody": "I read and answer every message myself, usually within one to two working days.",
+    "qrFallback": "Buy me a coffee"
   },
   "services": {
     "eyebrow": "Services",
     "title": "Packages & pricing.",
     "lead": "Five ways to work together, from a wedding invitation to a fully custom system.",
     "priceFrom": "Starting from",
-    "inquire": "Start a project"
+    "explore": "Explore",
+    "builder": "Builder",
+    "digitalProduct": "Digital Product"
+  },
+  "products": {
+    "eyebrow": "Digital products",
+    "title": "Premium accounts, ready to use.",
+    "lead": "Subscription accounts sold through Lynk.id. Pick one, check out there, and your access details follow.",
+    "explore": "Explore"
   },
   "contactForm": {
     "name": "Name",
@@ -95,6 +134,112 @@
   },
   "footer": {
     "statement": "Available for select work.",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "builtWith": "Built with",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
+  },
+  "features": {
+    "eyebrow": "Process",
+    "title": "How the work runs.",
+    "back": "Back to home",
+    "explore": "Explore"
+  },
+  "benefits": {
+    "eyebrow": "Why us",
+    "title": "Why work with us.",
+    "scrollHint": "Scroll to open"
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "updated": "Last updated 23 August 2026",
+    "terms": {
+      "title": "Terms of Service",
+      "lead": "What you agree to when you use this site or commission work from Dwi Studio.",
+      "sections": [
+        {
+          "heading": "Who you are dealing with",
+          "body": "Dwi Studio is a one-person design and development practice in Banjarmasin, Indonesia, run by M. Dwi Cahya Winantio. Everything on this site is written, designed, and built by one hand."
+        },
+        {
+          "heading": "Using this site",
+          "body": "Read it, share it, link to it. The writing, photographs, code, and design belong to the studio - do not republish them as your own, and ask first before using them to train a model."
+        },
+        {
+          "heading": "Prices are starting points",
+          "body": "The figures on the Services page are where projects start, not fixed quotes. A real quote follows a conversation about what you need, and it names the scope, the timeline, and the price before any work begins."
+        },
+        {
+          "heading": "Payment",
+          "body": "Projects open with a deposit and settle on handover unless we agree otherwise in writing. The exact terms live in your quote, not on this page."
+        },
+        {
+          "heading": "Revisions and timelines",
+          "body": "Every quote states how many revision rounds it includes. Timelines assume your content and feedback arrive when they are due; if they arrive late, the delivery date moves by the same amount."
+        },
+        {
+          "heading": "Who owns the finished work",
+          "body": "Once the final invoice is paid, the work is yours. The studio keeps the right to show it in its portfolio unless you ask otherwise. Third-party fonts, photography, and plugins stay under their own licences, which the quote names."
+        },
+        {
+          "heading": "What you provide",
+          "body": "You are responsible for the text, images, and logos you send, and for holding the rights to use them."
+        },
+        {
+          "heading": "Limits",
+          "body": "Work is built carefully and tested before it ships, but no site can be guaranteed free of faults or downtime. The studio is not liable for indirect or consequential loss. Nothing here removes rights you hold under Indonesian consumer law."
+        },
+        {
+          "heading": "Changes to these terms",
+          "body": "These terms can change. The date at the top tells you when they last did, and a change never applies backwards to work already quoted."
+        },
+        {
+          "heading": "Questions",
+          "body": "Write through the contact page. The reply comes from the studio, not a helpdesk."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lead": "What this site collects, why it collects it, and how long it is kept.",
+      "sections": [
+        {
+          "heading": "The short version",
+          "body": "No advertising, no tracking pixels, no third-party analytics. The only personal data this site collects is what you type into the contact form."
+        },
+        {
+          "heading": "What the contact form collects",
+          "body": "Your name, email address, subject, and message - with the date it arrived and whether it has been read. Nothing else is stored, and nothing is inferred about you."
+        },
+        {
+          "heading": "Why it is collected",
+          "body": "To read your message and answer it. That is the only purpose. Your details are never sold, never shared with anyone else, and never used for marketing."
+        },
+        {
+          "heading": "How long it is kept",
+          "body": "Messages are kept while the conversation is still useful and deleted when it is not. Ask for yours to be deleted sooner and it will be."
+        },
+        {
+          "heading": "Where it is stored",
+          "body": "In this site's own database, on hosting the studio controls. The hosting provider processes it on the studio's behalf and under contract, and uses it for nothing else."
+        },
+        {
+          "heading": "Cookies",
+          "body": "Browsing the public site sets no cookies. A session cookie exists only inside the admin area, which is for the studio's own sign-in - not for visitors."
+        },
+        {
+          "heading": "Your rights",
+          "body": "You can ask what is held about you, ask for a copy, ask for a correction, or ask for it to be deleted. Write in and it will be acted on."
+        },
+        {
+          "heading": "Changes to this policy",
+          "body": "If this policy changes, the date at the top changes with it."
+        },
+        {
+          "heading": "Contact",
+          "body": "Reach the studio through the contact page."
+        }
+      ]
+    }
   }
 }

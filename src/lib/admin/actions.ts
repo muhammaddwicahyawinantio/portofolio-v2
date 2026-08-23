@@ -37,12 +37,17 @@ export async function saveRecord(_prev: FormState, form: FormData): Promise<Form
 
   try {
     if (resource.singleton) {
-      // Baris tunggal dengan id tetap, jadi menyimpan dua kali tidak pernah
-      // menghasilkan baris kedua.
+      // Id-nya diambil dari baris yang memang ada, bukan dipatok "footer".
+      // Dulu dipatok, dan itu benar cuma untuk FooterContent: baris About
+      // dibuat seed lewat create() sehingga id-nya cuid, jadi upsert ke
+      // "footer" MEMBUAT baris About kedua alih-alih memperbarui yang tampil.
+      // Fallback ke resource.key dipakai saat tabelnya masih kosong.
+      const existing = await delegate.findFirst({});
+      const rowId = typeof existing?.id === "string" ? existing.id : key;
       await delegate.upsert({
-        where: { id: "footer" },
+        where: { id: rowId },
         update: data,
-        create: { id: "footer", ...data },
+        create: { id: rowId, ...data },
       });
     } else if (id) {
       await delegate.update({ where: { id }, data });

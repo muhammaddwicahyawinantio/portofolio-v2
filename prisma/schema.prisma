@@ -48,11 +48,11 @@ model Website {
 }
 
 model Service {
-  id             String @id @default(cuid())
+  id             String  @id @default(cuid())
   name_en        String
   name_id        String
-  description_en String @db.Text
-  description_id String @db.Text
+  description_en String  @db.Text
+  description_id String  @db.Text
   icon           String
   priceLabel     String
   features_en    Json
@@ -60,7 +60,140 @@ model Service {
   benefits_en    Json
   benefits_id    Json
   image          String?
+  // Tujuan tombol Explore, cerminan Product.link. Tidak ada /services/{slug}
+  // di situs ini, jadi kosong -> jatuh ke /contact seperti CTA sebelumnya.
+  link           String?
+  order          Int     @default(0)
+
+  @@index([order])
+}
+
+// Produk digital yang dijual lewat Lynk.id. `title` tunggal, bukan bilingual:
+// isinya nama merek ("ChatGPT Plus") yang tidak diterjemahkan — pola yang sama
+// dipakai Website.name dan FilmItem.title. Yang berupa prosa tetap _en/_id.
+// Tidak ada kolom harga: checkout dan harganya dipegang halaman Lynk.id, jadi
+// menyimpannya di sini berarti dua sumber kebenaran yang bisa berbeda.
+model Product {
+  id             String  @id @default(cuid())
+  title          String
+  subtitle_en    String
+  subtitle_id    String
+  description_en String  @db.Text
+  description_id String  @db.Text
+  image          String?
+  link           String
+  order          Int     @default(0)
+
+  @@index([order])
+}
+
+model Feature {
+  id             String  @id @default(cuid())
+  slug           String  @unique
+  title_en       String
+  title_id       String
+  description_en String  @db.Text
+  description_id String  @db.Text
+  image          String?
+  // Tujuan tombol Explore. Kosong -> jatuh ke /features/{slug}, halaman detail
+  // yang memang sudah ada. Jadi kolom ini menimpa, bukan menggantikan, slug.
+  link           String?
+  order          Int     @default(0)
+
+  @@index([order])
+}
+
+// Singleton (pola FooterContent) — hero homepage, dulu hardcoded di i18n.
+// headline disimpan multi-baris: satu baris teks = satu baris judul. Baris
+// pertama tegak, sisanya italic — persis bentuk "One studio. / Five mediums."
+// yang sudah tampil, tapi jumlah barisnya bebas.
+model HeroSection {
+  id              String  @id @default("hero")
+  backgroundImage String?
+  headline_en     String  @db.Text
+  headline_id     String  @db.Text
+  subheadline_en  String?
+  subheadline_id  String?
+  ctaText_en      String?
+  ctaText_id      String?
+  ctaUrl          String?
+}
+
+// Alasan klien memilih studio ini. `icon` emoji, bukan unggahan: pola yang
+// sama dengan Service.icon, dan satu karakter tidak butuh berkas.
+model Benefit {
+  id             String @id @default(cuid())
+  icon           String
+  title_en       String
+  title_id       String
+  description_en String @db.Text
+  description_id String @db.Text
   order          Int    @default(0)
+
+  @@index([order])
+}
+
+// Singleton. Kolom kanan section Contact di homepage — QR code + labelnya.
+model ContactSettings {
+  id         String  @id @default("contact")
+  qrImage    String?
+  qrLabel_en String?
+  qrLabel_id String?
+}
+
+model About {
+  id                  String  @id @default(cuid())
+  title_en            String
+  title_id            String
+  location            String
+  status_en           String
+  status_id           String
+  shortDescription_en String  @db.Text
+  shortDescription_id String  @db.Text
+  motto_en            String  @db.Text
+  motto_id            String  @db.Text
+  cvFile              String?
+  fullStory_en        String  @db.Text
+  fullStory_id        String  @db.Text
+  // Array URL potret, bentuknya sama dengan Project.images dan dibaca lewat
+  // toStringArray(). Halaman About menampilkannya sebagai DriftWall 5 kolom.
+  images              Json?
+}
+
+model WorkExperience {
+  id      String @id @default(cuid())
+  company String
+  role_en String
+  role_id String
+  period  String
+  order   Int    @default(0)
+
+  @@index([order])
+}
+
+model Education {
+  id          String @id @default(cuid())
+  institution String
+  period      String
+  order       Int    @default(0)
+
+  @@index([order])
+}
+
+model Skill {
+  id    String  @id @default(cuid())
+  title String
+  icon  String?
+  order Int     @default(0)
+
+  @@index([order])
+}
+
+model Certification {
+  id    String  @id @default(cuid())
+  name  String
+  image String?
+  order Int     @default(0)
 
   @@index([order])
 }

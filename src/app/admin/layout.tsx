@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Roboto_Slab, Open_Sans } from "next/font/google";
+import { Spectral, Plus_Jakarta_Sans } from "next/font/google";
 import "@/styles/globals.css";
 
 // Root layout kedua. Admin berada di luar segmen [locale] karena CMS-nya
 // satu bahasa, jadi ia butuh <html>/<body> sendiri.
-const display = Roboto_Slab({
+const display = Spectral({
   subsets: ["latin"],
-  weight: ["400", "700", "800"],
+  weight: ["400", "500", "600"],
   variable: "--font-display-family",
   display: "swap",
 });
 
-const body = Open_Sans({
+const body = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-body-family",
   display: "swap",
 });
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 export default function AdminRootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="bg-ink text-paper font-body">{children}</body>
+      <body className="bg-cream text-ink font-body">{children}</body>
     </html>
   );
 }

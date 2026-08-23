@@ -22,6 +22,10 @@ assert.ok(randomUploadName("image/webp")?.endsWith(".webp"));
 assert.ok(randomUploadName("video/mp4")?.endsWith(".mp4"), "video/mp4 harus jadi .mp4");
 assert.ok(randomUploadName("video/webm")?.endsWith(".webm"), "video/webm harus jadi .webm");
 
+// 2b. Audio MP3 untuk trek musik di halaman About.
+assert.ok(randomUploadName("audio/mpeg")?.endsWith(".mp3"), "audio/mpeg harus jadi .mp3");
+assert.equal(isVideoUrl("/uploads/x.mp3"), false, "mp3 tidak boleh dianggap video");
+
 // 3. MIME type di luar whitelist ditolak (mis. text/html yang menyamar jadi upload).
 assert.equal(randomUploadName("text/html"), null, "MIME type tak dikenal harus ditolak");
 assert.equal(randomUploadName("application/octet-stream"), null);
@@ -41,4 +45,4 @@ for (const [mime, ext] of Object.entries(ALLOWED_TYPES)) {
 }
 assert.equal(isVideoUrl("/uploads/x.jpg"), false, "ekstensi gambar tidak boleh dianggap video");
 
-console.log("upload: 7 cek lolos");
+console.log("upload: 9 cek lolos");

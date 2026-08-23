@@ -6,7 +6,6 @@ import { useLenis } from "lenis/react";
 import { gsap } from "@/lib/gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { INTRO_REPLAY_EVENT, replayIntro } from "@/lib/intro";
-import Emblem from "@/components/ui/Emblem";
 
 gsap.registerPlugin(CustomEase);
 
@@ -29,8 +28,8 @@ let hasPlayed = false;
  * Intro cinematic "DWI STUDIO".
  *
  *   0.0  arc spinner berputar di layar hitam pekat
- *   1.0  ring mengecil-memudar, emblem lingkaran putih solid masuk
- *   1.6  "DWI" meluncur keluar dari balik emblem, di balik mask
+ *   1.0  ring mengecil-memudar, kartu logo (public/logo.svg) masuk
+ *   1.6  "DWI" meluncur keluar dari balik logo, di balik mask
  *   2.2  garis pemisah memanjang (scaleY)
  *   2.7  "STUDIO" meluncur keluar di kanan garis
  *   3.0  tagline (hero.line1-3) fade-up di bawah lockup
@@ -40,7 +39,10 @@ let hasPlayed = false;
  *
  * Semua gerak memakai transform/opacity saja supaya tetap di GPU. Lockup sudah
  * berada pada lebar akhirnya sejak awal; yang bergeser adalah panggungnya,
- * jadi emblem tetap terlihat di tengah tanpa satu pun animasi properti layout.
+ * jadi logo tetap terlihat di tengah tanpa satu pun animasi properti layout.
+ *
+ * Timeline-nya TIDAK diubah sama sekali di rev. ini — hanya isi dan ukuran
+ * elemennya. Gerakannya persis yang sudah ada.
  */
 export default function Intro() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -49,9 +51,13 @@ export default function Intro() {
   const hero = useTranslations("hero");
   const lenis = useLenis();
 
-  // Dibaca saat render supaya panel tidak sempat terlihat satu frame saat
-  // berpindah halaman. Return-nya di bawah, setelah semua hook dipanggil.
-  const skip = hasPlayed;
+  // Dibekukan sebagai state, BUKAN `const skip = hasPlayed` yang dibaca ulang
+  // tiap render: efek di bawah menulis hasPlayed = true lalu setPlaying(true),
+  // dan pembacaan ulang akan membuat render berikutnya mengembalikan null —
+  // intro mencabut dirinya sendiri sebelum timeline sempat main. Nilai awal
+  // tetap dibaca saat mount, jadi remount karena ganti bahasa tetap melewati
+  // intro; replay meresetnya lewat setSkip(false) di bawah.
+  const [skip, setSkip] = useState(hasPlayed);
 
   /**
    * Kunci scroll lapis kedua. overflow:hidden saja tidak cukup: Lenis membaca
@@ -69,6 +75,7 @@ export default function Intro() {
   useEffect(() => {
     const onReplay = () => {
       hasPlayed = false;
+      setSkip(false);
       setRunId((n) => n + 1);
     };
 
@@ -95,13 +102,13 @@ export default function Intro() {
     // headline SENGAJA tidak masuk sini, dibersihkan terpisah di bawah lewat
     // clearProps:"transform" saja. clearProps:"all" pada gsap.set() yang
     // berdiri sendiri (bukan sambungan tween) menghapus SELURUH inline style
-    // elemen, bukan cuma yang disentuh Intro. Pelajaran dari bug nyata: waktu
-    // headline masih dibungkus KineticText (kini dipindah ke footer),
-    // clearProps:"all" di sini membongkar visibility:hidden yang ditulis
-    // KineticText langsung ke DOM, menampakkan <h1> asli di belakang
-    // kanvasnya, dobel teks. Aturannya tetap dipertahankan: elemen manapun
-    // yang inline style-nya juga dikelola sistem lain di luar Intro tidak
-    // boleh kena clearProps:"all" yang menyapu semuanya.
+    // elemen, bukan cuma yang disentuh Intro. Pelajaran dari bug nyata: dulu
+    // headline dibungkus efek kinetic yang menulis visibility:hidden langsung
+    // ke DOM, dan clearProps:"all" di sini membongkarnya sehingga <h1> asli
+    // muncul di belakang kanvasnya — teks dobel. Efek itu sudah tidak ada,
+    // tapi aturannya tetap dipertahankan: elemen manapun yang inline style-nya
+    // juga dikelola sistem lain di luar Intro tidak boleh kena clearProps:"all"
+    // yang menyapu semuanya.
     const revealTargets = [main, header, heroBg].filter(Boolean) as Element[];
 
     const tl = gsap.timeline({ paused: true });
@@ -127,8 +134,8 @@ export default function Intro() {
       // tertinggal pada opacity 0 dan seluruh halaman jadi tak terlihat.
       if (revealTargets.length) gsap.set(revealTargets, { clearProps: "all" });
       // Dibersihkan terpisah dan hanya "transform": satu-satunya properti
-      // yang pernah disentuh Intro di elemen ini, jadi visibility milik
-      // KineticText tidak ikut terhapus.
+      // yang pernah disentuh Intro di elemen ini, jadi inline style yang
+      // ditulis sistem lain tidak ikut terhapus.
       if (headline) gsap.set(headline, { clearProps: "transform" });
     };
 
@@ -182,6 +189,8 @@ export default function Intro() {
 
     // Fase 7 disusun sebagai tiga gerak independen, bukan satu <main> yang
     // di-scale sekaligus: background zoom, navbar slide, headline slide.
+    // <main> hanya disembunyikan sampai sesaat SEBELUM tirai membuka, bukan
+    // sampai sesudahnya — lihat tl.set() di bawah.
     gsap.set(main, { autoAlpha: 0 });
     gsap.set(header, { autoAlpha: 0, y: -15 });
     if (heroBg) gsap.set(heroBg, { scale: 1.18 });
@@ -220,12 +229,19 @@ export default function Intro() {
       .to(panels[0]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.3)
       .to(panels[1]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.4)
       .to(panels[2]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.5)
+      // Halaman dinyalakan di 3.2, saat tirai MASIH tertutup rapat. Wajib
+      // sebelum 3.3: kalau <main> baru muncul setelah panel pergi, yang
+      // tersingkap cuma latar body yang kini sewarna panel bg-cream — tirainya
+      // bergerak tapi tidak terlihat sama sekali. Foto harus sudah menunggu di
+      // belakang tirai, persis seperti referensi yang tidak pernah
+      // menyembunyikan #main-hero. set(), bukan to(): fade di sini tak ada
+      // gunanya karena penontonnya masih tertutup panel.
+      .set(main, { autoAlpha: 1 }, 3.2)
       // Fase 7 — hero reveal: background zoom-out 1.18 -> 1 (2,2 detik, mulai
       // bersamaan tirai), navbar turun dari -15px, headline naik dari 30px.
       .to(heroBg, { scale: 1, duration: 2.2, ease: FLUID }, 3.3)
       .to(header, { autoAlpha: 1, y: 0, duration: 1, ease: FLUID }, 3.7)
-      .to(headline, { y: 0, duration: 1, ease: FLUID }, 3.8)
-      .to(main, { autoAlpha: 1, duration: 1.2, ease: FLUID }, 3.9);
+      .to(headline, { y: 0, duration: 1, ease: FLUID }, 3.8);
 
     // Ring berputar sampai font benar-benar siap: menyingkap wordmark sebelum
     // font termuat akan terlihat berganti bentuk, dan offset tengahnya meleset.
@@ -251,7 +267,12 @@ export default function Intro() {
       aria-hidden
       // overflow-hidden menahan teks yang meluncur supaya tidak pernah
       // menimbulkan scrollbar horizontal di layar sempit.
-      className="intro-failsafe fixed inset-0 z-[70] flex items-center justify-center overflow-hidden bg-black"
+      //
+      // SENGAJA tanpa bg-*: yang menutup layar HANYA ketiga panel di bawah.
+      // Background di root ini adalah lapisan hitam opaque seukuran viewport
+      // yang duduk di belakang panel, jadi tirai yang menyusut tidak menyingkap
+      // apa pun sampai root-nya di-display:none — tirainya jadi tak terlihat.
+      className="intro-failsafe fixed inset-0 z-[70] flex items-center justify-center overflow-hidden"
     >
       {/* Tiga panel tirai arsitektural. Bergantian arah, bukan menyusut ke
           tengah: kolom 1 & 3 origin-top (ditarik ke atas), kolom 2 origin-bottom
@@ -262,52 +283,72 @@ export default function Intro() {
           sendiri. -mx-px pada panel tengah menutup celah sub-pixel yang bisa
           muncul saat lebar viewport ganjil. */}
       <div className="absolute inset-0 flex">
-        <span data-panel className="h-full flex-1 origin-top bg-black will-change-transform" />
+        <span data-panel className="bg-charcoal h-full flex-1 origin-top will-change-transform" />
         <span
           data-panel
-          className="-mx-px h-full flex-1 origin-bottom bg-black will-change-transform"
+          className="bg-charcoal -mx-px h-full flex-1 origin-bottom will-change-transform"
         />
-        <span data-panel className="h-full flex-1 origin-top bg-black will-change-transform" />
+        <span data-panel className="bg-charcoal h-full flex-1 origin-top will-change-transform" />
       </div>
 
       <div data-stage className="relative z-10 flex items-center will-change-transform">
-        <span data-logo className="relative flex h-8 w-8 shrink-0 items-center justify-center">
+        {/* Kotaknya kini LANDSCAPE 3:2, mengikuti proporsi logo.svg (1264x843).
+            Kalau dipaksa persegi seperti emblem lama, logonya gepeng atau
+            terpotong. centerOffset() mengukur kotak ini apa adanya, jadi
+            perubahan ukuran tidak perlu penyesuaian di timeline. */}
+        <span
+          data-logo
+          className="relative flex h-9 w-[3.375rem] shrink-0 items-center justify-center md:h-12 md:w-[4.5rem]"
+        >
           {/* Putaran dipegang CSS di elemen dalam; GSAP memakai transform di
               pembungkusnya. Kalau ditumpuk di elemen yang sama, animasi CSS
               menang atas inline style dan skala GSAP hilang. */}
           <span data-spinner className="absolute will-change-transform">
-            <span className="intro-ring block h-7 w-7 rounded-full border-2 border-white/15 border-t-white" />
+            <span className="intro-ring border-cream/15 border-t-cream block h-8 w-8 rounded-full border-2 md:h-10 md:w-10" />
           </span>
 
-          {/* Emblem yang sama dengan yang dipakai header, jadi intro menyerah
-              terima ke lockup identik, bukan memotong ke logo lain. */}
+          {/* logo.svg, bukan Emblem lagi. Berkasnya adalah plat putih penuh
+              dengan mark digunting di dalamnya, jadi di atas tirai charcoal ia
+              terbaca sebagai KARTU putih — kebetulan itu justru menyambung ke
+              bahasa kertas situs ini. rounded-card supaya sudutnya sama dengan
+              permukaan lain; plat aslinya bersudut siku.
+              Catatan: navbar masih memakai Emblem, jadi serah terima intro ke
+              header tidak lagi memakai mark yang identik. */}
           <span data-emblem className="opacity-0 will-change-transform">
-            <Emblem className="h-8 w-8" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase */}
+            <img
+              src="/logo.svg"
+              alt=""
+              className="rounded-card block h-9 w-[3.375rem] object-contain md:h-12 md:w-[4.5rem]"
+            />
           </span>
         </span>
 
-        <span data-word="dwi" className="ml-3.5 overflow-hidden">
-          <span className="block text-[13px] font-semibold tracking-[0.35em] whitespace-nowrap text-white uppercase opacity-0 will-change-transform">
+        <span data-word="dwi" className="ml-4 overflow-hidden md:ml-5">
+          <span className="text-cream block text-[17px] font-semibold tracking-[0.35em] whitespace-nowrap uppercase opacity-0 will-change-transform md:text-[26px]">
             Dwi
           </span>
         </span>
 
         <span
           data-divider
-          className="mx-4 h-4 w-px origin-center bg-white/40 opacity-0 will-change-transform"
+          className="bg-cream/40 mx-4 h-5 w-px origin-center opacity-0 will-change-transform md:mx-5 md:h-7"
         />
 
         <span data-word="studio" className="overflow-hidden">
-          <span className="block text-[13px] font-medium tracking-[0.35em] whitespace-nowrap text-white/90 uppercase opacity-0 will-change-transform">
+          <span className="text-cream/90 block text-[17px] font-medium tracking-[0.35em] whitespace-nowrap uppercase opacity-0 will-change-transform md:text-[26px]">
             Studio
           </span>
         </span>
 
         {/* absolute + top-full: tidak ikut lebar stage, jadi centerOffset()
-            yang mengukur lockup logo+teks tidak terpengaruh baris ini. */}
+            yang mengukur lockup logo+teks tidak terpengaruh baris ini.
+            Tracking diturunkan 0.5em -> 0.3em saat ukurannya dinaikkan: pada
+            13px, "ONE STUDIO. FIVE MEDIUMS." dengan tracking 0.5em lebih lebar
+            dari layar ponsel dan akan terpotong overflow-hidden root. */}
         <span
           data-tagline
-          className="absolute top-full left-1/2 mt-4 -translate-x-1/2 text-[8px] font-semibold tracking-[0.5em] whitespace-nowrap text-white/40 uppercase opacity-0 will-change-transform"
+          className="text-cream/45 absolute top-full left-1/2 mt-4 -translate-x-1/2 text-[10px] font-semibold tracking-[0.3em] whitespace-nowrap uppercase opacity-0 will-change-transform md:mt-6 md:text-[13px]"
         >
           {hero("line1")} {hero("line2")} {hero("line3")}
         </span>

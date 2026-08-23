@@ -32,10 +32,10 @@ export default function ProjectsPage({ params }: { params: Promise<{ locale: str
 
   return (
     <>
-      <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
+      <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} centered />
       <Section className="pt-0">
         <Container>
-          <ProjectList locale={locale} />
+          <ProjectList locale={locale} readMoreLabel={t("readMore")} />
         </Container>
       </Section>
     </>

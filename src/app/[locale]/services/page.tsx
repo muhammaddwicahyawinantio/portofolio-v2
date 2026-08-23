@@ -32,7 +32,7 @@ export default function ServicesPage({ params }: { params: Promise<{ locale: str
     <>
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
       <Container className="pb-24 md:pb-36">
-        <ServiceGrid locale={locale} priceFromLabel={t("priceFrom")} inquireLabel={t("inquire")} />
+        <ServiceGrid locale={locale} priceFromLabel={t("priceFrom")} exploreLabel={t("explore")} />
       </Container>
     </>
   );

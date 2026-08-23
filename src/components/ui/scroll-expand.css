@@ -1,0 +1,155 @@
+/**
+ * ScrollExpand — ReactBits, disesuaikan. Lihat scroll-expand.tsx untuk daftar
+ * penyimpangannya.
+ *
+ * ATURAN PALING PENTING DI BERKAS INI: keadaan DEFAULT adalah keadaan AKHIR —
+ * bingkai terbuka penuh, isi terlihat, tinggi mengikuti isinya. Versi aslinya
+ * menaruh keadaan istirahat di sini (clip-path terpotong + overlay opacity 0),
+ * jadi tanpa JS seluruh isi section hilang permanen. Efeknya baru menyala saat
+ * JS memasang [data-mode="expand"].
+ */
+
+.scroll-expand {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-expand__track {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-expand__stage {
+  position: relative;
+  width: 100%;
+  --se-title-size: 4rem;
+}
+
+/* Latar bingkai lewat custom property, bukan warna yang dipatok di sini:
+   komponennya tetap netral, dan pemakainya yang menentukan lembar apa yang
+   memuai. Tanpa media, latar inilah yang jadi "media"-nya. */
+.scroll-expand__frame {
+  position: relative;
+  background-color: var(--se-frame-bg, transparent);
+  background-image: var(--se-frame-image, none);
+  background-size: var(--se-frame-size, auto);
+  background-blend-mode: multiply;
+}
+
+.scroll-expand__overlay {
+  position: relative;
+}
+
+/* ── Mode aktif ────────────────────────────────────────────────────────── */
+
+.scroll-expand[data-mode="expand"] .scroll-expand__stage {
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+}
+
+.scroll-expand[data-mode="expand"] .scroll-expand__frame {
+  position: absolute;
+  inset: 0;
+  will-change: clip-path;
+}
+
+.scroll-expand[data-mode="expand"] .scroll-expand__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Varian scroller sendiri (useWindowScroll={false}). Tidak dipakai di situs
+   ini — beranda digerakkan scroll halaman — tapi API-nya dipertahankan. */
+.scroll-expand--scroller {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: contain;
+}
+
+.scroll-expand--scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Media (opsional) ──────────────────────────────────────────────────── */
+
+.scroll-expand__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  transform-origin: center;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Scrim dari token, bukan hitam pekat: satu-satunya gelap yang boleh di situs
+   ini adalah charcoal, dan itu pun untuk benda solid — bukan #000. */
+.scroll-expand__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-charcoal) 72%, transparent),
+    color-mix(in srgb, var(--color-charcoal) 10%, transparent) 45%,
+    color-mix(in srgb, var(--color-charcoal) 34%, transparent)
+  );
+}
+
+/* ── Judul & petunjuk (opsional) ───────────────────────────────────────── */
+
+/* Serif display + tinta hangat, bukan sans 700 putih ber-text-shadow. Bayangan
+   teks dibuang seluruhnya: di atas kertas krem ia terbaca sebagai noda abu. */
+.scroll-expand__title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 6%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--se-title-size);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: var(--color-ink);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* Di mode statis tidak ada yang memuai, jadi tidak ada yang perlu ditunggu:
+   petunjuknya akan berbohong. Disembunyikan, bukan dibiarkan mengambang. */
+.scroll-expand:not([data-mode="expand"]) .scroll-expand__hint {
+  display: none;
+}
+
+.scroll-expand__hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.25rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  pointer-events: none;
+  will-change: opacity, transform;
+}

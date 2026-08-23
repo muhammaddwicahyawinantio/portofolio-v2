@@ -13,7 +13,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="flex min-h-screen">
       <Sidebar name={session.user.name ?? session.user.email ?? "Admin"} />
-      <main className="min-w-0 flex-1 px-8 py-10 lg:px-12">{children}</main>
+      {/* pt-20 di mobile memberi ruang di bawah top bar tetap (h-14) Sidebar. */}
+      <main className="min-w-0 flex-1 px-5 pt-20 pb-12 sm:px-6 lg:px-12 lg:py-10">{children}</main>
     </div>
   );
 }

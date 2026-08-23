@@ -1,42 +1,201 @@
 @import "tailwindcss";
 
 @theme {
-  /* Silver-gelatin monochrome — cast dingin, sengaja bukan cream/warm. */
-  --color-ink: #0a0a0b;
-  --color-ink-raised: #141417;
-  --color-graphite: #3a3b40;
-  --color-ash: #7a7c83;
-  --color-silver: #c3c6cc;
-  --color-paper: #edeff2;
+  /* Facelift "Kertas Kalkir" (rev. B). Nilai token diambil dari palet yang
+     ditetapkan brief — NAMA dibiarkan apa adanya (`gold` tetap `gold`, `line`
+     tetap `line`) supaya 400+ kelas `text-gold`/`border-line`/`bg-cream` di
+     src/ ikut berubah tanpa satu komponen pun disentuh. Peta namanya:
+       cream      → cream-0   (dasar halaman, satu lembar)
+       cream-deep → cream-1   (dua lembar bertumpuk)
+       line       → border    (hairline, kini beropacity)
+       gold       → sand      (aksen dekoratif)
+       gold-ink   → sand-ink  (turunan yang lolos AA untuk label 12px)
+     Tiga nama benar-benar baru: charcoal, charcoal-soft, sand-deep. */
+  --color-cream: #faf7f0; /* cream-0 — dasar halaman, satu lembar kalkir */
+  --color-cream-deep: #f2ecde; /* cream-1 — dua lembar bertumpuk; footer, strip label */
+  --color-card: #fdfbf6; /* permukaan lembar */
+  --color-ink: #22201b; /* teks utama — 15.2:1 di atas cream-0 */
+  --color-ink-soft: #6b6255; /* teks sekunder — 5.6:1, masih AA */
+  /* Hairline beropacity, bukan hex pekat. Yang lama (#d7cfbf) duduk di 1.32:1
+     dan, dipakai 88 kali, menjadikan seluruh situs terbaca sebagai wireframe.
+     8% grafit = 1.16:1 — hadir, tidak berteriak. */
+  --color-line: rgba(33, 30, 25, 0.08);
+
+  /* GELAP = elemen solid & dekoratif SAJA (tombol, tirai intro, scrim foto,
+     badge). Sengaja dipisah dari `ink` supaya warna teks dan warna benda gelap
+     tidak lagi memakai satu token — aturan 4 brief jadi dijaga oleh nama,
+     bukan oleh disiplin. `charcoal-soft` = kepekatan kedua untuk hover/pressed. */
+  --color-charcoal: #1c1914;
+  --color-charcoal-soft: #312d24;
+
+  /* Aksen hangat: satu hue, tiga kepekatan.
+     `gold`      #c6a26f — DEKORATIF saja (2.2:1 di cream). Jangan untuk teks.
+     `sand-deep` #9b7b4c — 3.7:1: angka besar, garis, tick, tepi hover, dan
+                           semua pemakaian NON-teks (ambang WCAG non-teks 3:1).
+     `gold-ink`  #7f653e — 5.1:1 di cream-0, 4.7:1 di cream-1: satu-satunya yang
+                           boleh membawa teks kecil (eyebrow, label, tag 12px).
+                           Nilai brief (#9b7b4c) hanya 3.3–3.7:1, di bawah AA. */
+  --color-gold: #c6a26f;
+  --color-sand-deep: #9b7b4c;
+  --color-gold-ink: #7f653e;
+
+  /* Alias shadcn-style ke palet yang sama, supaya komponen registry
+     (bg-background, text-muted-foreground, dst) langsung nempel tanpa diedit. */
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-muted-foreground: var(--color-ink-soft);
+  --color-accent: var(--color-gold);
+
+  /* Status validasi dari token, bukan merah/hijau default browser. Oxblood
+     hangat (bukan merah menyala) untuk error, olive teduh untuk sukses — dua-
+     duanya duduk di keluarga kertas/pensil, bukan warna sistem. Lolos AA di
+     atas cream & card. Alias `destructive` disediakan untuk komponen shadcn. */
+  --color-danger: #8f3a2f;
+  --color-success: #5c6b3a;
+  --color-destructive: var(--color-danger);
+
+  /* Radius diperketat 14px → 4px. Kartu di situs ini adalah LEMBAR kertas, dan
+     kertas punya sudut siku. 14px membuatnya terbaca sebagai panel aplikasi.
+     Tombol tetap pill (999px) — ia benda lain: kontrol, bukan lembar. */
+  --radius-card: 4px;
+
+  /* Bayangan tinggal bayangan KONTAK. Halo ambient 48px yang lama adalah satu-
+     satunya hal yang memisahkan kartu dari latar (card vs cream cuma 1.03:1),
+     dan hasilnya kartu mengambang seperti panel Material. Sekarang yang
+     memisahkan adalah hairline + pergantian bidang; bayangan hanya menempelkan
+     kartu ke kertas. Hover masih diberi angkatan kecil supaya interaksi
+     tetap terbaca. */
+  --shadow-card: 0 1px 2px rgba(28, 25, 20, 0.05);
+  --shadow-card-hover: 0 1px 2px rgba(28, 25, 20, 0.06), 0 14px 30px -20px rgba(28, 25, 20, 0.2);
 
   --font-display: var(--font-display-family), Georgia, serif;
   --font-body: var(--font-body-family), system-ui, sans-serif;
+  /* Utility/data face — membawa suara teknis "drafting". */
+  --font-mono: var(--font-mono-family), ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ── Plester kertas ───────────────────────────────────────────────────────
+   Dua lapis, persis seperti batu kapur/plester pada referensi foto:
+
+     1. AWAN tonal besar dan lembut  → `--paper-mottle`, di sini
+     2. BINTIK halus                 → grain di body::after, sudah ada
+
+   Lapis awan ini SIFAT KERTASNYA, bukan film di atas segalanya: ia dipasang
+   sebagai background-image pada bidang cream saja, jadi ia tidak pernah jatuh
+   di atas foto hero atau bidang charcoal. Foto tidak butuh awan plester.
+
+   Cara kerjanya: feTurbulence menghasilkan derau abu-abu, lalu feComponentTransfer
+   memampatkan rentang terangnya ke 0.885–1.0 dan memaksa alpha ke 1. Dipadu
+   `background-blend-mode: multiply`, hasilnya mengalikan warna cream di
+   bawahnya — jadi bercaknya MEWARISI kehangatan cream (beige lebih tua), bukan
+   menimpanya dengan abu-abu. Itu sebabnya ia terbaca hangat seperti di foto
+   tanpa satu pun hue baru masuk ke palet.
+
+   baseFrequency 0.009 pada viewBox 400 + background-size 900px = bercak selebar
+   ~250px: cukup besar untuk lolos uji blur (satu tarikan tenang, bukan ramai).
+   stitchTiles menjadikannya bersambung mulus antar-ubin. */
+:root {
+  --paper-mottle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009' numOctaves='4' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.115' intercept='0.885'/%3E%3CfeFuncG type='linear' slope='0.115' intercept='0.885'/%3E%3CfeFuncB type='linear' slope='0.115' intercept='0.885'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  --paper-mottle-size: 900px 900px;
+  --paper-wash: linear-gradient(
+    180deg,
+    var(--color-cream) 0%,
+    var(--color-cream) 58%,
+    var(--color-cream-deep) 100%
+  );
+}
+
+/**
+ * Bidang kertas. `.paper` = satu lembar (cream-0), `.paper-deep` = dua lembar
+ * bertumpuk (cream-1). Keduanya memakai plester yang sama persis, jadi kedua
+ * ply terbaca sebagai MATERIAL yang sama pada kedalaman berbeda — bukan dua
+ * bahan berbeda.
+ *
+ * Sengaja TIDAK dipasang pada `bg-card`: kartu adalah lembar bersih di atas
+ * meja, dan menaruh tekstur di sana berarti mengulangnya puluhan kali dalam
+ * satu layar — kesalahan yang sama dengan .blueprint-grid dulu.
+ */
+.paper {
+  background-color: var(--color-cream);
+  background-image: var(--paper-mottle);
+  background-size: var(--paper-mottle-size);
+  background-blend-mode: multiply;
+}
+
+.paper-deep {
+  background-color: var(--color-cream-deep);
+  background-image: var(--paper-mottle);
+  background-size: var(--paper-mottle-size);
+  background-blend-mode: multiply;
 }
 
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Base dinaikkan 15px → 16px: teks kecil di situs ini (label, caption,
+       subhead) terasa terlalu mungil. Satu tuas rem menaikkan semuanya
+       serempak; judul besar dipatok vw, jadi tak ikut membengkak. */
+    font-size: 16px;
+  }
+
+  body {
+    /* Sapuan vertikal: cream-0 bertahan sampai 58%, lalu turun ke cream-1 di
+       kaki halaman, jadi footer (yang memang cream-1) TIBA, bukan berganti
+       mendadak. Satu arah, satu keluarga hue.
+       `attachment` dilepas: sapuan ini milik dokumen, bukan milik jendela.
+       Beranda menimpanya dengan bidang `.paper` sendiri (lihat page.tsx) karena
+       di sana ritme sudah datang dari pergantian lembar antar-section. */
+    background-color: var(--color-cream);
+    background-image: var(--paper-mottle), var(--paper-wash);
+    background-size: var(--paper-mottle-size), auto;
+    background-blend-mode: multiply, normal;
+    color: var(--color-ink);
+  }
+
+  /* design.md §3: serif editorial untuk judul, bobot 500–600 dan TIDAK lebih.
+     Ditaruh di base supaya heading tanpa utility apa pun tetap benar; utility
+     Tailwind di komponen tetap menang kalau memang perlu beda. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    color: var(--color-ink);
   }
 
   ::selection {
-    background: var(--color-paper);
+    /* Gold sebagai highlight — pemakaian kecil yang memang diizinkan §2. */
+    background: color-mix(in srgb, var(--color-gold) 28%, transparent);
     color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-paper);
+    outline: 2px solid var(--color-ink);
     outline-offset: 3px;
   }
 
-  /* Grain sinematik tipis di atas seluruh halaman, di bawah header/menu/intro/
-     cursor (z-index rendah) supaya tidak pernah menutupi UI, dan non-interaktif. */
+  /* Serat kertas. Kini SATU-SATUNYA layer tekstur di situs ini — dua smudge dan
+     .blueprint-grid sudah dibuang, jadi tidak ada lagi tiga tekstur bertumpuk.
+     Diturunkan 3% → 2.2%: cream-0 lebih terang dari cream lama, dan noise yang
+     sama terbaca lebih kuat di atasnya. z-index rendah + pointer-events none
+     supaya ia tak pernah menutupi header/menu/intro/kursor.
+
+     `mix-blend-mode: multiply` ditambahkan: tanpa itu derau abu-abu ini
+     ditumpuk apa adanya dan terbaca sebagai KABUT yang menyapu rata — ia
+     mencerahkan bagian gelap sekaligus menggelapkan bagian terang. Dengan
+     multiply ia hanya bisa MENGGELAPKAN, jadi hasilnya butiran yang duduk di
+     dalam kertas seperti grit batu kapur pada foto acuan, bukan lapisan
+     di atasnya. Karena multiply lebih lembut, opacity boleh naik sedikit. */
   body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: 30;
-    opacity: 0.035;
+    opacity: 0.045;
+    mix-blend-mode: multiply;
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
@@ -50,6 +209,272 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/**
+ * Eyebrow — perangkat struktural yang diulang di atas tiap section
+ * (design.md §3 + §5). Dot gold kecil, lalu teks uppercase ber-tracking lebar.
+ * Kelas CSS, bukan komponen React: ia dipakai dari <p>, <dt>, dan <span> di
+ * belasan berkas, dan tidak membawa perilaku apa pun yang perlu dibungkus.
+ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+
+/* Tanda registrasi drafting (+), bukan bullet bulat — memutus kesan "dot label"
+   generik dan menyambung ke bahasa blueprint di seluruh situs. */
+.eyebrow::before {
+  content: "+";
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 1.05em;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-gold-ink);
+}
+
+/* ── Signature: kolam sand ────────────────────────────────────────────────
+   SATU-SATUNYA titik hangat di seluruh beranda, membocor keluar dari sudut
+   kanan-bawah section Contact. Di situlah halaman ingin pengunjung bertindak,
+   jadi di situ pula satu-satunya fokus warna hangat ditaruh (aturan 2 + 6).
+   Kelas, bukan utility arbitrary, supaya nilainya tetap datang dari token.
+   Section pemakainya harus `relative`, dan isinya `relative` juga — elemen
+   absolut ini akan melukis di atas anak statis kalau tidak. */
+.sand-pool {
+  background-image: radial-gradient(
+    62% 118% at 94% 100%,
+    color-mix(in srgb, var(--color-gold) 30%, transparent),
+    transparent 70%
+  );
+}
+
+/* ── Tirai section penutup "Ready to begin?" (ReadyPanel.tsx) ─────────────
+   clip-path memotong keturunan ber-`position: fixed` TANPA menjadikan dirinya
+   containing block. Jadi lapisan latar di dalamnya terpaku ke viewport, tapi
+   cuma terlihat di dalam kotak section ini: saat section naik ke layar,
+   latarnya tidak ikut menggulir — ia TERSINGKAP dari bawah.
+
+   Poligon penuh, bukan `overflow: hidden`: overflow tidak memotong elemen fixed
+   sama sekali.
+
+   Yang di-fixed HANYA latarnya. Isi section (judul, formulir, kartu QR, pita
+   testimoni) tetap mengalir normal di atasnya, jadi setinggi apa pun isinya tak
+   ada yang terpotong — pelajaran dari percobaan pertama, yang menaruh judul di
+   dalam panel fixed dan membuatnya teriris section berikutnya. */
+.ready-curtain {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.ready-backdrop {
+  position: fixed;
+  inset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Latar terpaku itu parallax. Untuk yang meminta gerak dikurangi ia jadi
+     bidang biasa yang ikut menggulir bersama section — warna dan komposisinya
+     sama persis, cuma tanpa efek tersingkapnya. */
+  .ready-backdrop {
+    position: absolute;
+  }
+}
+
+/* Judul bergradasi: pekat di atas, memudar ke bawah. `drop-shadow` versi asli
+   dibuang — di atas cream ia terbaca sebagai noda abu, bukan cahaya.
+   Ukurannya diturunkan dari 8vw/6rem: dulu ia berdiri sendiri di satu layar
+   kosong, sekarang ia kepala section yang di bawahnya langsung ada formulir. */
+.ready-heading {
+  /* TANPA `margin`, `max-width`, atau `text-align` di sini. Kelas ini CSS tanpa
+     @layer, jadi ia menang atas utility Tailwind yang duduk di @layer utilities
+     — `margin: 0` yang dulu ada di sini membuat `mb-20` pada elemennya tidak
+     pernah berlaku sama sekali. Kelas ini cuma memegang perlakuan TIPOGRAFI;
+     tata letaknya diserahkan ke utility di komponen. */
+  font-weight: 500;
+  font-size: clamp(2.6rem, 9vw, 7rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  color: var(--color-ink);
+}
+
+/* Kotak masker per baris, dibuat SplitText. Katanya naik dari bawah kotak ini,
+   dan yang di luar kotak terpotong — itu yang membuat gerakannya terbaca
+   sebagai teks yang muncul, bukan memudar.
+
+   padding-bottom + margin-bottom yang saling meniadakan: tanpa itu `overflow:
+   hidden` memotong ekor huruf turun ("y" dan "g" di "Ready to begin?") pada
+   keadaan diamnya. Tata letaknya tidak berubah sedikit pun. */
+.ready-line {
+  overflow: hidden;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+/* Fill transparan HANYA kalau background-clip:text memang didukung; tanpa
+   penjaga ini, browser yang tidak mendukungnya menampilkan judul tak terlihat.
+   Gradiennya dipasang di KATA, bukan cuma di <h2>: begitu SplitText memotong,
+   kata-katanya jadi span yang di-translate, sedangkan gradien milik <h2> tetap
+   dilukis pada kotak <h2> — hasilnya tiap kata menampilkan potongan gradien dari
+   posisi yang salah selama ia bergerak. Di kata, gradiennya ikut kata itu.
+   `:has()` mematikan gradien <h2> begitu potongannya ada, supaya tidak dua
+   lapis. Sebelum SplitText jalan (dan pada reduced-motion, yang tidak pernah
+   memotong sama sekali), <h2>-lah yang memakainya. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .ready-heading:has(.ready-word) {
+    background-image: none;
+  }
+
+  .ready-heading,
+  .ready-word {
+    background-image: linear-gradient(
+      180deg,
+      var(--color-ink) 0%,
+      color-mix(in srgb, var(--color-ink) 34%, transparent) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* .blueprint-grid DIHAPUS. Ia signature arah desain sebelumnya, tapi ia
+   dirender di SETIAP kartu layanan — lima per layar — jadi signature-nya sudah
+   jadi wallpaper, dan kisinya bertabrakan dengan hairline 8% yang baru. Satu
+   bahasa tekstur (lembar + hairline), bukan dua. Penggantinya: gutter rule
+   (GutterRule.tsx), satu garis per halaman. */
+
+/* Pembatas dimensi: dua hairline mengapit label mono (indeks/koordinat/section).
+   Markup: <div class="dim-divider"><span>01 · SERVICES</span></div>. Tick pendek
+   di ujung-dalam meniru garis ukur gambar teknik. */
+.dim-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.dim-divider::before,
+.dim-divider::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--color-line);
+}
+.dim-divider > span {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+
+/**
+ * Kartu yang mengangkat diri saat hover. Menggantikan tepi-menyala versi
+ * gelap: di atas cream yang membedakan layer adalah bayangan dan garis, bukan
+ * cahaya. :focus-within ikut disertakan supaya pemakai papan ketik dapat
+ * isyarat yang sama.
+ */
+.card-glow {
+  box-shadow: var(--shadow-card);
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.card-glow:hover,
+.card-glow:focus-within {
+  /* sand-deep, bukan sand: ini tepi non-teks, dan sand-deep yang lolos ambang
+     kontras 3:1 untuk elemen non-teks. Dicampur ke transparan (bukan ke
+     --color-line, yang kini sudah beropacity sendiri) supaya hasilnya tetap
+     hairline dan tidak menumpuk dua alpha. */
+  border-color: color-mix(in srgb, var(--color-sand-deep) 38%, transparent);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Fade-in halus untuk elemen yang muncul: halaman login saat load, bubble chat
+   baru di AI Chat. fill-mode `both` supaya blok reduced-motion (durasi 0.01ms)
+   menjadikannya langsung tampil penuh, bukan menghilang. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/**
+ * Marquee — pita kartu berjalan. Animasi CSS murni, tanpa satu baris JS pun,
+ * jadi komponen pemakainya tetap bisa jadi server component.
+ *
+ * Jaraknya dipegang satu variabel karena dipakai dua kali: sebagai `gap` flex
+ * DAN di dalam translateX. Kalau keduanya bisa melenceng, sambungan tiap
+ * putaran akan tersendat.
+ */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--marquee-gap)));
+  }
+}
+
+.marquee {
+  --marquee-gap: 1rem;
+  --marquee-duration: 48s;
+  display: flex;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+  /* Tepi memudar: tanpa ini kartu terpotong mendadak di batas container dan
+     pitanya terbaca sebagai daftar yang kepotong, bukan aliran yang menerus. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--marquee-gap);
+  animation: marquee var(--marquee-duration) linear infinite;
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Blok reduced-motion di @layer base memangkas SEMUA durasi jadi 0.01ms.
+     Untuk pita ini artinya ia melompat ke posisi akhir lalu diam — terlihat
+     rusak, bukan tenang. Jadi animasinya dimatikan penuh, salinan duplikat
+     disembunyikan, dan pitanya dijadikan bisa digulir tangan. */
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+  .marquee-track[aria-hidden="true"] {
+    display: none;
   }
 }
 
@@ -85,3 +510,25 @@
 .intro-failsafe {
   animation: intro-failsafe 0s linear 11s forwards;
 }
+
+/* Latar halaman Contact. Bukan fade: clip-path-nya yang bergerak, dari bingkai
+   kecil di tengah sampai penuh — gambarnya benar-benar memuai membuka halaman.
+   fill-mode `both` wajib; tanpa itu ia balik ke bingkai kecil setelah selesai,
+   dan blok prefers-reduced-motion di atas (durasi 0.01ms) menjadikannya
+   langsung tampil penuh, bukan hilang. */
+@keyframes backdrop-expand {
+  from {
+    clip-path: inset(42% 46%);
+    transform: scale(1.15);
+  }
+  to {
+    clip-path: inset(0%);
+    transform: scale(1);
+  }
+}
+
+.backdrop-expand {
+  animation: backdrop-expand 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+

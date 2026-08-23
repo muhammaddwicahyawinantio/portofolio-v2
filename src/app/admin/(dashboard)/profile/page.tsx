@@ -5,12 +5,12 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const INPUT =
-  "border-graphite/60 focus:border-paper bg-ink text-paper w-full border px-4 py-2.5 text-sm outline-none transition-colors";
+  "border-line focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-gold-ink/35 bg-card text-ink w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors";
 
 function Label({ children, name, ...rest }: React.ComponentProps<"input"> & { children: string }) {
   return (
     <label className="block">
-      <span className="text-ash mb-2 block text-[11px] font-semibold tracking-[0.2em] uppercase">
+      <span className="text-ink-soft mb-2 block font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
         {children}
       </span>
       <input name={name} className={INPUT} {...rest} />
@@ -76,18 +76,18 @@ export default async function ProfilePage({
   return (
     <div className="flex max-w-2xl flex-col gap-8">
       <header className="flex items-baseline justify-between">
-        <h1 className="font-display text-3xl leading-none font-extrabold tracking-[-0.03em]">
+        <h1 className="font-display text-3xl leading-none font-medium tracking-[-0.01em]">
           Profile
         </h1>
-        {saved ? <p className="text-sm text-[#4ade80]">Saved.</p> : null}
+        {saved ? <p className="text-success font-mono text-[13px]">Saved.</p> : null}
       </header>
 
       <form
         action={save}
-        className="border-graphite/40 bg-ink-raised flex flex-col gap-5 border p-6"
+        className="border-line bg-card rounded-card shadow-card flex flex-col gap-5 border p-6"
       >
-        <p className="text-ash text-sm">
-          Signed in as <span className="text-paper">{user.email}</span>
+        <p className="text-ink-soft text-sm">
+          Signed in as <span className="text-ink">{user.email}</span>
         </p>
 
         <Label name="name" defaultValue={user.name} required>
@@ -97,8 +97,8 @@ export default async function ProfilePage({
           Avatar URL
         </Label>
 
-        <div className="border-graphite/40 mt-2 border-t pt-6">
-          <p className="text-ash mb-5 text-[11px] font-semibold tracking-[0.2em] uppercase">
+        <div className="border-line mt-2 border-t pt-6">
+          <p className="text-ink-soft mb-5 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
             Change password
           </p>
           <div className="flex flex-col gap-5">
@@ -108,12 +108,12 @@ export default async function ProfilePage({
             <Label name="newPassword" type="password" autoComplete="new-password">
               New password
             </Label>
-            <p className="text-graphite text-xs">Leave both blank to keep your current password.</p>
+            <p className="text-ink-soft text-xs">Leave both blank to keep your current password.</p>
           </div>
         </div>
 
         {error ? (
-          <p role="alert" className="text-sm text-red-400">
+          <p role="alert" className="text-danger text-[13px] leading-[1.5]">
             {ERRORS[error] ?? "Something went wrong."}
           </p>
         ) : null}
@@ -121,7 +121,7 @@ export default async function ProfilePage({
         <div>
           <button
             type="submit"
-            className="bg-paper text-ink hover:bg-silver px-6 py-3 text-xs font-semibold tracking-[0.2em] uppercase transition-colors"
+            className="bg-ink text-cream hover:bg-ink-soft rounded-full px-6 py-3 text-xs font-semibold tracking-[0.2em] uppercase transition-colors"
           >
             Save changes
           </button>

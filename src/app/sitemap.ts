@@ -2,7 +2,16 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, localePath } from "@/lib/seo";
 
-const PATHS = ["", "/about", "/projects", "/contact"];
+const PATHS = [
+  "",
+  "/about",
+  "/projects",
+  "/services",
+  "/products",
+  "/contact",
+  "/terms",
+  "/privacy",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routing.locales.flatMap((locale) =>

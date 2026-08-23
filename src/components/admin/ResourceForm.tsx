@@ -6,7 +6,7 @@ import type { Field, Resource } from "@/lib/admin/resources";
 import { isVideoUrl } from "@/lib/media";
 
 const INPUT =
-  "border-graphite/60 focus:border-paper bg-ink text-paper w-full border px-4 py-2.5 text-sm outline-none transition-colors";
+  "border-line focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-gold-ink/35 bg-card text-ink w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-colors";
 
 function initialValue(field: Field, record?: Record<string, unknown> | null) {
   const value = record?.[field.name];
@@ -35,6 +35,10 @@ function Control({ field, record }: { field: Field; record?: Record<string, unkn
     return <ImageControl field={field} record={record} />;
   }
 
+  if (field.type === "file") {
+    return <FileControl field={field} record={record} />;
+  }
+
   if (field.type === "gallery") {
     return <GalleryControl field={field} record={record} />;
   }
@@ -46,7 +50,7 @@ function Control({ field, record }: { field: Field; record?: Record<string, unkn
         name={field.name}
         type="checkbox"
         defaultChecked={checked}
-        className="border-graphite/60 bg-ink h-5 w-5 border accent-paper"
+        className="border-line bg-card accent-ink h-5 w-5 rounded border"
       />
     );
   }
@@ -72,7 +76,13 @@ function Control({ field, record }: { field: Field; record?: Record<string, unkn
   );
 }
 
-function ImageControl({ field, record }: { field: Field; record?: Record<string, unknown> | null }) {
+function ImageControl({
+  field,
+  record,
+}: {
+  field: Field;
+  record?: Record<string, unknown> | null;
+}) {
   const initial = typeof record?.[field.name] === "string" ? (record[field.name] as string) : "";
   const [url, setUrl] = useState(initial);
   const [uploading, setUploading] = useState(false);
@@ -103,20 +113,25 @@ function ImageControl({ field, record }: { field: Field; record?: Record<string,
       <input type="hidden" name={field.name} value={url} readOnly />
       {url ? (
         isVideoUrl(url) ? (
-          <video src={url} className="border-graphite/60 h-32 w-32 border object-cover" muted />
+          <video src={url} className="border-line h-32 w-32 border object-cover" muted />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase (local public/ URLs only)
-          <img src={url} alt="" className="border-graphite/60 h-32 w-32 border object-cover" />
+          <img src={url} alt="" className="border-line h-32 w-32 border object-cover" />
         )
       ) : (
-        <div className="border-graphite/60 text-graphite flex h-32 w-32 items-center justify-center border border-dashed text-[10px] uppercase">
+        <div className="border-line text-ink-soft flex h-32 w-32 items-center justify-center border border-dashed text-[10px] uppercase">
           No image
         </div>
       )}
-      <input type="file" accept="image/*,video/mp4,video/webm" onChange={onFileChange} className={INPUT} />
-      {uploading ? <p className="text-ash text-xs">Uploading…</p> : null}
+      <input
+        type="file"
+        accept="image/*,video/mp4,video/webm"
+        onChange={onFileChange}
+        className={INPUT}
+      />
+      {uploading ? <p className="text-ink-soft text-xs">Uploading…</p> : null}
       {error ? (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-danger text-[13px]">
           {error}
         </p>
       ) : null}
@@ -124,7 +139,74 @@ function ImageControl({ field, record }: { field: Field; record?: Record<string,
   );
 }
 
-function GalleryControl({ field, record }: { field: Field; record?: Record<string, unknown> | null }) {
+/**
+ * Sama seperti ImageControl tapi tanpa pratinjau <img>: dipakai untuk berkas
+ * yang tidak bisa dirender sebagai gambar — PDF (CV/resume) dan MP3 (trek
+ * musik). Yang ditampilkan tautan ke berkas tersimpan, supaya admin bisa
+ * memastikan unggahannya benar sebelum menyimpan.
+ *
+ * `accept` datang dari definisi field, bukan dipatok di sini: satu kontrol
+ * melayani beberapa jenis berkas tanpa perlu komponen kedua.
+ */
+function FileControl({ field, record }: { field: Field; record?: Record<string, unknown> | null }) {
+  const initial = typeof record?.[field.name] === "string" ? (record[field.name] as string) : "";
+  const [url, setUrl] = useState(initial);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+
+    const body = new FormData();
+    body.set("file", file);
+    const res = await fetch("/api/admin/upload", { method: "POST", body });
+    const data = (await res.json()) as { url?: string; error?: string };
+
+    setUploading(false);
+    if (!res.ok) {
+      setError(data.error ?? "Upload failed.");
+      return;
+    }
+    setUrl(data.url ?? "");
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <input type="hidden" name={field.name} value={url} readOnly />
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-ink hover:text-ink-soft text-sm underline"
+        >
+          {url}
+        </a>
+      ) : (
+        <p className="text-ink-soft text-[10px] uppercase">No file</p>
+      )}
+      <input type="file" accept={field.accept} onChange={onFileChange} className={INPUT} />
+      {uploading ? <p className="text-ink-soft text-xs">Uploading…</p> : null}
+      {error ? (
+        <p role="alert" className="text-danger text-[13px]">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function GalleryControl({
+  field,
+  record,
+}: {
+  field: Field;
+  record?: Record<string, unknown> | null;
+}) {
   const raw = record?.[field.name];
   const initial = Array.isArray(raw) ? raw.filter((v): v is string => typeof v === "string") : [];
   const [urls, setUrls] = useState<string[]>(initial);
@@ -182,15 +264,15 @@ function GalleryControl({ field, record }: { field: Field; record?: Record<strin
           {urls.map((url) => (
             <div key={url} className="group relative">
               {isVideoUrl(url) ? (
-                <video src={url} className="border-graphite/60 h-24 w-full border object-cover" muted />
+                <video src={url} className="border-line h-24 w-full border object-cover" muted />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase (local public/ URLs only)
-                <img src={url} alt="" className="border-graphite/60 h-24 w-full border object-cover" />
+                <img src={url} alt="" className="border-line h-24 w-full border object-cover" />
               )}
               <button
                 type="button"
                 onClick={() => remove(url)}
-                className="bg-ink/80 text-paper absolute top-1 right-1 px-1.5 py-0.5 text-[10px] uppercase"
+                className="bg-ink/80 text-cream absolute top-1 right-1 px-1.5 py-0.5 text-[10px] uppercase"
               >
                 Remove
               </button>
@@ -198,13 +280,13 @@ function GalleryControl({ field, record }: { field: Field; record?: Record<strin
           ))}
         </div>
       ) : (
-        <div className="border-graphite/60 text-graphite order-1 flex h-24 w-full items-center justify-center border border-dashed text-[10px] uppercase">
+        <div className="border-line text-ink-soft order-1 flex h-24 w-full items-center justify-center border border-dashed text-[10px] uppercase">
           No media
         </div>
       )}
-      {uploading ? <p className="text-ash order-3 text-xs">Uploading…</p> : null}
+      {uploading ? <p className="text-ink-soft order-3 text-xs">Uploading…</p> : null}
       {error ? (
-        <p role="alert" className="order-3 text-sm text-red-400">
+        <p role="alert" className="text-danger order-3 text-[13px]">
           {error}
         </p>
       ) : null}
@@ -239,9 +321,14 @@ export default function ResourceForm({
                 : ""
             }
           >
-            <span className="text-ash mb-2 block text-[11px] font-semibold tracking-[0.2em] uppercase">
+            <span className="text-ink-soft mb-2 block font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
               {field.label}
-              {field.required ? <span aria-hidden> *</span> : null}
+              {field.required ? (
+                <span className="text-gold-ink" aria-hidden>
+                  {" "}
+                  *
+                </span>
+              ) : null}
             </span>
             <Control field={field} record={record} />
           </label>
@@ -249,7 +336,7 @@ export default function ResourceForm({
       </div>
 
       {state?.error ? (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-danger text-[13px]">
           {state.error}
         </p>
       ) : null}
@@ -258,7 +345,7 @@ export default function ResourceForm({
         <button
           type="submit"
           disabled={pending}
-          className="bg-paper text-ink hover:bg-silver px-6 py-3 text-xs font-semibold tracking-[0.2em] uppercase transition-colors disabled:opacity-50"
+          className="bg-ink text-cream hover:bg-ink-soft rounded-full px-6 py-3 text-xs font-semibold tracking-[0.2em] uppercase transition-colors disabled:opacity-50"
         >
           {pending ? "Saving…" : editingId ? "Save changes" : "Create"}
         </button>

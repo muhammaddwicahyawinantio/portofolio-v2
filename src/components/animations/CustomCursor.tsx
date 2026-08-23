@@ -2,22 +2,32 @@
 
 import { useEffect, useRef } from "react";
 
-const TRAIL_MAX = 26; // sampel jejak yang disimpan
+const TRAIL_MAX = 20; // sampel jejak yang disimpan
 const DECAY = 0.045; // hilangnya "tinta" per frame
-const RING_IDLE = 7;
-const RING_HOVER = 26;
-const DOT_R = 3.5; // titik inti, ukurannya tetap
+const RING_IDLE = 5;
+const RING_HOVER = 15;
+const DOT_R = 2.5; // titik inti, ukurannya tetap
 const INTERACTIVE = "a, button, input, textarea, select, [data-cursor]";
 
 type Point = { x: number; y: number; w: number; life: number };
 
 /**
+ * Putih MURNI, bukan --color-cream. Canvas-nya ber-mix-blend-mode: difference,
+ * dan difference terhadap #ffffff adalah inversi tepat: hitam pekat di atas
+ * area terang, putih pekat di atas area gelap. Itulah kenapa kursor ini ikut
+ * benar begitu situsnya berpindah dari latar gelap ke cream tanpa satu baris
+ * pun disentuh — di atas kertas ia jadi tinta. Dengan warna token yang bukan
+ * putih murni hasilnya meleset dan tepinya keabu-abuan.
+ */
+const INK_WHITE = "#ffffff";
+
+/**
  * Kursor custom dan brush trail digambar di SATU canvas, jadi cuma ada satu
  * RAF loop, bukan dua sumber animasi yang harus disinkronkan.
  *
- * Canvas-nya ber-mix-blend-mode: difference, jadi goresan otomatis membalik
- * nilai apa pun di belakangnya — putih di atas ink, gelap di atas segmen
- * terang Value Rail. Tidak perlu logika warna sama sekali.
+ * Ukuran cincin, titik, dan tebal kuas sengaja kecil: kursor ini melayang di
+ * atas tipografi yang kini juga lebih kecil, dan cincin 26px yang lama menutupi
+ * elemen yang justru sedang mau diklik.
  */
 export default function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -65,7 +75,7 @@ export default function CustomCursor() {
       if (dist < 2.5) return;
 
       // Makin cepat gerakannya, makin tipis goresan — seperti kuas sungguhan.
-      const w = Math.max(1.5, 13 - dist * 0.32);
+      const w = Math.max(1, 9 - dist * 0.28);
       trail.push({ x: pointer.x, y: pointer.y, w, life: 1 });
       if (trail.length > TRAIL_MAX) trail.shift();
       last = { x: pointer.x, y: pointer.y };
@@ -82,7 +92,7 @@ export default function CustomCursor() {
       // Jejak: garis penghubung sampel, menebal dan makin pekat ke arah terbaru.
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.strokeStyle = "#edeff2";
+      ctx.strokeStyle = INK_WHITE;
       for (let i = 1; i < trail.length; i++) {
         const a = trail[i - 1]!;
         const b = trail[i]!;
@@ -108,13 +118,13 @@ export default function CustomCursor() {
       // Cincin yang membesar, bukan cakram penuh — cakram menutupi elemen yang
       // justru sedang mau diklik. Titik inti tetap kecil supaya posisinya jelas.
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "#edeff2";
+      ctx.fillStyle = INK_WHITE;
       ctx.beginPath();
       ctx.arc(dot.x, dot.y, DOT_R, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = "#edeff2";
-      ctx.lineWidth = 1.25;
+      ctx.strokeStyle = INK_WHITE;
+      ctx.lineWidth = 1;
       ctx.globalAlpha = 0.7;
       ctx.beginPath();
       ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);

@@ -1,41 +1,37 @@
 import "server-only";
-import { ArrowUpRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { isVideoUrl } from "@/lib/media";
+import { isVideoUrl, toStringArray } from "@/lib/media";
 import Reveal from "@/components/animations/Reveal";
-import { ExpandingCards, type CardItem } from "@/components/ui/expanding-cards";
-
-function toStringArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
-}
+import ProjectAccordion, { type ProjectPanel } from "@/components/sections/ProjectAccordion";
 
 export default async function ProjectShowcase({ locale }: { locale: string }) {
+  // Featured duluan, sisanya menyusul: akordeon dengan satu panel terlihat
+  // rusak, jadi barisnya selalu diisi sampai enam proyek kalau ada.
   const rows = await prisma.project.findMany({
-    where: { featured: true, archived: false },
-    orderBy: { order: "asc" },
+    where: { archived: false },
+    orderBy: [{ featured: "desc" }, { order: "asc" }],
+    take: 6,
   });
   if (rows.length === 0) return null;
 
-  const items: CardItem[] = rows.map((row) => {
+  const panels: ProjectPanel[] = rows.map((row) => {
     const gallery = toStringArray(row.images).filter((url) => !isVideoUrl(url));
-    const imgSrc =
+    const image =
       (row.coverImage && !isVideoUrl(row.coverImage) ? row.coverImage : null) ??
       gallery[0] ??
       "/images/placeholder-1.jpg";
 
     return {
-      id: row.id,
+      slug: row.slug,
       title: locale === "id" ? row.title_id : row.title_en,
-      description: locale === "id" ? row.description_id : row.description_en,
-      imgSrc,
-      icon: <ArrowUpRight size={24} />,
-      linkHref: `/projects/${row.slug}`,
+      category: row.category,
+      image,
     };
   });
 
   return (
     <Reveal>
-      <ExpandingCards items={items} />
+      <ProjectAccordion panels={panels} />
     </Reveal>
   );
 }

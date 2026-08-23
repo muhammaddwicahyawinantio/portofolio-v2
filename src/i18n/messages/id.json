@@ -7,6 +7,7 @@
     "about": "Tentang",
     "projects": "Proyek",
     "services": "Layanan",
+    "products": "Produk",
     "contact": "Kontak",
     "getInTouch": "Hubungi saya"
   },
@@ -27,30 +28,47 @@
     "scroll": "Gulir ke bawah",
     "scrollHint": "Untuk memulai ceritanya"
   },
-  "mediums": {
-    "web": "Web",
-    "motion": "Motion",
-    "threeD": "3D",
-    "sound": "Suara",
-    "film": "Film"
-  },
-  "index": {
-    "eyebrow": "Medium",
-    "web": "Situs yang ringan dimuat dan mulus bergerak.",
-    "motion": "Tipografi, transisi, dan title sequence.",
-    "threeD": "Adegan real-time yang jalan di browser.",
-    "sound": "Scoring dan sound design untuk gambar.",
-    "film": "Penyutradaraan format pendek, syuting sampai grading."
-  },
   "cta": {
     "eyebrow": "Kontak",
     "heading": "Punya sesuatu untuk dibuat?",
-    "action": "Mulai proyek"
+    "action": "Mulai proyek",
+    "ready": "Siap mulai?"
   },
   "about": {
     "eyebrow": "Tentang",
-    "title": "Studio satu orang.",
-    "lead": "Dwi Studio bekerja lintas web, motion, 3D, suara, dan film. Setiap proyek dirancang dan dibangun tangan yang sama, dari awal sampai akhir."
+    "title": "Tentang Saya",
+    "lead": "Dwi Studio bekerja lintas web, motion, 3D, suara, dan film. Setiap proyek dirancang dan dibangun tangan yang sama, dari awal sampai akhir.",
+    "storyTitle": "Perjalanan",
+    "workTitle": "Pengalaman Kerja",
+    "educationTitle": "Pendidikan",
+    "periodLabel": "Periode",
+    "roleLabel": "Peran",
+    "institutionLabel": "Institusi",
+    "skillsTitle": "Keahlian & Perkakas",
+    "certificationsTitle": "Sertifikasi",
+    "valuesTitle": "Cara Saya Bekerja",
+    "cvPreview": "Lihat CV",
+    "cvDownload": "Unduh CV",
+    "cvLoading": "Memuat CV…",
+    "cvError": "CV gagal dimuat.",
+    "cvClose": "Tutup pratinjau",
+    "values": {
+      "one": {
+        "title": "Baca dulu, baru tulis",
+        "body": "Saya menelusuri seluruh jalurnya sebelum menyentuh papan ketik. Perbaikan tercepat yang salah tempat cuma menambah bug kedua."
+      },
+      "two": {
+        "title": "Sekecil mungkin",
+        "body": "Perubahan terkecil yang benar-benar bertahan menang atas abstraksi yang rapi tapi belum dibutuhkan siapa pun."
+      },
+      "three": {
+        "title": "Serahkan yang bisa kamu jalankan",
+        "body": "Setiap proyek pulang dengan CMS-nya sendiri. Kamu tidak perlu menghubungi saya untuk mengganti satu kalimat."
+      }
+    },
+    "mediaTitle": "Musik & Film",
+    "musicTitle": "Musik",
+    "filmTitle": "Film"
   },
   "projects": {
     "eyebrow": "Karya",
@@ -60,19 +78,40 @@
     "year": "Tahun",
     "client": "Klien",
     "visitSite": "Kunjungi situs",
-    "back": "Kembali ke proyek"
+    "back": "Kembali ke proyek",
+    "openHint": "Klik panel yang terbuka untuk membuka studi kasusnya",
+    "readMore": "Lihat proyek"
   },
   "contact": {
     "eyebrow": "Kontak",
     "title": "Mulai proyek.",
-    "lead": "Ceritakan apa yang mau kamu buat dan kapan kamu butuh."
+    "lead": "Ceritakan apa yang mau kamu buat dan kapan kamu butuh.",
+    "breadcrumb": "Kontak / Konsultasi",
+    "point1": "Ceritakan tujuan proyek dan siapa yang kamu tuju",
+    "point2": "Saya balas dengan cakupan, jadwal, dan angka yang jelas",
+    "point3": "Kamu terima situs beserta CMS yang bisa kamu jalankan sendiri",
+    "trustedBy": "Kata klien",
+    "privacy": "Dengan mengirim formulir ini kamu setuju datamu disimpan hanya untuk membalas pesan ini. Tidak dibagikan ke pihak lain, dan tidak dipakai untuk kirim promosi.",
+    "infoSocialTitle": "Kanal lain",
+    "infoLocationTitle": "Lokasi & status",
+    "infoReplyTitle": "Waktu balas",
+    "infoReplyBody": "Semua pesan saya baca dan saya balas sendiri, biasanya dalam satu sampai dua hari kerja.",
+    "qrFallback": "Buat ngopi"
   },
   "services": {
     "eyebrow": "Layanan",
     "title": "Paket & harga.",
     "lead": "Lima cara bekerja sama, mulai dari undangan pernikahan sampai sistem custom.",
     "priceFrom": "Mulai dari",
-    "inquire": "Mulai proyek"
+    "explore": "Jelajahi",
+    "builder": "Builder",
+    "digitalProduct": "Produk Digital"
+  },
+  "products": {
+    "eyebrow": "Produk digital",
+    "title": "Akun premium, siap pakai.",
+    "lead": "Akun langganan yang dijual lewat Lynk.id. Pilih satu, bayar di sana, lalu detail aksesnya menyusul.",
+    "explore": "Jelajahi"
   },
   "contactForm": {
     "name": "Nama",
@@ -95,6 +134,112 @@
   },
   "footer": {
     "statement": "Terbuka untuk proyek terpilih.",
-    "rights": "Hak cipta dilindungi."
+    "rights": "Hak cipta dilindungi.",
+    "builtWith": "Dibangun dengan",
+    "terms": "Syarat Layanan",
+    "privacy": "Kebijakan Privasi"
+  },
+  "features": {
+    "eyebrow": "Proses",
+    "title": "Cara kerjanya.",
+    "back": "Kembali ke beranda",
+    "explore": "Jelajahi"
+  },
+  "benefits": {
+    "eyebrow": "Kenapa kami",
+    "title": "Kenapa percayakan ke kami.",
+    "scrollHint": "Gulir untuk membuka"
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "updated": "Terakhir diperbarui 23 Agustus 2026",
+    "terms": {
+      "title": "Syarat Layanan",
+      "lead": "Yang kamu setujui saat memakai situs ini atau memesan pekerjaan dari Dwi Studio.",
+      "sections": [
+        {
+          "heading": "Dengan siapa kamu berurusan",
+          "body": "Dwi Studio adalah praktik desain dan pengembangan satu orang di Banjarmasin, Indonesia, dijalankan oleh M. Dwi Cahya Winantio. Semua yang ada di situs ini ditulis, dirancang, dan dibangun satu tangan."
+        },
+        {
+          "heading": "Memakai situs ini",
+          "body": "Silakan dibaca, dibagikan, dan ditautkan. Tulisan, foto, kode, dan desainnya milik studio - jangan diterbitkan ulang sebagai milik sendiri, dan tanyakan dulu sebelum dipakai untuk melatih model."
+        },
+        {
+          "heading": "Harga adalah titik mulai",
+          "body": "Angka di halaman Layanan adalah tempat proyek dimulai, bukan penawaran final. Penawaran sungguhan datang setelah pembicaraan tentang kebutuhanmu, dan ia menyebut ruang lingkup, tenggat, serta harganya sebelum pekerjaan dimulai."
+        },
+        {
+          "heading": "Pembayaran",
+          "body": "Proyek dibuka dengan uang muka dan dilunasi saat serah terima, kecuali disepakati lain secara tertulis. Ketentuan persisnya ada di penawaranmu, bukan di halaman ini."
+        },
+        {
+          "heading": "Revisi dan tenggat",
+          "body": "Setiap penawaran menyebut berapa putaran revisi yang termasuk. Tenggat mengandaikan materi dan masukanmu datang tepat waktu; kalau terlambat, tanggal serah terima bergeser sebanyak keterlambatan itu."
+        },
+        {
+          "heading": "Siapa pemilik hasil akhirnya",
+          "body": "Begitu tagihan terakhir lunas, pekerjaannya jadi milikmu. Studio menyimpan hak menampilkannya di portofolio kecuali kamu meminta sebaliknya. Font, foto, dan plugin pihak ketiga tetap tunduk pada lisensinya masing-masing, dan penawaran akan menyebutkannya."
+        },
+        {
+          "heading": "Yang kamu sediakan",
+          "body": "Kamu bertanggung jawab atas teks, gambar, dan logo yang kamu kirim, serta atas hak untuk memakainya."
+        },
+        {
+          "heading": "Batasan",
+          "body": "Pekerjaan dibangun hati-hati dan diuji sebelum dikirim, tapi tak ada situs yang bisa dijamin bebas cacat atau bebas gangguan. Studio tidak bertanggung jawab atas kerugian tidak langsung atau turunan. Tidak ada di sini yang menghapus hakmu menurut hukum perlindungan konsumen Indonesia."
+        },
+        {
+          "heading": "Perubahan syarat ini",
+          "body": "Syarat ini bisa berubah. Tanggal di atas memberi tahu kapan terakhir berubah, dan perubahan tidak pernah berlaku surut untuk pekerjaan yang sudah ditawarkan."
+        },
+        {
+          "heading": "Pertanyaan",
+          "body": "Tulis lewat halaman kontak. Balasannya datang dari studio, bukan dari helpdesk."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "lead": "Apa yang situs ini kumpulkan, kenapa, dan berapa lama disimpan.",
+      "sections": [
+        {
+          "heading": "Versi singkatnya",
+          "body": "Tidak ada iklan, tidak ada piksel pelacak, tidak ada analitik pihak ketiga. Satu-satunya data pribadi yang situs ini kumpulkan adalah yang kamu ketik di formulir kontak."
+        },
+        {
+          "heading": "Yang dikumpulkan formulir kontak",
+          "body": "Nama, alamat email, subjek, dan pesanmu - beserta tanggal masuknya dan status sudah dibaca atau belum. Tidak ada yang lain disimpan, dan tidak ada yang disimpulkan tentang dirimu."
+        },
+        {
+          "heading": "Kenapa dikumpulkan",
+          "body": "Untuk membaca pesanmu dan membalasnya. Itu satu-satunya tujuannya. Datamu tidak pernah dijual, tidak pernah dibagikan ke siapa pun, dan tidak pernah dipakai untuk pemasaran."
+        },
+        {
+          "heading": "Berapa lama disimpan",
+          "body": "Pesan disimpan selama percakapannya masih berguna dan dihapus saat tidak lagi. Minta pesanmu dihapus lebih cepat, dan akan dihapus."
+        },
+        {
+          "heading": "Di mana disimpan",
+          "body": "Di basis data situs ini sendiri, pada hosting yang dikendalikan studio. Penyedia hosting memprosesnya atas nama studio dan berdasarkan kontrak, dan tidak memakainya untuk hal lain."
+        },
+        {
+          "heading": "Cookie",
+          "body": "Menjelajahi situs publik ini tidak menaruh cookie apa pun. Cookie sesi hanya ada di area admin, yang dipakai studio untuk masuk - bukan untuk pengunjung."
+        },
+        {
+          "heading": "Hakmu",
+          "body": "Kamu boleh menanyakan data apa yang disimpan tentangmu, meminta salinannya, meminta koreksi, atau meminta penghapusan. Tulis saja, dan akan ditindaklanjuti."
+        },
+        {
+          "heading": "Perubahan kebijakan ini",
+          "body": "Kalau kebijakan ini berubah, tanggal di atas ikut berubah."
+        },
+        {
+          "heading": "Kontak",
+          "body": "Hubungi studio lewat halaman kontak."
+        }
+      ]
+    }
   }
 }

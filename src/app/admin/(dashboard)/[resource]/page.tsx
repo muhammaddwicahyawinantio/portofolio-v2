@@ -45,20 +45,20 @@ export default async function ResourcePage({
   return (
     <div className="flex flex-col gap-8">
       <header className="flex items-baseline justify-between">
-        <h1 className="font-display text-3xl leading-none font-extrabold tracking-[-0.03em]">
+        <h1 className="font-display text-3xl leading-none font-medium tracking-[-0.01em]">
           {resource.label}
         </h1>
-        {saved ? <p className="text-sm text-[#4ade80]">Saved.</p> : null}
+        {saved ? <p className="text-success font-mono text-[13px]">Saved.</p> : null}
       </header>
 
       {resource.readOnly ? null : (
-        <section className="border-graphite/40 bg-ink-raised border p-6">
+        <section className="border-line bg-card rounded-card shadow-card border p-6">
           <div className="mb-6 flex items-baseline justify-between">
-            <h2 className="text-[11px] font-semibold tracking-[0.2em] uppercase">
+            <h2 className="font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
               {resource.singleton ? "Content" : editing ? "Edit entry" : "New entry"}
             </h2>
             {editing && !resource.singleton ? (
-              <Link href={`/admin/${key}`} className="text-ash hover:text-paper text-xs">
+              <Link href={`/admin/${key}`} className="text-ink-soft hover:text-ink text-xs">
                 Cancel edit
               </Link>
             ) : null}
@@ -68,33 +68,36 @@ export default async function ResourcePage({
       )}
 
       {resource.singleton ? null : (
-        <section className="border-graphite/40 bg-ink-raised overflow-x-auto border">
+        <section className="border-line bg-card rounded-card shadow-card overflow-x-auto border">
           {rows.length === 0 ? (
-            <p className="text-ash px-6 py-10 text-sm">
+            <p className="text-ink-soft px-6 py-10 text-sm">
               Nothing here yet.{" "}
               {resource.readOnly ? "" : "Use the form above to add the first one."}
             </p>
           ) : (
             <table className="w-full min-w-[40rem] text-left text-sm">
-              <thead className="text-graphite text-[10px] tracking-[0.2em] uppercase">
+              <thead className="text-ink-soft border-line border-b font-mono text-[11px] tracking-[0.1em] uppercase">
                 <tr>
                   {resource.columns.map((column) => (
-                    <th key={column} className="px-6 py-3 font-semibold">
+                    <th key={column} className="px-6 py-3 font-medium">
                       {column.replace(/_/g, " ")}
                     </th>
                   ))}
-                  <th className="px-6 py-3 text-right font-semibold">Actions</th>
+                  <th className="px-6 py-3 text-right font-medium">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
-                  <tr key={String(row.id)} className="border-graphite/30 border-t align-top">
+                  <tr
+                    key={String(row.id)}
+                    className="border-line hover:bg-cream-deep/50 border-t align-top transition-colors"
+                  >
                     {resource.columns.map((column) => (
-                      <td key={column} className="text-ash px-6 py-4">
+                      <td key={column} className="text-ink-soft px-6 py-4">
                         {column === resource.columns[0] && row.isRead === false ? (
                           <span
                             aria-label="Unread"
-                            className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-[#4ade80]"
+                            className="bg-gold mr-2 inline-block h-1.5 w-1.5 rounded-full"
                           />
                         ) : null}
                         {renderCell(row[column])}
@@ -106,14 +109,14 @@ export default async function ResourcePage({
                           <form action={toggleMessageRead}>
                             <input type="hidden" name="__id" value={String(row.id)} />
                             <input type="hidden" name="__isRead" value={String(row.isRead)} />
-                            <button type="submit" className="text-ash hover:text-paper text-xs">
+                            <button type="submit" className="text-ink-soft hover:text-ink text-xs">
                               Mark {row.isRead ? "unread" : "read"}
                             </button>
                           </form>
                         ) : (
                           <Link
                             href={`/admin/${key}?id=${row.id}`}
-                            className="text-ash hover:text-paper text-xs"
+                            className="text-ink-soft hover:text-ink text-xs"
                           >
                             Edit
                           </Link>
@@ -122,7 +125,10 @@ export default async function ResourcePage({
                         <form action={deleteRecord}>
                           <input type="hidden" name="__resource" value={key} />
                           <input type="hidden" name="__id" value={String(row.id)} />
-                          <button type="submit" className="text-xs text-red-400 hover:text-red-300">
+                          <button
+                            type="submit"
+                            className="text-danger/75 hover:text-danger text-xs transition-colors"
+                          >
                             Delete
                           </button>
                         </form>

@@ -1,34 +1,37 @@
-import { useTranslations } from "next-intl";
-import Container from "@/components/ui/Container";
-import KineticText from "@/components/animations/KineticText";
+import "server-only";
+import { getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/prisma";
+import { NAV } from "@/lib/nav";
+import Footer1 from "@/components/ui/footer-section-1";
 
-export default function Footer() {
-  const t = useTranslations("footer");
-  const year = new Date().getFullYear();
+export default async function Footer() {
+  const [t, tNav, socials] = await Promise.all([
+    getTranslations("footer"),
+    getTranslations("nav"),
+    // Dikelola dari CMS: Settings → Social Links. Urutannya ikut kolom `order`.
+    prisma.socialLink
+      .findMany({
+        orderBy: { order: "asc" },
+        select: { id: true, platform: true, url: true, icon: true },
+      })
+      // Footer hidup di layout, jadi query yang gagal menjatuhkan SELURUH
+      // halaman — termasuk intro. Social link cuma pelengkap: kalau DB tidak
+      // terjangkau, situsnya tetap tampil tanpa baris ini.
+      .catch((err) => {
+        console.error("[footer] gagal memuat social links:", err);
+        return [];
+      }),
+  ]);
 
   return (
-    <footer className="border-graphite/60 border-t pt-20 pb-10 md:pt-28">
-      <Container>
-        {/* Wordmark besar sebagai satu-satunya rumah efek kinetic/cursor
-            displacement di situs — dipindah dari judul hero supaya first
-            impression halaman tenang, dan kejutan interaktifnya menunggu di
-            titik keluar. <h2> asli tetap di DOM; KineticText hanya menimpanya
-            dengan kanvas kalau perangkatnya sanggup. */}
-        <KineticText>
-          <h2 className="font-display text-center text-[clamp(3.5rem,16vw,13rem)] leading-[0.85] font-extrabold tracking-[-0.03em] uppercase">
-            Dwi Studio
-          </h2>
-        </KineticText>
-
-        <div className="mt-12 flex flex-col gap-8 md:mt-16 md:flex-row md:items-end md:justify-between">
-          <p className="font-display max-w-xl text-2xl leading-[1.05] font-extrabold tracking-[-0.03em] text-balance md:text-4xl">
-            {t("statement")}
-          </p>
-          <p className="text-ash text-[11px] tracking-[0.2em] uppercase">
-            © {year} Dwi Studio. {t("rights")}
-          </p>
-        </div>
-      </Container>
-    </footer>
+    <Footer1
+      navLinks={NAV.map((item) => ({ href: item.href, label: tNav(item.key) }))}
+      socials={socials}
+      statement={t("statement")}
+      rights={t("rights")}
+      builtWithLabel={t("builtWith")}
+      termsLabel={t("terms")}
+      privacyLabel={t("privacy")}
+    />
   );
 }

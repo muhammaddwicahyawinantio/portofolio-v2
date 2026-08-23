@@ -8,16 +8,14 @@ export default function NotFound() {
   return (
     <section className="flex min-h-[70vh] flex-col justify-center pt-40 pb-24">
       <Container>
-        <p className="text-ash mb-8 text-[11px] font-semibold tracking-[0.3em] uppercase">
-          {t("eyebrow")}
-        </p>
+        <p className="eyebrow mb-8">{t("eyebrow")}</p>
         <h1
           data-headline
-          className="font-display max-w-3xl text-[clamp(2.25rem,7vw,5.5rem)] leading-[0.9] font-extrabold tracking-[-0.045em] text-balance"
+          className="font-display max-w-3xl text-[clamp(1.75rem,5vw,3.5rem)] leading-[1.05] font-medium tracking-[-0.01em] text-balance"
         >
           {t("title")}
         </h1>
-        <p className="text-silver mt-8 max-w-lg text-base leading-[1.65] text-pretty">
+        <p className="text-ink-soft mt-8 max-w-lg text-base leading-[1.65] text-pretty">
           {t("lead")}
         </p>
         <Button href="/" className="mt-12">

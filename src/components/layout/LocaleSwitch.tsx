@@ -23,7 +23,7 @@ export default function LocaleSwitch() {
       {routing.locales.map((locale, i) => (
         <Fragment key={locale}>
           {i > 0 && (
-            <span aria-hidden className="text-graphite">
+            <span aria-hidden className="text-ink-soft">
               /
             </span>
           )}
@@ -32,8 +32,8 @@ export default function LocaleSwitch() {
             locale={locale}
             aria-current={locale === active ? "true" : undefined}
             className={clsx(
-              "hover:text-paper transition-colors duration-300",
-              locale === active ? "text-paper" : "text-ash",
+              "hover:text-ink transition-colors duration-300",
+              locale === active ? "text-ink" : "text-ink-soft",
             )}
           >
             {t(locale)}
