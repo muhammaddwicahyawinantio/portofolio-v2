@@ -28,6 +28,16 @@ import {
 import { WEDDING_STATUSES } from "@/lib/wedding/validation";
 import { TEMPLATE_OPTIONS } from "@/lib/wedding/template-registry";
 import { DISPLAY_FONTS, BODY_FONTS } from "@/lib/wedding/fonts";
+import {
+  parseAnimationSettings,
+  SECTION_KEYS,
+  SECTION_CONFIG,
+  PROFILES,
+  INTENSITIES,
+  BACKGROUND_EFFECTS,
+} from "@/lib/wedding/animation-presets";
+
+const pretty = (s: string) => s.split("-").map((w) => w[0]!.toUpperCase() + w.slice(1)).join(" ");
 
 export default async function EditInvitationPage({
   params,
@@ -40,6 +50,8 @@ export default async function EditInvitationPage({
   const { tab = "main", saved, child } = await searchParams;
   const record = await getInvitationForEdit(id);
   if (!record) notFound();
+
+  const anim = parseAnimationSettings(record.animationSettings);
 
   return (
     <div className="flex flex-col gap-8">
@@ -240,6 +252,42 @@ export default async function EditInvitationPage({
               ]}
             />
           </>
+        ) : tab === "animations" ? (
+          <InvitationSectionForm section="animations" id={id}>
+            <Field label="Smooth Scroll">
+              <Checkbox name="anim_smoothScroll" defaultChecked={anim.global.smoothScroll} />
+            </Field>
+            <Field label="Profile">
+              <SelectInput
+                name="anim_profile"
+                defaultValue={anim.global.profile}
+                options={PROFILES.map((p) => ({ value: p, label: pretty(p) }))}
+              />
+            </Field>
+            <Field label="Intensity">
+              <SelectInput
+                name="anim_intensity"
+                defaultValue={anim.global.intensity}
+                options={INTENSITIES.map((p) => ({ value: p, label: pretty(p) }))}
+              />
+            </Field>
+            <Field label="Background Effect">
+              <SelectInput
+                name="anim_background"
+                defaultValue={anim.global.background}
+                options={BACKGROUND_EFFECTS.map((p) => ({ value: p, label: pretty(p) }))}
+              />
+            </Field>
+            {SECTION_KEYS.map((k) => (
+              <Field key={k} label={`${SECTION_CONFIG[k].label} animation`}>
+                <SelectInput
+                  name={`anim_section_${k}`}
+                  defaultValue={anim.sections[k]}
+                  options={SECTION_CONFIG[k].options}
+                />
+              </Field>
+            ))}
+          </InvitationSectionForm>
         ) : tab === "rsvps" ? (
           record.rsvps.length === 0 ? (
             <p className="text-ink-soft text-sm">No RSVPs yet.</p>

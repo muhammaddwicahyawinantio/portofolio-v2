@@ -7,6 +7,7 @@ const TABS: [string, string][] = [
   ["gallery", "Gallery"],
   ["gifts", "Gifts"],
   ["settings", "Settings"],
+  ["animations", "Animations"],
   ["rsvps", "RSVPs"],
   ["guestbook", "Guestbook"],
 ];
