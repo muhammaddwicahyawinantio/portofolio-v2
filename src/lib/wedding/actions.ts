@@ -11,6 +11,8 @@ import {
   cleanText,
   WEDDING_STATUSES,
   GIFT_TYPES,
+  parseRsvp,
+  parseMessage,
   type WeddingStatusValue,
   type GiftType,
 } from "@/lib/wedding/validation";
@@ -296,5 +298,72 @@ export async function deleteGift(form: FormData) {
   const invitationId = String(form.get("__invitationId") ?? "");
   if (!id) return;
   await prisma.weddingGift.delete({ where: { id } });
+  await revalidateChild(invitationId);
+}
+
+// ── Public submissions (no auth) + guestbook moderation ──────────────────────
+
+export type PublicFormState = { error?: string; success?: boolean } | null;
+
+export async function submitRsvp(_prev: PublicFormState, form: FormData): Promise<PublicFormState> {
+  const invitationId = String(form.get("invitationId") ?? "");
+  const inv = await prisma.weddingInvitation.findUnique({
+    where: { id: invitationId },
+    select: { status: true, isRsvpEnabled: true, slug: true },
+  });
+  if (!inv || inv.status !== "published" || !inv.isRsvpEnabled) {
+    return { error: "Undangan tidak tersedia." };
+  }
+
+  const parsed = parseRsvp({
+    guestName: form.get("guestName"),
+    attendanceStatus: form.get("attendanceStatus"),
+    guestCount: form.get("guestCount"),
+    message: form.get("message"),
+  });
+  if (!parsed.ok) return { error: parsed.error };
+
+  await prisma.weddingRsvp.create({ data: { invitationId, ...parsed.value } });
+  revalidatePath(`/undangan/${inv.slug}`);
+  return { success: true };
+}
+
+export async function submitMessage(
+  _prev: PublicFormState,
+  form: FormData,
+): Promise<PublicFormState> {
+  const invitationId = String(form.get("invitationId") ?? "");
+  const inv = await prisma.weddingInvitation.findUnique({
+    where: { id: invitationId },
+    select: { status: true, isGuestbookEnabled: true, slug: true },
+  });
+  if (!inv || inv.status !== "published" || !inv.isGuestbookEnabled) {
+    return { error: "Undangan tidak tersedia." };
+  }
+
+  const parsed = parseMessage({ guestName: form.get("guestName"), message: form.get("message") });
+  if (!parsed.ok) return { error: parsed.error };
+
+  await prisma.weddingMessage.create({ data: { invitationId, ...parsed.value } }); // isVisible defaults true
+  revalidatePath(`/undangan/${inv.slug}`);
+  return { success: true };
+}
+
+export async function toggleMessageVisible(form: FormData) {
+  await requireAdmin();
+  const id = String(form.get("__id") ?? "");
+  const invitationId = String(form.get("__invitationId") ?? "");
+  const isVisible = form.get("__isVisible") === "true";
+  if (!id) return;
+  await prisma.weddingMessage.update({ where: { id }, data: { isVisible: !isVisible } });
+  await revalidateChild(invitationId);
+}
+
+export async function deleteMessage(form: FormData) {
+  await requireAdmin();
+  const id = String(form.get("__id") ?? "");
+  const invitationId = String(form.get("__invitationId") ?? "");
+  if (!id) return;
+  await prisma.weddingMessage.delete({ where: { id } });
   await revalidateChild(invitationId);
 }
