@@ -7,5 +7,5 @@ export default createMiddleware(routing);
 // Titik ditulis [.] bukan \. — backslash tunggal di string TS adalah escape tak
 // dikenal dan diam-diam luruh jadi ".", yang bikin regex menolak semua path.
 export const config = {
-  matcher: ["/((?!api|admin|_next|_vercel|.*[.].*).*)"],
+  matcher: ["/((?!api|admin|undangan|_next|_vercel|.*[.].*).*)"],
 };
