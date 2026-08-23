@@ -20,7 +20,7 @@ export default function Gallery({
         <Eyebrow>Gallery</Eyebrow>
         <HorizontalScrollSection preview={preview}>
           {items.map((g) => (
-            <figure key={g.id} className="w-[68%] shrink-0 sm:w-[44%] md:w-[32%]">
+            <figure key={g.id} className="w-[68%] shrink-0 snap-start sm:w-[44%] md:w-[32%]">
               {/* eslint-disable-next-line @next/next/no-img-element -- local public/ URLs only */}
               <img
                 src={g.imageUrl}

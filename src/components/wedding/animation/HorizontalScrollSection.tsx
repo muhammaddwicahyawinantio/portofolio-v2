@@ -59,9 +59,10 @@ export default function HorizontalScrollSection({
     return () => mm.revert();
   }, [preview]);
 
-  // Mobile / preview default: horizontal swipe. Desktop pin overrides via GSAP.
+  // Mobile / preview default: native horizontal swipe with snap. Desktop pin
+  // overrides via GSAP (snap is disabled there so the pinned tween is smooth).
   return (
-    <div ref={wrapRef} className="overflow-x-auto md:overflow-x-hidden">
+    <div ref={wrapRef} className="snap-x snap-mandatory overflow-x-auto md:snap-none md:overflow-x-hidden">
       <div
         ref={trackRef}
         className="flex gap-3 pb-2 md:flex-nowrap"

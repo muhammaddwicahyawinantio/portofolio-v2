@@ -31,28 +31,41 @@ export default function SectionMotion({
     if (!cls) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const reveal = () => el.classList.add("is-visible");
     el.classList.add("wm", `wm-${cls}`);
+
     let io: IntersectionObserver | null = null;
     let raf = 0;
+    // Safety net: reveal no matter what after a short delay, so a section can
+    // never stay hidden if the observer misfires on some mobile layout or the
+    // browser lacks IntersectionObserver. Content is JS-gated hidden, so JS-off
+    // already stays visible; this covers JS-runs-but-observer-fails.
+    const failsafe = window.setTimeout(reveal, 1600);
 
-    if (preview) {
-      raf = requestAnimationFrame(() => el.classList.add("is-visible"));
-    } else {
-      io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) {
-            if (e.isIntersecting) {
-              el.classList.add("is-visible");
-              io?.unobserve(el);
+    try {
+      if (preview || typeof IntersectionObserver === "undefined") {
+        raf = requestAnimationFrame(reveal);
+      } else {
+        io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                reveal();
+                io?.unobserve(el);
+              }
             }
-          }
-        },
-        { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
-      );
-      io.observe(el);
+          },
+          // Mobile-friendly: 10% visible, with a little bottom inset.
+          { threshold: 0.1, rootMargin: "0px 0px -8% 0px" },
+        );
+        io.observe(el);
+      }
+    } catch {
+      reveal();
     }
 
     return () => {
+      window.clearTimeout(failsafe);
       if (raf) cancelAnimationFrame(raf);
       io?.disconnect();
       el.classList.remove("wm", `wm-${cls}`, "is-visible");
