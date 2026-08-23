@@ -10,7 +10,9 @@ import {
   isSafeUrl,
   cleanText,
   WEDDING_STATUSES,
+  GIFT_TYPES,
   type WeddingStatusValue,
+  type GiftType,
 } from "@/lib/wedding/validation";
 import { TEMPLATES } from "@/lib/wedding/template-registry";
 import { DISPLAY_FONTS, BODY_FONTS } from "@/lib/wedding/fonts";
@@ -159,4 +161,140 @@ export async function togglePublish(form: FormData) {
   });
   revalidatePath("/admin/wedding-invitations");
   revalidatePath(`/undangan/${current.slug}`);
+}
+
+// ── Child collections (events, gallery, gifts) ───────────────────────────────
+
+async function invitationSlug(invitationId: string): Promise<string | null> {
+  const inv = await prisma.weddingInvitation.findUnique({
+    where: { id: invitationId },
+    select: { slug: true },
+  });
+  return inv?.slug ?? null;
+}
+
+function intField(form: FormData, name: string): number {
+  const n = Number(cleanText(form.get(name), 10));
+  return Number.isFinite(n) ? Math.trunc(n) : 0;
+}
+
+async function revalidateChild(invitationId: string) {
+  const slug = await invitationSlug(invitationId);
+  revalidatePath(`/admin/wedding-invitations/${invitationId}`);
+  if (slug) revalidatePath(`/undangan/${slug}`);
+}
+
+// ---- Events ----
+export async function saveEvent(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireAdmin();
+  const invitationId = String(form.get("__invitationId") ?? "");
+  const id = String(form.get("__id") ?? "");
+  if (!invitationId) return { error: "Undangan tidak dikenal." };
+
+  const title = cleanText(form.get("title"), 150);
+  const dateStr = cleanText(form.get("date"), 20);
+  if (!title) return { error: "Judul acara wajib diisi." };
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return { error: "Tanggal tidak valid." };
+
+  let mapsUrl: string | null;
+  try {
+    mapsUrl = urlField(form, "mapsUrl");
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "URL tidak valid." };
+  }
+
+  const data = {
+    title,
+    date,
+    startTime: cleanText(form.get("startTime"), 10) || null,
+    endTime: cleanText(form.get("endTime"), 10) || null,
+    venueName: cleanText(form.get("venueName"), 200) || null,
+    venueAddress: cleanText(form.get("venueAddress"), 500) || null,
+    mapsUrl,
+    description: cleanText(form.get("description"), 1000) || null,
+    order: intField(form, "order"),
+  };
+
+  if (id) await prisma.weddingEvent.update({ where: { id }, data });
+  else await prisma.weddingEvent.create({ data: { ...data, invitationId } });
+
+  await revalidateChild(invitationId);
+  redirect(`/admin/wedding-invitations/${invitationId}?tab=events&saved=1`);
+}
+
+export async function deleteEvent(form: FormData) {
+  await requireAdmin();
+  const id = String(form.get("__id") ?? "");
+  const invitationId = String(form.get("__invitationId") ?? "");
+  if (!id) return;
+  await prisma.weddingEvent.delete({ where: { id } });
+  await revalidateChild(invitationId);
+}
+
+// ---- Gallery ----
+export async function saveGalleryItem(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireAdmin();
+  const invitationId = String(form.get("__invitationId") ?? "");
+  const id = String(form.get("__id") ?? "");
+  if (!invitationId) return { error: "Undangan tidak dikenal." };
+  const imageUrl = cleanText(form.get("imageUrl"), 500);
+  if (!imageUrl || !isSafeUrl(imageUrl)) return { error: "Gambar wajib diunggah." };
+  const data = {
+    imageUrl,
+    caption: cleanText(form.get("caption"), 200) || null,
+    order: intField(form, "order"),
+  };
+  if (id) await prisma.weddingGallery.update({ where: { id }, data });
+  else await prisma.weddingGallery.create({ data: { ...data, invitationId } });
+  await revalidateChild(invitationId);
+  redirect(`/admin/wedding-invitations/${invitationId}?tab=gallery&saved=1`);
+}
+
+export async function deleteGalleryItem(form: FormData) {
+  await requireAdmin();
+  const id = String(form.get("__id") ?? "");
+  const invitationId = String(form.get("__invitationId") ?? "");
+  if (!id) return;
+  await prisma.weddingGallery.delete({ where: { id } });
+  await revalidateChild(invitationId);
+}
+
+// ---- Gifts ----
+export async function saveGift(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireAdmin();
+  const invitationId = String(form.get("__invitationId") ?? "");
+  const id = String(form.get("__id") ?? "");
+  if (!invitationId) return { error: "Undangan tidak dikenal." };
+  const type = String(form.get("type") ?? "");
+  if (!GIFT_TYPES.includes(type as GiftType)) return { error: "Tipe gift tidak valid." };
+  let qrImage: string | null;
+  try {
+    qrImage = urlField(form, "qrImage");
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "URL tidak valid." };
+  }
+  const data = {
+    type: type as GiftType,
+    providerName: cleanText(form.get("providerName"), 150) || null,
+    accountNumber: cleanText(form.get("accountNumber"), 100) || null,
+    accountName: cleanText(form.get("accountName"), 150) || null,
+    address: cleanText(form.get("address"), 500) || null,
+    qrImage,
+    notes: cleanText(form.get("notes"), 500) || null,
+    order: intField(form, "order"),
+  };
+  if (id) await prisma.weddingGift.update({ where: { id }, data });
+  else await prisma.weddingGift.create({ data: { ...data, invitationId } });
+  await revalidateChild(invitationId);
+  redirect(`/admin/wedding-invitations/${invitationId}?tab=gifts&saved=1`);
+}
+
+export async function deleteGift(form: FormData) {
+  await requireAdmin();
+  const id = String(form.get("__id") ?? "");
+  const invitationId = String(form.get("__invitationId") ?? "");
+  if (!id) return;
+  await prisma.weddingGift.delete({ where: { id } });
+  await revalidateChild(invitationId);
 }
