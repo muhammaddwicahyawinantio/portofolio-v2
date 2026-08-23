@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getInvitationForEdit } from "@/lib/wedding/queries";
-import { deleteEvent, deleteGalleryItem, deleteGift } from "@/lib/wedding/actions";
+import {
+  deleteEvent,
+  deleteGalleryItem,
+  deleteGift,
+  toggleMessageVisible,
+  deleteMessage,
+} from "@/lib/wedding/actions";
 import EditorTabs from "@/components/wedding/admin/EditorTabs";
 import InvitationSectionForm from "@/components/wedding/admin/InvitationSectionForm";
 import EventForm from "@/components/wedding/admin/EventForm";
@@ -230,9 +236,85 @@ export default async function EditInvitationPage({
               ]}
             />
           </>
-        ) : (
-          <p className="text-ink-soft text-sm">This tab ships in a later phase.</p>
-        )}
+        ) : tab === "rsvps" ? (
+          record.rsvps.length === 0 ? (
+            <p className="text-ink-soft text-sm">No RSVPs yet.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <p className="text-ink-soft mb-4 text-sm">
+                {record.rsvps.filter((r) => r.attendanceStatus === "attending").length} attending ·{" "}
+                {record.rsvps.filter((r) => r.attendanceStatus === "not_attending").length} not ·{" "}
+                {record.rsvps.filter((r) => r.attendanceStatus === "maybe").length} maybe
+              </p>
+              <table className="w-full min-w-[40rem] text-left text-sm">
+                <thead className="text-ink-soft border-line border-b font-mono text-[11px] tracking-[0.1em] uppercase">
+                  <tr>
+                    <th className="px-4 py-2.5 font-medium">Name</th>
+                    <th className="px-4 py-2.5 font-medium">Status</th>
+                    <th className="px-4 py-2.5 font-medium">Guests</th>
+                    <th className="px-4 py-2.5 font-medium">Message</th>
+                    <th className="px-4 py-2.5 font-medium">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {record.rsvps.map((r) => (
+                    <tr key={r.id} className="border-line border-t align-top">
+                      <td className="text-ink px-4 py-3">{r.guestName}</td>
+                      <td className="text-ink-soft px-4 py-3">{r.attendanceStatus}</td>
+                      <td className="text-ink-soft px-4 py-3">{r.guestCount}</td>
+                      <td className="text-ink-soft px-4 py-3">{r.message ?? "—"}</td>
+                      <td className="text-ink-soft px-4 py-3">
+                        {new Date(r.createdAt).toLocaleDateString("id-ID")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        ) : tab === "guestbook" ? (
+          record.messages.length === 0 ? (
+            <p className="text-ink-soft text-sm">No messages yet.</p>
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {record.messages.map((m) => (
+                <li
+                  key={m.id}
+                  className="border-line flex items-start justify-between gap-4 rounded-lg border p-4"
+                >
+                  <div className={m.isVisible ? "" : "opacity-50"}>
+                    <p className="text-ink text-sm font-medium">{m.guestName}</p>
+                    <p className="text-ink-soft mt-1 text-sm">{m.message}</p>
+                    <p className="text-ink-soft mt-1 text-[11px]">
+                      {new Date(m.createdAt).toLocaleDateString("id-ID")} ·{" "}
+                      {m.isVisible ? "Visible" : "Hidden"}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-4">
+                    <form action={toggleMessageVisible}>
+                      <input type="hidden" name="__id" value={m.id} />
+                      <input type="hidden" name="__invitationId" value={id} />
+                      <input type="hidden" name="__isVisible" value={String(m.isVisible)} />
+                      <button type="submit" className="text-ink-soft hover:text-ink text-xs">
+                        {m.isVisible ? "Hide" : "Show"}
+                      </button>
+                    </form>
+                    <form action={deleteMessage}>
+                      <input type="hidden" name="__id" value={m.id} />
+                      <input type="hidden" name="__invitationId" value={id} />
+                      <button
+                        type="submit"
+                        className="text-danger/75 hover:text-danger text-xs"
+                      >
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )
+        ) : null}
       </section>
     </div>
   );
