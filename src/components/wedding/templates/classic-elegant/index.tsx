@@ -35,7 +35,7 @@ export default function ClassicElegant({ invitation, guestName, preview = false 
       >
         <Cover invitation={invitation} guestName={guestName} preview={preview} />
         <SectionMotion preset={anim.sections.couple} preview={preview}>
-          <Couple invitation={invitation} />
+          <Couple invitation={invitation} scroll={anim.sections.couple} preview={preview} />
         </SectionMotion>
         <SectionMotion preset={anim.sections.countdown} preview={preview}>
           <Countdown date={invitation.events[0]?.date ?? null} />
@@ -49,7 +49,7 @@ export default function ClassicElegant({ invitation, guestName, preview = false 
           </SectionMotion>
         ) : null}
         <SectionMotion preset={anim.sections.gallery} preview={preview}>
-          <Gallery items={invitation.gallery} />
+          <Gallery items={invitation.gallery} scroll={anim.sections.gallery} preview={preview} />
         </SectionMotion>
         <SectionMotion preset={anim.sections.gift} preview={preview}>
           <Gift gifts={invitation.gifts} />
