@@ -18,6 +18,7 @@ import {
 } from "@/lib/wedding/validation";
 import { TEMPLATES } from "@/lib/wedding/template-registry";
 import { DISPLAY_FONTS, BODY_FONTS } from "@/lib/wedding/fonts";
+import { parseAnimationSettings, SECTION_KEYS } from "@/lib/wedding/animation-presets";
 
 export type FormState = { error?: string } | null;
 
@@ -92,6 +93,19 @@ function buildSectionData(section: string, form: FormData): Record<string, unkno
       isRsvpEnabled: form.get("isRsvpEnabled") === "on",
       isGuestbookEnabled: form.get("isGuestbookEnabled") === "on",
     };
+  }
+  if (section === "animations") {
+    const raw = {
+      global: {
+        smoothScroll: form.get("anim_smoothScroll") === "on",
+        profile: form.get("anim_profile"),
+        intensity: form.get("anim_intensity"),
+        background: form.get("anim_background"),
+      },
+      sections: Object.fromEntries(SECTION_KEYS.map((k) => [k, form.get(`anim_section_${k}`)])),
+    };
+    // Validated to whitelisted preset values before it ever reaches the DB.
+    return { animationSettings: parseAnimationSettings(raw) as Prisma.InputJsonValue };
   }
   throw new Error("Section tidak dikenal.");
 }
