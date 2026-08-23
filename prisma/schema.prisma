@@ -313,3 +313,170 @@ model AdminUser {
   avatar       String?
   createdAt    DateTime @default(now())
 }
+
+// ── Undangan pernikahan digital ──────────────────────────────────────────────
+// Konten single-language (Indonesia), locale-free — TIDAK pakai suffix _en/_id
+// seperti model studio di atas. Satu invitation = parent + beberapa koleksi anak.
+
+enum WeddingStatus {
+  draft
+  published
+  archived
+}
+
+enum WeddingGiftType {
+  bank
+  ewallet
+  address
+  qris
+}
+
+enum WeddingAttendance {
+  attending
+  not_attending
+  maybe
+}
+
+model WeddingInvitation {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  status       WeddingStatus @default(draft)
+  templateSlug String        @default("classic-elegant")
+
+  brideName     String
+  groomName     String
+  brideFullName String?
+  groomFullName String?
+  brideParents  String? @db.Text
+  groomParents  String? @db.Text
+  bridePhoto    String?
+  groomPhoto    String?
+
+  openingText String? @db.Text
+  quoteText   String? @db.Text
+  storyTitle  String?
+  storyText   String? @db.Text
+  coverImage  String?
+  musicUrl    String?
+
+  primaryColor    String @default("#5A6B4E")
+  secondaryColor  String @default("#B98A7A")
+  accentColor     String @default("#C9A15A")
+  backgroundColor String @default("#F7F3EC")
+  fontDisplay     String @default("cormorant")
+  fontBody        String @default("jost")
+
+  isMusicEnabled     Boolean @default(true)
+  isRsvpEnabled      Boolean @default(true)
+  isGuestbookEnabled Boolean @default(true)
+
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  events   WeddingEvent[]
+  gallery  WeddingGallery[]
+  gifts    WeddingGift[]
+  guests   WeddingGuest[]
+  rsvps    WeddingRsvp[]
+  messages WeddingMessage[]
+
+  @@index([status])
+}
+
+model WeddingEvent {
+  id           String   @id @default(cuid())
+  invitationId String
+  title        String
+  date         DateTime
+  startTime    String?
+  endTime      String?
+  venueName    String?
+  venueAddress String?  @db.Text
+  mapsUrl      String?
+  description  String?  @db.Text
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, order])
+}
+
+model WeddingGallery {
+  id           String   @id @default(cuid())
+  invitationId String
+  imageUrl     String
+  caption      String?
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, order])
+}
+
+model WeddingGift {
+  id            String          @id @default(cuid())
+  invitationId  String
+  type          WeddingGiftType
+  providerName  String?
+  accountNumber String?
+  accountName   String?
+  address       String?         @db.Text
+  qrImage       String?
+  notes         String?         @db.Text
+  order         Int             @default(0)
+  createdAt     DateTime        @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, order])
+}
+
+model WeddingGuest {
+  id           String   @id @default(cuid())
+  invitationId String
+  name         String
+  slug         String
+  phone        String?
+  groupName    String?
+  createdAt    DateTime @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  rsvps      WeddingRsvp[]
+
+  @@unique([invitationId, slug])
+  @@index([invitationId])
+}
+
+model WeddingRsvp {
+  id               String            @id @default(cuid())
+  invitationId     String
+  guestId          String?
+  guestName        String
+  attendanceStatus WeddingAttendance
+  guestCount       Int               @default(1)
+  message          String?           @db.Text
+  createdAt        DateTime          @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guest      WeddingGuest?     @relation(fields: [guestId], references: [id], onDelete: SetNull)
+
+  @@index([invitationId, createdAt])
+}
+
+model WeddingMessage {
+  id           String   @id @default(cuid())
+  invitationId String
+  guestName    String
+  message      String   @db.Text
+  isVisible    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, createdAt])
+}
