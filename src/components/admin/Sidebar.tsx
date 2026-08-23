@@ -24,6 +24,7 @@ import {
   Tag,
   LayoutGrid,
   Gift,
+  Heart,
   Bot,
   Settings,
   Menu,
@@ -103,6 +104,13 @@ const NAV: NavSection[] = [
     ],
   },
   {
+    key: "weddings",
+    label: "Weddings",
+    icon: Heart,
+    href: "/admin/wedding-invitations",
+    hint: "Digital wedding invitations — create, theme, publish, and review RSVPs.",
+  },
+  {
     key: "ai-chat",
     label: "AI Chat",
     icon: Bot,
@@ -129,6 +137,12 @@ function sectionForPath(pathname: string): string {
   for (const s of NAV) {
     if (s.href === pathname) return s.key;
     if (s.items?.some((i) => i.href === pathname)) return s.key;
+  }
+  // Prefix match for standalone sections with sub-routes (mis. editor undangan
+  // /admin/wedding-invitations/[id]). "/admin" dilewati agar tidak menang atas
+  // semua path.
+  for (const s of NAV) {
+    if (s.href && s.href !== "/admin" && pathname.startsWith(s.href)) return s.key;
   }
   return "dashboard";
 }
