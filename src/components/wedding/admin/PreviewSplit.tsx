@@ -1,5 +1,5 @@
 "use client";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import MobilePreview from "./MobilePreview";
 import type { WeddingPreviewData } from "@/components/wedding/types";
 
@@ -56,6 +56,7 @@ export default function PreviewSplit({
 }) {
   const [draft, setDraft] = useState<Record<string, string | boolean>>({});
   const [view, setView] = useState<"edit" | "preview">("edit");
+  const editorRef = useRef<HTMLDivElement>(null);
 
   function sync(e: FormEvent) {
     const t = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -63,6 +64,22 @@ export default function PreviewSplit({
     const value = t instanceof HTMLInputElement && t.type === "checkbox" ? t.checked : t.value;
     setDraft((d) => ({ ...d, [t.name]: value }));
   }
+
+  // Uploads (ImageControl) can't bubble a normal change event for the new URL,
+  // so they emit a custom "wedding:field-change" — this catches it so cover /
+  // bride / groom photos update in the preview the moment they finish uploading.
+  useEffect(() => {
+    const el = editorRef.current;
+    if (!el) return;
+    function onFieldChange(e: Event) {
+      const detail = (e as CustomEvent<{ name?: string; value?: string }>).detail;
+      if (detail?.name && LIVE_FIELDS.has(detail.name)) {
+        setDraft((d) => ({ ...d, [detail.name as string]: detail.value ?? "" }));
+      }
+    }
+    el.addEventListener("wedding:field-change", onFieldChange as EventListener);
+    return () => el.removeEventListener("wedding:field-change", onFieldChange as EventListener);
+  }, []);
 
   const preview = {
     ...record,
@@ -89,6 +106,7 @@ export default function PreviewSplit({
 
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <div
+          ref={editorRef}
           onChange={sync}
           className={`min-w-0 flex-1 ${view === "preview" ? "hidden lg:block" : ""}`}
         >

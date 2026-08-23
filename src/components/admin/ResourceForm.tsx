@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, type ChangeEvent } from "react";
+import { useActionState, useRef, useState, type ChangeEvent } from "react";
 import { saveRecord, type FormState } from "@/lib/admin/actions";
 import type { Field, Resource } from "@/lib/admin/resources";
 import { isVideoUrl } from "@/lib/media";
@@ -87,6 +87,7 @@ export function ImageControl({
   const [url, setUrl] = useState(initial);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const hiddenRef = useRef<HTMLInputElement>(null);
 
   async function onFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -106,11 +107,20 @@ export function ImageControl({
       return;
     }
     setUrl(data.url ?? "");
+    // Bubbling event so listeners (wedding live preview) see the new URL — a
+    // programmatic hidden-input value change fires none on its own. Ignored
+    // where nothing listens.
+    hiddenRef.current?.dispatchEvent(
+      new CustomEvent("wedding:field-change", {
+        bubbles: true,
+        detail: { name: field.name, value: data.url ?? "" },
+      }),
+    );
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <input type="hidden" name={field.name} value={url} readOnly />
+      <input ref={hiddenRef} type="hidden" name={field.name} value={url} readOnly />
       {url ? (
         isVideoUrl(url) ? (
           <video src={url} className="border-line h-32 w-32 border object-cover" muted />
@@ -153,6 +163,7 @@ function FileControl({ field, record }: { field: Field; record?: Record<string, 
   const [url, setUrl] = useState(initial);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const hiddenRef = useRef<HTMLInputElement>(null);
 
   async function onFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -172,11 +183,20 @@ function FileControl({ field, record }: { field: Field; record?: Record<string, 
       return;
     }
     setUrl(data.url ?? "");
+    // Bubbling event so listeners (wedding live preview) see the new URL — a
+    // programmatic hidden-input value change fires none on its own. Ignored
+    // where nothing listens.
+    hiddenRef.current?.dispatchEvent(
+      new CustomEvent("wedding:field-change", {
+        bubbles: true,
+        detail: { name: field.name, value: data.url ?? "" },
+      }),
+    );
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <input type="hidden" name={field.name} value={url} readOnly />
+      <input ref={hiddenRef} type="hidden" name={field.name} value={url} readOnly />
       {url ? (
         <a
           href={url}
