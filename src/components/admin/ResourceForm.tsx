@@ -76,7 +76,7 @@ function Control({ field, record }: { field: Field; record?: Record<string, unkn
   );
 }
 
-function ImageControl({
+export function ImageControl({
   field,
   record,
 }: {
