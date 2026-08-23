@@ -6,10 +6,12 @@ import { entranceClass } from "@/lib/wedding/animation-presets";
  * Whole-section entrance reveal driven by the section's chosen preset. Adds the
  * hidden `.wm-*` state via JS ONLY when motion is allowed (so no-JS and
  * reduced-motion always show final content), then reveals:
- * - public page: on scroll into view (IntersectionObserver, window).
- * - admin preview: immediately on mount, and replays when the preset changes,
- *   so picking a preset visibly does something without scroll gymnastics inside
- *   the device frame.
+ * - public page: when the section scrolls into view (IntersectionObserver).
+ * - admin preview: immediately on mount, replaying when the preset changes.
+ *
+ * Never-stuck guarantee without killing the scroll effect: the safety timer
+ * only reveals a section that is actually on screen (an observer hiccup) —
+ * off-screen sections are left to scroll-reveal so the entrance still plays.
  */
 export default function SectionMotion({
   preset,
@@ -32,43 +34,47 @@ export default function SectionMotion({
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const reveal = () => el.classList.add("is-visible");
+    const cleanupClasses = () => el.classList.remove("wm", `wm-${cls}`, "is-visible");
     el.classList.add("wm", `wm-${cls}`);
 
-    let io: IntersectionObserver | null = null;
-    let raf = 0;
-    // Safety net: reveal no matter what after a short delay, so a section can
-    // never stay hidden if the observer misfires on some mobile layout or the
-    // browser lacks IntersectionObserver. Content is JS-gated hidden, so JS-off
-    // already stays visible; this covers JS-runs-but-observer-fails.
-    const failsafe = window.setTimeout(reveal, 1600);
-
-    try {
-      if (preview || typeof IntersectionObserver === "undefined") {
-        raf = requestAnimationFrame(reveal);
-      } else {
-        io = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries) {
-              if (e.isIntersecting) {
-                reveal();
-                io?.unobserve(el);
-              }
-            }
-          },
-          // Mobile-friendly: 10% visible, with a little bottom inset.
-          { threshold: 0.1, rootMargin: "0px 0px -8% 0px" },
-        );
-        io.observe(el);
-      }
-    } catch {
-      reveal();
+    if (preview) {
+      const raf = requestAnimationFrame(reveal);
+      return () => {
+        cancelAnimationFrame(raf);
+        cleanupClasses();
+      };
     }
+
+    if (typeof IntersectionObserver === "undefined") {
+      reveal();
+      return cleanupClasses;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            reveal();
+            io.disconnect();
+          }
+        }
+      },
+      { threshold: 0.12 },
+    );
+    io.observe(el);
+
+    // Safety net: if a section that is ON SCREEN hasn't revealed (observer
+    // hiccup), reveal it. Off-screen sections are left alone so their entrance
+    // still plays when scrolled to.
+    const failsafe = window.setTimeout(() => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.9 && r.bottom > 0) reveal();
+    }, 2500);
 
     return () => {
       window.clearTimeout(failsafe);
-      if (raf) cancelAnimationFrame(raf);
-      io?.disconnect();
-      el.classList.remove("wm", `wm-${cls}`, "is-visible");
+      io.disconnect();
+      cleanupClasses();
     };
   }, [preset, preview]);
 
