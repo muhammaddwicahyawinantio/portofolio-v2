@@ -24,7 +24,9 @@ import {
   ColorInput,
   Checkbox,
   ImageControl,
+  LABEL,
 } from "@/components/wedding/admin/fields";
+import MusicControl from "@/components/wedding/admin/MusicControl";
 import { WEDDING_STATUSES } from "@/lib/wedding/validation";
 import { TEMPLATE_OPTIONS } from "@/lib/wedding/template-registry";
 import { DISPLAY_FONTS, BODY_FONTS } from "@/lib/wedding/fonts";
@@ -182,9 +184,13 @@ export default async function EditInvitationPage({
                 options={BODY_FONTS.map((f) => ({ value: f.key, label: f.label }))}
               />
             </Field>
-            <Field label="Music URL" wide>
-              <TextInput name="musicUrl" type="url" defaultValue={record.musicUrl ?? ""} />
-            </Field>
+            <div className="md:col-span-2">
+              <span className={LABEL}>Background Music</span>
+              <MusicControl record={record} />
+              <p className="text-ink-soft mt-2 text-[11px]">
+                Upload an MP3 file used after guests open the invitation.
+              </p>
+            </div>
             <Field label="Enable Music">
               <Checkbox name="isMusicEnabled" defaultChecked={record.isMusicEnabled} />
             </Field>
