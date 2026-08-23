@@ -1,8 +1,8 @@
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 import Section from "@/components/wedding/shared/Section";
 import Eyebrow from "@/components/wedding/shared/Eyebrow";
 
-export default function Gallery({ items }: { items: PublicInvitation["gallery"] }) {
+export default function Gallery({ items }: { items: WeddingPreviewData["gallery"] }) {
   if (items.length === 0) return null;
   return (
     <Section>

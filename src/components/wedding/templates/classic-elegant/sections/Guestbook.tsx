@@ -1,7 +1,7 @@
 "use client";
 import { useActionState } from "react";
 import { submitMessage, type PublicFormState } from "@/lib/wedding/actions";
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 import Section from "@/components/wedding/shared/Section";
 import Eyebrow from "@/components/wedding/shared/Eyebrow";
 
@@ -13,7 +13,7 @@ export default function Guestbook({
   messages,
 }: {
   invitationId: string;
-  messages: PublicInvitation["messages"];
+  messages: WeddingPreviewData["messages"];
 }) {
   const [state, formAction, pending] = useActionState<PublicFormState, FormData>(
     submitMessage,

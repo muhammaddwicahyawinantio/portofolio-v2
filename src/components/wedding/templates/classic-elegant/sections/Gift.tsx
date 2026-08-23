@@ -1,9 +1,9 @@
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 import Section from "@/components/wedding/shared/Section";
 import Eyebrow from "@/components/wedding/shared/Eyebrow";
 import CopyButton from "@/components/wedding/shared/CopyButton";
 
-export default function Gift({ gifts }: { gifts: PublicInvitation["gifts"] }) {
+export default function Gift({ gifts }: { gifts: WeddingPreviewData["gifts"] }) {
   if (gifts.length === 0) return null;
   return (
     <Section>

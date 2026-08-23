@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPublishedInvitation } from "@/lib/wedding/queries";
-import { getTemplate } from "@/lib/wedding/template-registry";
+import WeddingTemplateRenderer from "@/components/wedding/template-renderer";
 import { cleanText } from "@/lib/wedding/validation";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,6 +23,5 @@ export default async function InvitationPage({
   if (!invitation) notFound();
 
   const guestName = to ? cleanText(to, 100) || null : null;
-  const Template = getTemplate(invitation.templateSlug).component;
-  return <Template invitation={invitation} guestName={guestName} />;
+  return <WeddingTemplateRenderer invitation={invitation} guestName={guestName} />;
 }

@@ -1,4 +1,4 @@
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 import Section from "@/components/wedding/shared/Section";
 import Eyebrow from "@/components/wedding/shared/Eyebrow";
 
@@ -11,7 +11,7 @@ function formatDate(d: Date) {
   });
 }
 
-export default function Events({ events }: { events: PublicInvitation["events"] }) {
+export default function Events({ events }: { events: WeddingPreviewData["events"] }) {
   if (events.length === 0) return null;
   return (
     <Section>

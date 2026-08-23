@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 
 export default function Cover({
   invitation,
   guestName,
 }: {
-  invitation: PublicInvitation;
+  invitation: WeddingPreviewData;
   guestName: string | null;
 }) {
   const [opened, setOpened] = useState(false);

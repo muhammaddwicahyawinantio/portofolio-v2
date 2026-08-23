@@ -1,8 +1,8 @@
 import type { ComponentType } from "react";
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 import ClassicElegant from "@/components/wedding/templates/classic-elegant";
 
-export type TemplateProps = { invitation: PublicInvitation; guestName: string | null };
+export type TemplateProps = { invitation: WeddingPreviewData; guestName: string | null };
 
 type TemplateEntry = { label: string; thumbnail: string; component: ComponentType<TemplateProps> };
 

@@ -1,7 +1,7 @@
-import type { PublicInvitation } from "@/lib/wedding/queries";
+import type { WeddingPreviewData } from "@/components/wedding/types";
 import Section from "@/components/wedding/shared/Section";
 
-export default function Closing({ invitation }: { invitation: PublicInvitation }) {
+export default function Closing({ invitation }: { invitation: WeddingPreviewData }) {
   return (
     <Section className="text-center">
       <p className="text-sm leading-relaxed opacity-80">
