@@ -725,6 +725,28 @@ async function main() {
         "Berawal dari satu kelas kuliah di tahun 2019, pertemanan kami tumbuh perlahan menjadi sesuatu yang lebih dalam. Setelah lima tahun melewati suka dan duka bersama, kami memutuskan untuk melangkah ke jenjang yang lebih serius.",
       coverImage: "/images/hero.jpg",
       publishedAt: new Date(),
+      // Set animasi "perfect" — showcase cinematic cover, portrait parallax,
+      // dan galeri horizontal-scroll.
+      animationSettings: {
+        global: {
+          smoothScroll: true,
+          profile: "elegant",
+          intensity: "medium",
+          background: "parallax-soft",
+        },
+        sections: {
+          cover: "cinematic-opening",
+          couple: "portrait-parallax",
+          countdown: "number-rise",
+          events: "card-reveal",
+          story: "timeline-reveal",
+          gallery: "horizontal-scroll",
+          gift: "soft-rise",
+          rsvp: "form-reveal",
+          guestbook: "message-cascade",
+          closing: "fade-up",
+        },
+      },
       events: {
         create: [
           {
