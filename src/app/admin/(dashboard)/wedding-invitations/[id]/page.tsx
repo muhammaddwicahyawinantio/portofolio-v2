@@ -14,6 +14,8 @@ import EventForm from "@/components/wedding/admin/EventForm";
 import GalleryForm from "@/components/wedding/admin/GalleryForm";
 import GiftForm from "@/components/wedding/admin/GiftForm";
 import ChildList from "@/components/wedding/admin/ChildList";
+import PreviewSplit from "@/components/wedding/admin/PreviewSplit";
+import { weddingFontVars } from "@/lib/wedding/fonts-next";
 import {
   Field,
   TextInput,
@@ -61,9 +63,11 @@ export default async function EditInvitationPage({
         </div>
       </header>
 
-      <EditorTabs id={id} current={tab} />
+      <PreviewSplit record={record} fontClass={weddingFontVars}>
+        <div className="flex flex-col gap-6">
+          <EditorTabs id={id} current={tab} />
 
-      <section className="border-line bg-card rounded-card shadow-card border p-6">
+          <section className="border-line bg-card rounded-card shadow-card border p-6">
         {tab === "main" ? (
           <InvitationSectionForm section="main" id={id}>
             <Field label="Title" required>
@@ -315,7 +319,9 @@ export default async function EditInvitationPage({
             </ul>
           )
         ) : null}
-      </section>
+          </section>
+        </div>
+      </PreviewSplit>
     </div>
   );
 }
