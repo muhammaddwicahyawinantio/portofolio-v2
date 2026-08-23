@@ -371,6 +371,11 @@ model WeddingInvitation {
   isRsvpEnabled      Boolean @default(true)
   isGuestbookEnabled Boolean @default(true)
 
+  // Preset animasi per-section + global. Bentuknya divalidasi lewat
+  // animation-presets.ts (parseAnimationSettings) di batas baca/tulis — kolom
+  // Json bebas skema, jadi keamanannya ada di parser, bukan di database.
+  animationSettings Json?
+
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
