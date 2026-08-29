@@ -23,8 +23,11 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "about" });
 
   return {
-    title: t("title"),
-    description: t("lead"),
+    // absolute: metaTitle sudah membawa suffix "DwiStudio" sendiri (lihat
+    // seobasic.md §2-6) — kalau lewat `title` biasa, template layout root
+    // ("%s — DwiStudio") menambahkannya LAGI dan menghasilkan "... — DwiStudio — DwiStudio".
+    title: { absolute: t("metaTitle") },
+    description: t("metaDescription"),
     alternates: alternates(locale, "/about"),
   };
 }
@@ -57,7 +60,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const hasHistory = work.length > 0 || education.length > 0;
 
   return (
-    <>
+    <div className="interior-page pb-24 md:pb-36">
       {/* 2 - Hero: bio dan potret duduk di satu bingkai, dipisah satu garis.
           Padding atas tetap besar - navbar mengambang di atasnya. */}
       <section className="pt-28 md:pt-32">
@@ -69,14 +72,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             >
               <h1
                 data-headline
-                className="font-display text-[clamp(1.9rem,5.5vw,4rem)] leading-[1.05] font-medium tracking-[-0.022em] text-balance"
+                className="font-rampart-one font-display text-[clamp(2.2rem,6.5vw,4.75rem)] leading-[1.05] font-medium tracking-[-0.022em] text-balance"
               >
                 {about ? (id ? about.title_id : about.title_en) : t("title")}
               </h1>
 
               {about ? (
                 <>
-                  <p className="text-ink-soft mt-6 max-w-lg text-sm leading-[1.7] text-pretty md:text-base">
+                  <p className="text-ink-soft mt-6 max-w-lg text-base leading-[1.7] text-pretty md:text-lg">
                     {id ? about.shortDescription_id : about.shortDescription_en}
                   </p>
 
@@ -304,7 +307,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <Frame>
             <Panel label={tCta("eyebrow")}>
               <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-                <h2 className="font-display max-w-xl text-[clamp(1.5rem,3.5vw,2.5rem)] leading-[1.05] font-medium tracking-[-0.01em] text-balance">
+                <h2 className="font-rampart-one font-display max-w-xl text-[clamp(1.5rem,3.5vw,2.5rem)] leading-[1.05] font-medium tracking-[-0.01em] text-balance">
                   {tCta("heading")}
                 </h2>
                 <Button href="/contact">{tCta("action")}</Button>
@@ -313,7 +316,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </Frame>
         </Container>
       </section>
-    </>
+    </div>
   );
 }
 

@@ -6,7 +6,7 @@ import Section from "@/components/wedding/shared/Section";
 import Eyebrow from "@/components/wedding/shared/Eyebrow";
 
 const INPUT =
-  "w-full rounded-lg border border-[var(--w-accent)]/40 bg-white/60 px-4 py-2.5 text-sm text-[#2E2A26] outline-none transition-colors focus:border-[var(--w-primary)]";
+  "w-full rounded-lg border border-[var(--w-accent)]/40 bg-white/60 px-4 py-2.5 text-sm text-[#2E2A26] outline-none backdrop-blur-sm transition-colors focus:border-[var(--w-primary)]";
 
 export default function Guestbook({
   invitationId,
@@ -49,7 +49,7 @@ export default function Guestbook({
           <p className="text-center text-sm opacity-60">Jadilah yang pertama memberi ucapan.</p>
         ) : (
           messages.map((m) => (
-            <div key={m.id} className="rounded-xl border border-[var(--w-accent)]/25 bg-white/40 p-4">
+            <div key={m.id} className="rounded-xl border border-[var(--w-accent)]/25 bg-white/40 p-4 backdrop-blur-sm">
               <p className="font-[family-name:var(--w-font-display)] text-lg text-[var(--w-primary)]">
                 {m.guestName}
               </p>

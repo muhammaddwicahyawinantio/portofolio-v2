@@ -90,7 +90,9 @@ export default function Cover({
   if (preview) {
     return (
       <div
-        className="flex min-h-[70vh] flex-col items-center justify-center px-6 py-16 text-center"
+        className={`flex min-h-[70vh] flex-col items-center justify-center px-6 py-16 text-center ${
+          onImage ? "" : "w-ambient-bg"
+        }`}
         style={bgStyle}
       >
         {inner}
@@ -106,8 +108,8 @@ export default function Cover({
       <div
         aria-hidden={opened}
         className={`fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center transition-opacity duration-700 ${
-          opened ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
+          onImage ? "" : "w-ambient-bg"
+        } ${opened ? "pointer-events-none opacity-0" : "opacity-100"}`}
         style={bgStyle}
       >
         {inner}

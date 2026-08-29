@@ -11,10 +11,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session?.user) redirect("/admin/login");
 
   return (
-    <div className="flex min-h-screen">
+    <div className="admin-shell flex min-h-screen">
       <Sidebar name={session.user.name ?? session.user.email ?? "Admin"} />
       {/* pt-20 di mobile memberi ruang di bawah top bar tetap (h-14) Sidebar. */}
-      <main className="min-w-0 flex-1 px-5 pt-20 pb-12 sm:px-6 lg:px-12 lg:py-10">{children}</main>
+      <main className="relative z-10 min-w-0 flex-1 px-5 pt-20 pb-12 sm:px-6 lg:px-12 lg:py-10">
+        {children}
+      </main>
     </div>
   );
 }

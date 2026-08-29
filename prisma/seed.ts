@@ -3,8 +3,6 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-const CATEGORIES = ["Branding", "Web Design", "Motion", "Photography"];
-
 async function main() {
   await prisma.adminUser.upsert({
     where: { email: process.env.ADMIN_EMAIL ?? "admin@dwistudio.com" },
@@ -36,27 +34,77 @@ async function main() {
         year: "2026",
         client: "Muhammad Ilham",
         link: "https://moshmadness-production.up.railway.app/",
-        coverImage: "/images/placeholder-1.jpg",
-        images: ["/images/placeholder-1.jpg", "/images/placeholder-2.jpg"],
+        coverImage: "/images/placeholder-1.png",
+        images: ["/images/placeholder-1.png", "/images/placeholder-2.png"],
         featured: true,
         archived: false,
         order: 0,
       },
-      ...Array.from({ length: 5 }, (_, i) => ({
-        title_en: `Project ${String(i + 1).padStart(2, "0")}`,
-        title_id: `Proyek ${String(i + 1).padStart(2, "0")}`,
-        slug: `project-${i + 1}`,
-        description_en: `A monochrome study in form and motion — case study ${i + 1}.`,
-        description_id: `Studi monokrom tentang bentuk dan gerak — studi kasus ${i + 1}.`,
+      // Showcase konsep, BUKAN client nyata — ditandai eksplisit di judul dan
+      // deskripsi (per audit repositioning) supaya tidak terbaca sebagai studi
+      // kasus klien sungguhan. `client: null` sekaligus menyembunyikan field
+      // Klien di halaman detail (dt/dd-nya dirender kondisional).
+      ...[
+        {
+          slug: "wedding-invitation-platform",
+          title_en: "Wedding Invitation Platform (Concept)",
+          title_id: "Platform Undangan Pernikahan Digital (Konsep)",
+          description_en:
+            "Concept project: a digital wedding invitation platform with RSVP, guest wishes, and a gallery, built to explore the templating system behind DwiStudio's wedding invitation service.",
+          description_id:
+            "Proyek konsep: platform undangan pernikahan digital dengan RSVP, ucapan tamu, dan galeri foto, dibangun untuk mengeksplorasi sistem template di balik layanan undangan pernikahan digital DwiStudio.",
+          category: "Digital Experience",
+        },
+        {
+          slug: "company-profile-website",
+          title_en: "Company Profile Website (Concept)",
+          title_id: "Website Company Profile (Konsep)",
+          description_en:
+            "Concept project: a company profile site with services, articles, and a CMS-managed content structure for a growing business.",
+          description_id:
+            "Proyek konsep: website company profile dengan halaman layanan, artikel, dan struktur konten yang dikelola CMS untuk bisnis yang sedang berkembang.",
+          category: "Web Design",
+        },
+        {
+          slug: "e-commerce-experience",
+          title_en: "E-Commerce Experience (Concept)",
+          title_id: "Pengalaman E-Commerce (Konsep)",
+          description_en:
+            "Concept project: an online storefront with product catalog, cart, and checkout flow designed for a clear, low-friction shopping experience.",
+          description_id:
+            "Proyek konsep: toko online dengan katalog produk, keranjang, dan alur checkout yang dirancang untuk pengalaman belanja yang jelas dan minim hambatan.",
+          category: "E-Commerce",
+        },
+        {
+          slug: "learning-management-system",
+          title_en: "Learning Management System (Concept)",
+          title_id: "Sistem E-Learning (Konsep)",
+          description_en:
+            "Concept project: a multi-user e-learning system with course materials, quizzes, and progress tracking for an education provider.",
+          description_id:
+            "Proyek konsep: sistem e-learning multi-user dengan materi pembelajaran, kuis, dan pelacakan progres untuk penyedia pendidikan.",
+          category: "Web System",
+        },
+        {
+          slug: "business-dashboard",
+          title_en: "Business Dashboard (Concept)",
+          title_id: "Dashboard Bisnis (Konsep)",
+          description_en:
+            "Concept project: an internal dashboard for tracking operational data, with role-based access and reporting for day-to-day decisions.",
+          description_id:
+            "Proyek konsep: dashboard internal untuk memantau data operasional, dengan akses berbasis peran dan pelaporan untuk keputusan sehari-hari.",
+          category: "Web System",
+        },
+      ].map((p, i) => ({
+        ...p,
         caseStudy_en: "Full case study coming soon.",
         caseStudy_id: "Studi kasus lengkap segera hadir.",
-        category: CATEGORIES[i % CATEGORIES.length]!,
         role: "Full Stack Developer",
         year: "2026",
         client: null,
         link: null,
         coverImage: null,
-        images: [`/images/placeholder-${(i % 3) + 1}.jpg`],
+        images: [] as string[],
         featured: false,
         archived: false,
         order: i + 1,
@@ -64,14 +112,20 @@ async function main() {
     ],
   });
 
+  // Showcase internal admin, bukan halaman publik (grep: tidak ada pemakai di
+  // src/app/[locale]) — nama konsep, bukan client nyata, konsisten dengan Project.
   await prisma.website.deleteMany({});
   await prisma.website.createMany({
-    data: Array.from({ length: 4 }, (_, i) => ({
-      name: `Client Site ${i + 1}`,
-      url: `https://example-${i + 1}.com`,
-      thumbnail: `/images/placeholder-${(i % 3) + 1}.jpg`,
-      description_en: `Full-stack build for client ${i + 1}.`,
-      description_id: `Pengembangan full-stack untuk klien ${i + 1}.`,
+    data: [
+      { name: "Business Website Concept", url: "https://example.com/business-website" },
+      { name: "Creative Commerce Concept", url: "https://example.com/creative-commerce" },
+      { name: "Digital Wedding Concept", url: "https://example.com/digital-wedding" },
+      { name: "Dashboard System Concept", url: "https://example.com/dashboard-system" },
+    ].map((w, i) => ({
+      ...w,
+      thumbnail: `/images/placeholder-${(i % 3) + 1}.png`,
+      description_en: `Full-stack build — ${w.name.toLowerCase()}.`,
+      description_id: `Pengembangan full-stack — ${w.name.toLowerCase()}.`,
       order: i,
     })),
   });
@@ -95,7 +149,7 @@ async function main() {
         "I did not start in software. My first job was on a logistics floor, counting stock and reconciling manifests, where a misplaced digit meant a truck went to the wrong city. That work taught me something no course did: systems fail at the seams, and the seams are where nobody is looking. I began writing small scripts to catch my own mistakes, then scripts to catch everyone else's, and somewhere in there the scripts became the job. I moved into IT support, then into development, and I have been building ever since. My approach has not changed much since the warehouse. I read the problem before I touch the keyboard, I trace the whole path rather than patch the loudest symptom, and I prefer the smallest change that actually holds. Good software, like good logistics, is mostly about removing the places where things can quietly go wrong.",
       fullStory_id:
         "Saya tidak memulai dari dunia perangkat lunak. Pekerjaan pertama saya di lantai logistik, menghitung stok dan mencocokkan manifes, tempat satu digit yang keliru berarti satu truk berangkat ke kota yang salah. Pekerjaan itu mengajarkan hal yang tidak diajarkan kursus mana pun: sistem runtuh di sambungannya, dan sambungan itu justru yang tidak pernah diperhatikan siapa pun. Saya mulai menulis skrip kecil untuk menangkap kesalahan saya sendiri, lalu skrip untuk menangkap kesalahan orang lain, dan entah sejak kapan skrip itu berubah jadi pekerjaannya. Saya pindah ke IT support, lalu ke pengembangan, dan sejak itu terus membangun. Cara kerja saya tidak banyak berubah sejak masa gudang. Saya membaca masalahnya sebelum menyentuh papan ketik, menelusuri seluruh jalurnya alih-alih menambal gejala yang paling berisik, dan memilih perubahan terkecil yang benar-benar bertahan. Perangkat lunak yang baik, seperti logistik yang baik, sebagian besar soal menghapus tempat-tempat di mana sesuatu bisa diam-diam melenceng.",
-      images: Array.from({ length: 5 }, () => "/images/hero.jpg"),
+      images: Array.from({ length: 5 }, () => "/images/hero.png"),
     },
   });
 
@@ -164,9 +218,9 @@ async function main() {
   await prisma.certification.deleteMany({});
   await prisma.certification.createMany({
     data: [
-      { name: "Meta Front-End Developer", image: "/images/hero.jpg", order: 1 },
-      { name: "Google UX Design", image: "/images/hero.jpg", order: 2 },
-      { name: "AWS Cloud Practitioner", image: "/images/hero.jpg", order: 3 },
+      { name: "Meta Front-End Developer", image: "/images/hero.png", order: 1 },
+      { name: "Google UX Design", image: "/images/hero.png", order: 2 },
+      { name: "AWS Cloud Practitioner", image: "/images/hero.png", order: 3 },
     ],
   });
 
@@ -179,11 +233,17 @@ async function main() {
     update: {},
     create: {
       id: "hero",
-      backgroundImage: "/images/hero.jpg",
-      headline_en: "One studio.\nFive mediums.",
-      headline_id: "Satu studio.\nLima medium.",
-      subheadline_en: "Scroll down · To begin the story",
-      subheadline_id: "Gulir ke bawah · Untuk memulai ceritanya",
+      backgroundImage: "/images/hero.png",
+      headline_en: "Build.\nGrow,\ngo digital.",
+      headline_id: "Bangun.\nTumbuh,\nsecara digital.",
+      subheadline_en: "Explore · See our services and work",
+      subheadline_id: "Jelajahi · Lihat layanan dan karya kami",
+      paragraph_en:
+        "DwiStudio designs and builds websites, web apps, and digital solutions that combine modern design, performance, and the features your business actually needs.",
+      paragraph_id:
+        "DwiStudio merancang dan mengembangkan website, aplikasi web, serta solusi digital yang menggabungkan desain modern, performa, dan fungsi yang benar-benar dibutuhkan bisnis.",
+      metrics_en: ["99% Client Satisfaction", "Fast & Responsive, Optimized Design", "Modern, Up-to-date Tech Stack"],
+      metrics_id: ["99% Kepuasan Klien", "Fast & Responsive Desain Optimized", "Modern Tech Stack Terkini"],
       ctaText_en: null,
       ctaText_id: null,
       ctaUrl: null,
@@ -201,7 +261,7 @@ async function main() {
           "Every project opens with reading, not designing: who the audience is, what the competitors already own, and which single idea is worth defending.",
         description_id:
           "Tiap proyek dibuka dengan membaca, bukan mendesain: siapa audiensnya, apa yang sudah dikuasai pesaing, dan satu gagasan mana yang layak dipertahankan.",
-        image: "/images/hero.jpg",
+        image: "/images/hero.png",
         order: 1,
       },
       {
@@ -212,7 +272,7 @@ async function main() {
           "Type, colour, and grid settle into one system — tested at a favicon and at a billboard before anything is called finished.",
         description_id:
           "Tipografi, warna, dan grid mengendap jadi satu sistem — diuji pada ukuran favicon dan papan iklan sebelum apa pun disebut selesai.",
-        image: "/images/hero.jpg",
+        image: "/images/hero.png",
         order: 2,
       },
       {
@@ -223,7 +283,7 @@ async function main() {
           "Layouts are drawn in the browser, not only in a canvas, so what gets approved is what actually ships.",
         description_id:
           "Tata letak digambar langsung di browser, bukan cuma di kanvas, jadi yang disetujui memang yang benar-benar dikirim.",
-        image: "/images/hero.jpg",
+        image: "/images/hero.png",
         order: 3,
       },
       {
@@ -234,7 +294,7 @@ async function main() {
           "You leave with a CMS you can run yourself — content, images, and copy editable without touching a line of code.",
         description_id:
           "Kamu pulang membawa CMS yang bisa kamu jalankan sendiri — konten, gambar, dan teks bisa diubah tanpa menyentuh satu baris kode.",
-        image: "/images/hero.jpg",
+        image: "/images/hero.png",
         order: 4,
       },
     ],
@@ -294,44 +354,52 @@ async function main() {
     data: [
       {
         icon: "💍",
-        name_en: "Wedding Invitation",
-        name_id: "Undangan Pernikahan",
-        description_en: "An elegant digital invitation that's easy to share with every guest.",
-        description_id: "Undangan digital yang elegan dan mudah dibagikan ke semua tamu.",
+        name_en: "Digital Wedding Invitation",
+        name_id: "Undangan Pernikahan Digital",
+        description_en:
+          "An elegant, personal web-based wedding invitation that's easy to share with family and guests across any platform.",
+        description_id:
+          "Undangan pernikahan berbasis web yang elegan, personal, dan mudah dibagikan kepada keluarga serta tamu melalui berbagai platform.",
         priceLabel: "Rp300.000 – Rp1.000.000",
         features_en: [
-          "Custom names & couple details",
-          "Wedding countdown",
+          "Responsive design for mobile and desktop",
+          "Personalized guest names",
+          "Ceremony & reception details",
+          "Event countdown",
           "Photo gallery",
+          "Love story",
           "Google Maps location",
           "Online RSVP",
-          "Love story",
+          "Guest wishes & prayers",
           "Background music",
-          "Guest wishes",
+          "Digital gift envelope",
           "Custom domain (optional)",
         ],
         features_id: [
-          "Custom nama & pasangan",
-          "Countdown pernikahan",
+          "Desain responsif untuk mobile dan desktop",
+          "Nama tamu personal",
+          "Informasi akad dan resepsi",
+          "Countdown acara",
           "Galeri foto",
-          "Lokasi Google Maps",
-          "RSVP online",
           "Love story",
-          "Musik latar",
-          "Ucapan tamu",
-          "Domain custom (opsional)",
+          "Google Maps",
+          "RSVP online",
+          "Ucapan dan doa tamu",
+          "Background music",
+          "Amplop digital",
+          "Domain custom opsional",
         ],
         benefits_en: [
-          "Cheaper than printed invitations",
-          "Easy to share via WhatsApp & Instagram",
-          "Professional look",
-          "Accessible 24/7",
+          "Easy to share via WhatsApp and social media",
+          "Event details can be updated without reprinting",
+          "A more interactive, personal presentation",
+          "Accessible anytime from any browser",
         ],
         benefits_id: [
-          "Hemat biaya dibanding undangan cetak",
-          "Mudah dibagikan lewat WhatsApp & Instagram",
-          "Tampilan profesional",
-          "Bisa diakses 24 jam",
+          "Mudah dibagikan melalui WhatsApp dan media sosial",
+          "Informasi acara dapat diperbarui tanpa mencetak ulang undangan",
+          "Tampilan lebih interaktif dan personal",
+          "Dapat diakses kapan saja melalui browser",
         ],
         order: 0,
       },
@@ -339,8 +407,10 @@ async function main() {
         icon: "🚀",
         name_en: "Landing Page",
         name_id: "Landing Page",
-        description_en: "A single focused page to promote your product or service.",
-        description_id: "Satu halaman fokus untuk mempromosikan produk atau jasa Anda.",
+        description_en:
+          "A landing page focused on introducing your product, service, or campaign and guiding visitors toward the action you want them to take.",
+        description_id:
+          "Landing page yang dirancang secara fokus untuk memperkenalkan produk, layanan, atau campaign sekaligus mengarahkan pengunjung menuju tindakan yang diinginkan.",
         priceLabel: "Rp1.500.000 – Rp4.000.000",
         features_en: [
           "1 professional page",
@@ -376,8 +446,10 @@ async function main() {
         icon: "🏢",
         name_en: "Company Profile / E-Commerce",
         name_id: "Company Profile / E-Commerce",
-        description_en: "A complete company website, expandable into a full online store.",
-        description_id: "Website perusahaan lengkap, bisa dikembangkan jadi toko online.",
+        description_en:
+          "A company website that represents your business professionally and can grow into a full product catalog or online store.",
+        description_id:
+          "Website perusahaan yang merepresentasikan identitas bisnis secara profesional dan dapat dikembangkan menjadi platform katalog maupun penjualan online.",
         priceLabel: "Rp4.000.000 – Rp12.000.000+",
         features_en: [
           "Company profile",
@@ -417,8 +489,10 @@ async function main() {
         icon: "🎓",
         name_en: "ERP / E-Learning System",
         name_id: "ERP / Sistem E-Learning",
-        description_en: "A multi-user system for managing business operations or learning.",
-        description_id: "Sistem multi-user untuk mengelola operasional bisnis atau pembelajaran.",
+        description_en:
+          "An integrated web system to manage business operations, administration, learning, user data, and reporting in one platform.",
+        description_id:
+          "Sistem web terintegrasi untuk membantu pengelolaan proses bisnis, administrasi, pembelajaran, data pengguna, dan pelaporan dalam satu platform.",
         priceLabel: "Rp15.000.000 – Rp50.000.000+",
         features_en: [
           "Multi-user login",
@@ -456,10 +530,12 @@ async function main() {
       },
       {
         icon: "⚙️",
-        name_en: "Custom Web App / System",
-        name_id: "Custom Web Apps / Sistem",
-        description_en: "A system built around your specific business workflow.",
-        description_id: "Sistem dibangun sesuai alur bisnis spesifik Anda.",
+        name_en: "Custom Web Application & System",
+        name_id: "Aplikasi & Sistem Web Custom",
+        description_en:
+          "A web application designed specifically around your workflow, operational needs, and business goals that off-the-shelf software can't cover.",
+        description_id:
+          "Aplikasi web yang dirancang khusus mengikuti alur kerja, kebutuhan operasional, dan tujuan bisnis yang tidak dapat dipenuhi oleh solusi generik.",
         priceLabel: "Rp10.000.000 – Rp100.000.000+",
         features_en: [
           "Built to your needs: CRM, HRIS, cooperative, inventory, finance, booking",
@@ -566,18 +642,22 @@ async function main() {
   await prisma.testimonial.deleteMany({});
   await prisma.testimonial.createMany({
     data: Array.from({ length: 3 }, (_, i) => ({
-      clientName: ["Rani Putri", "Alex Mercer", "Bima Santoso"][i]!,
+      name: ["Rani Putri", "Alex Mercer", "Bima Santoso"][i]!,
       position: ["Creative Director", "Founder", "Head of Product"][i]!,
-      content_en: "Delivered beyond what we imagined — the motion work is exceptional.",
-      content_id: "Hasilnya melampaui bayangan kami — kerja animasinya luar biasa.",
-      order: i,
+      content: [
+        "Delivered beyond what we imagined. The motion work made the brand feel alive without losing its restraint.",
+        "Dwi Studio translated a messy brief into a website that finally feels like us.",
+        "Clear process, careful craft, and no wasted noise. The project shipped exactly where it needed to land.",
+      ][i]!,
+      rating: 5,
+      isActive: true,
     })),
   });
 
   await prisma.mediaGalleryItem.deleteMany({});
   await prisma.mediaGalleryItem.createMany({
     data: Array.from({ length: 6 }, (_, i) => ({
-      fileUrl: `/images/placeholder-${(i % 3) + 1}.jpg`,
+      fileUrl: `/images/placeholder-${(i % 3) + 1}.png`,
       caption_en: `Frame ${i + 1}`,
       caption_id: `Bingkai ${i + 1}`,
       order: i,
@@ -588,7 +668,7 @@ async function main() {
   await prisma.gallery3DItem.createMany({
     data: Array.from({ length: 3 }, (_, i) => ({
       modelUrl: `/models/model-${i + 1}.glb`,
-      thumbnail: `/images/placeholder-${(i % 3) + 1}.jpg`,
+      thumbnail: `/images/placeholder-${(i % 3) + 1}.png`,
       description_en: `Real-time 3D asset ${i + 1}.`,
       description_id: `Aset 3D real-time ${i + 1}.`,
       order: i,
@@ -600,7 +680,7 @@ async function main() {
     data: Array.from({ length: 3 }, (_, i) => ({
       title: `Track ${i + 1}`,
       audioUrl: `/audio/track-${i + 1}.mp3`,
-      cover: `/images/placeholder-${(i % 3) + 1}.jpg`,
+      cover: `/images/placeholder-${(i % 3) + 1}.png`,
       order: i,
     })),
   });
@@ -610,7 +690,7 @@ async function main() {
     data: Array.from({ length: 3 }, (_, i) => ({
       title: `Film ${i + 1}`,
       videoUrl: `https://vimeo.com/00000${i + 1}`,
-      thumbnail: `/images/placeholder-${(i % 3) + 1}.jpg`,
+      thumbnail: `/images/placeholder-${(i % 3) + 1}.png`,
       description_en: `Short film ${i + 1}.`,
       description_id: `Film pendek ${i + 1}.`,
       order: i,
@@ -622,9 +702,9 @@ async function main() {
     update: {},
     create: {
       id: "footer",
-      text_en: "Let's build something worth remembering.",
-      text_id: "Mari bangun sesuatu yang layak dikenang.",
-      copyrightText: "© Dwi Studio",
+      text_en: "Building websites and digital solutions designed for real business needs.",
+      text_id: "Membangun website dan solusi digital yang dirancang untuk kebutuhan nyata.",
+      copyrightText: "© DwiStudio",
     },
   });
 
@@ -645,10 +725,10 @@ async function main() {
   await prisma.socialLink.deleteMany({});
   await prisma.socialLink.createMany({
     data: [
-      ["Instagram", "https://instagram.com/", "instagram"],
-      ["LinkedIn", "https://linkedin.com/", "linkedin"],
-      ["GitHub", "https://github.com/", "github"],
-      ["Dribbble", "https://dribbble.com/", "dribbble"],
+      ["Instagram", "https://instagram.com/winantioo", "instagram"],
+      ["WhatsApp", "https://wa.me/6285156767900", "whatsapp"],
+      ["LinkedIn", "https://www.linkedin.com/in/m.dwicahyawinantio", "linkedin"],
+      ["GitHub", "https://github.com/muhammaddwicahyawinantio", "github"],
     ].map(([platform, url, icon], i) => ({
       platform: platform!,
       url: url!,
@@ -714,8 +794,8 @@ async function main() {
       groomFullName: "Rizky Pratama",
       brideParents: "Putri dari Bapak Sutrisno & Ibu Wahyuni",
       groomParents: "Putra dari Bapak Hendra & Ibu Kartika",
-      bridePhoto: "/images/hero.jpg",
-      groomPhoto: "/images/hero.jpg",
+      bridePhoto: "/images/hero.png",
+      groomPhoto: "/images/hero.png",
       openingText:
         "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.",
       quoteText:
@@ -723,7 +803,7 @@ async function main() {
       storyTitle: "Cerita Kami",
       storyText:
         "Berawal dari satu kelas kuliah di tahun 2019, pertemanan kami tumbuh perlahan menjadi sesuatu yang lebih dalam. Setelah lima tahun melewati suka dan duka bersama, kami memutuskan untuk melangkah ke jenjang yang lebih serius.",
-      coverImage: "/images/hero.jpg",
+      coverImage: "/images/hero.png",
       publishedAt: new Date(),
       // Set animasi "perfect" — showcase cinematic cover, portrait parallax,
       // dan galeri horizontal-scroll.
@@ -773,7 +853,7 @@ async function main() {
       },
       gallery: {
         create: Array.from({ length: 4 }, (_, i) => ({
-          imageUrl: `/images/placeholder-${(i % 3) + 1}.jpg`,
+          imageUrl: `/images/placeholder-${(i % 3) + 1}.png`,
           caption: `Momen ${i + 1}`,
           order: i,
         })),
@@ -792,9 +872,21 @@ async function main() {
       },
       messages: {
         create: [
-          { guestName: "Keluarga Santoso", message: "Selamat menempuh hidup baru! Barakallah.", isVisible: true },
-          { guestName: "Rani & Doni", message: "Semoga menjadi keluarga sakinah, mawaddah, warahmah.", isVisible: true },
-          { guestName: "Teman Kampus", message: "Akhirnya! Selamat ya kalian berdua ❤️", isVisible: true },
+          {
+            guestName: "Keluarga Santoso",
+            message: "Selamat menempuh hidup baru! Barakallah.",
+            isVisible: true,
+          },
+          {
+            guestName: "Rani & Doni",
+            message: "Semoga menjadi keluarga sakinah, mawaddah, warahmah.",
+            isVisible: true,
+          },
+          {
+            guestName: "Teman Kampus",
+            message: "Akhirnya! Selamat ya kalian berdua ❤️",
+            isVisible: true,
+          },
         ],
       },
     },

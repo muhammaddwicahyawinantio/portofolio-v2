@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useLenis } from "lenis/react";
 import { gsap } from "@/lib/gsap";
 import { CustomEase } from "gsap/CustomEase";
-import { INTRO_REPLAY_EVENT, replayIntro } from "@/lib/intro";
+import { INTRO_REPLAY_EVENT, replayIntro, waitForIntroGate } from "@/lib/intro";
 
 gsap.registerPlugin(CustomEase);
 
@@ -13,8 +13,6 @@ gsap.registerPlugin(CustomEase);
 const FLUID = CustomEase.create("dwiFluid", "0.16, 1, 0.3, 1");
 // Untuk tirai: masuk dan keluar sama beratnya.
 const SHUTTER = CustomEase.create("dwiShutter", "0.77, 0, 0.175, 1");
-
-const MIN_SPIN_MS = 1000;
 
 /**
  * Scope modul, bukan sessionStorage: bertahan selama navigasi client-side dan
@@ -27,14 +25,13 @@ let hasPlayed = false;
 /**
  * Intro cinematic "DWI STUDIO".
  *
- *   0.0  arc spinner berputar di layar hitam pekat
- *   1.0  ring mengecil-memudar, kartu logo (public/logo.svg) masuk
- *   1.6  "DWI" meluncur keluar dari balik logo, di balik mask
- *   2.2  garis pemisah memanjang (scaleY)
- *   2.7  "STUDIO" meluncur keluar di kanan garis
- *   3.0  tagline (hero.line1-3) fade-up di bawah lockup
- *   3.8  seluruh lockup fade-out + micro scale-down
- *   4.3  tirai 3 panel membuka dari tengah, stagger 120ms
+ *   0.0  pulse ring dan progress meter mulai berjalan
+ *   0.1  kartu logo (public/logo.svg) masuk
+ *   0.5  "DWI" meluncur keluar dari balik logo, di balik mask
+ *   0.9  garis pemisah memanjang (scaleY)
+ *   1.1  "STUDIO" meluncur keluar di kanan garis
+ *   1.3  tagline (hero.line1-3) fade-up di bawah lockup
+ *   2.5  tirai 3 panel membuka setelah asset awal siap
  *        halaman menyusul: zoom-out 1.1 -> 1.0, header, lalu Value Rail
  *
  * Semua gerak memakai transform/opacity saja supaya tetap di GPU. Lockup sudah
@@ -92,6 +89,7 @@ export default function Intro() {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+    const startedAt = performance.now();
 
     const main = document.querySelector("main");
     const header = document.querySelector("header");
@@ -144,7 +142,7 @@ export default function Intro() {
       return;
     }
 
-    timer.id = window.setTimeout(hide, 9000);
+    timer.id = window.setTimeout(hide, 6500);
     tl.eventCallback("onComplete", hide);
 
     hasPlayed = true;
@@ -153,7 +151,6 @@ export default function Intro() {
     window.scrollTo(0, 0);
 
     const q = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel);
-    const spinner = q("[data-spinner]");
     const emblem = q("[data-emblem]");
     const stage = q("[data-stage]");
     const logo = q("[data-logo]");
@@ -161,6 +158,9 @@ export default function Intro() {
     const dwi = q("[data-word='dwi'] > span");
     const studio = q("[data-word='studio'] > span");
     const tagline = q("[data-tagline]");
+    const pulse = q("[data-pulse]");
+    const meter = q("[data-meter]");
+    const micro = q("[data-micro]");
     // Array, bukan NodeList: tiap panel butuh delay sendiri (0 / 0.1 / 0.2s),
     // jadi diindeks satu-satu alih-alih di-stagger seragam.
     const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
@@ -179,11 +179,13 @@ export default function Intro() {
     // opacity-0 tetap dipakai sebagai fallback SSR karena opacity satu
     // properti tunggal; GSAP autoAlpha menimpanya langsung, tidak menumpuk.
     root.style.display = "";
-    gsap.set(spinner, { autoAlpha: 1, scale: 1 });
-    gsap.set(emblem, { autoAlpha: 0, scale: 0.4 });
+    gsap.set(emblem, { autoAlpha: 0, scale: 0.72 });
     gsap.set([dwi, studio], { xPercent: -105, autoAlpha: 0 });
     gsap.set(divider, { scaleY: 0, autoAlpha: 0 });
     gsap.set(tagline, { autoAlpha: 0, y: 8 });
+    gsap.set(micro, { autoAlpha: 0, y: 5 });
+    gsap.set(pulse, { autoAlpha: 0.35, scale: 0.82 });
+    gsap.set(meter, { scaleX: 0, transformOrigin: "left center" });
     gsap.set(stage, { autoAlpha: 1, scale: 1 });
     gsap.set(panels, { scaleY: 1 });
 
@@ -210,25 +212,26 @@ export default function Intro() {
 
     gsap.set(stage, { x: centerOffset });
 
-    // Posisi dan durasi disamakan persis dengan referensi. Angkanya dikurangi
-    // 1 detik dari waktu absolut referensi, karena detik pertama sudah dipakai
-    // gerbang "ring berputar sampai font siap".
-    tl.to(spinner, { autoAlpha: 0, scale: 0.4, duration: 0.4, ease: FLUID }, 0)
-      .to(emblem, { autoAlpha: 1, scale: 1, duration: 0.5, ease: FLUID }, 0)
-      .to(dwi, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: FLUID }, 0.6)
-      .to(divider, { scaleY: 1, autoAlpha: 1, duration: 0.5, ease: FLUID }, 1.2)
-      .to(studio, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: FLUID }, 1.7)
-      .to(tagline, { autoAlpha: 1, y: 0, duration: 0.6, ease: FLUID }, 2.0)
-      // Panggung kembali ke tengah sepanjang teks tersingkap, jadi lockup
-      // terasa tumbuh tanpa satu pun animasi properti layout.
-      .to(stage, { x: 0, duration: 1.6, ease: FLUID }, 0.6)
-      .to(stage, { autoAlpha: 0, scale: 0.96, duration: 0.8, ease: FLUID }, 2.8)
+    // Timeline dipadatkan: intro terasa niat, tapi tidak menahan pengunjung
+    // terlalu lama. Gate asset di bawah yang menentukan kapan shutter boleh
+    // membuka; animasi lockup berjalan sambil aset awal halaman dipanaskan.
+    tl.to(meter, { scaleX: 1, duration: 2.35, ease: "none" }, 0)
+      .to(pulse, { autoAlpha: 1, scale: 1.12, duration: 1.15, ease: FLUID }, 0)
+      .to(emblem, { autoAlpha: 1, scale: 1, duration: 0.45, ease: FLUID }, 0.12)
+      .to(dwi, { xPercent: 0, autoAlpha: 1, duration: 0.58, ease: FLUID }, 0.48)
+      .to(divider, { scaleY: 1, autoAlpha: 1, duration: 0.38, ease: FLUID }, 0.9)
+      .to(studio, { xPercent: 0, autoAlpha: 1, duration: 0.58, ease: FLUID }, 1.08)
+      .to(tagline, { autoAlpha: 1, y: 0, duration: 0.42, ease: FLUID }, 1.35)
+      .to(micro, { autoAlpha: 1, y: 0, duration: 0.36, ease: FLUID }, 1.52)
+      .to(stage, { x: 0, duration: 1.12, ease: FLUID }, 0.48)
+      .to(stage, { autoAlpha: 0, scale: 0.97, duration: 0.38, ease: FLUID }, 2.05)
+      .addPause(2.36)
       // Fase 6 — shutter: tiga kolom membuka bergantian arah (top/bottom/top
       // lewat transform-origin di JSX), delay 0 / 0.1 / 0.2s, bukan menyusut
       // seragam ke tengah.
-      .to(panels[0]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.3)
-      .to(panels[1]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.4)
-      .to(panels[2]!, { scaleY: 0, duration: 1.2, ease: SHUTTER }, 3.5)
+      .to(panels[0]!, { scaleY: 0, duration: 0.82, ease: SHUTTER }, ">")
+      .to(panels[1]!, { scaleY: 0, duration: 0.82, ease: SHUTTER }, "<0.06")
+      .to(panels[2]!, { scaleY: 0, duration: 0.82, ease: SHUTTER }, "<0.06")
       // Halaman dinyalakan di 3.2, saat tirai MASIH tertutup rapat. Wajib
       // sebelum 3.3: kalau <main> baru muncul setelah panel pergi, yang
       // tersingkap cuma latar body yang kini sewarna panel bg-cream — tirainya
@@ -236,19 +239,17 @@ export default function Intro() {
       // belakang tirai, persis seperti referensi yang tidak pernah
       // menyembunyikan #main-hero. set(), bukan to(): fade di sini tak ada
       // gunanya karena penontonnya masih tertutup panel.
-      .set(main, { autoAlpha: 1 }, 3.2)
+      .set(main, { autoAlpha: 1 }, "<")
       // Fase 7 — hero reveal: background zoom-out 1.18 -> 1 (2,2 detik, mulai
       // bersamaan tirai), navbar turun dari -15px, headline naik dari 30px.
-      .to(heroBg, { scale: 1, duration: 2.2, ease: FLUID }, 3.3)
-      .to(header, { autoAlpha: 1, y: 0, duration: 1, ease: FLUID }, 3.7)
-      .to(headline, { y: 0, duration: 1, ease: FLUID }, 3.8);
+      .to(heroBg, { scale: 1, duration: 1.35, ease: FLUID }, "<")
+      .to(header, { autoAlpha: 1, y: 0, duration: 0.72, ease: FLUID }, "<0.24")
+      .to(headline, { y: 0, duration: 0.72, ease: FLUID }, "<0.08");
 
-    // Ring berputar sampai font benar-benar siap: menyingkap wordmark sebelum
-    // font termuat akan terlihat berganti bentuk, dan offset tengahnya meleset.
-    Promise.all([
-      document.fonts.ready,
-      new Promise((resolve) => setTimeout(resolve, MIN_SPIN_MS)),
-    ]).then(() => tl.play());
+    tl.play(0);
+    waitForIntroGate(startedAt).then(() => {
+      if (!cancelled) tl.play();
+    });
 
     return () => {
       cancelled = true;
@@ -291,7 +292,21 @@ export default function Intro() {
         <span data-panel className="bg-charcoal h-full flex-1 origin-top will-change-transform" />
       </div>
 
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1] opacity-30"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(250,247,240,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(250,247,240,0.08) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+        }}
+      />
+
       <div data-stage className="relative z-10 flex items-center will-change-transform">
+        <span
+          data-pulse
+          className="border-cream/10 absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border md:h-36 md:w-36"
+        />
         {/* Kotaknya kini LANDSCAPE 3:2, mengikuti proporsi logo.svg (1264x843).
             Kalau dipaksa persegi seperti emblem lama, logonya gepeng atau
             terpotong. centerOffset() mengukur kotak ini apa adanya, jadi
@@ -300,13 +315,6 @@ export default function Intro() {
           data-logo
           className="relative flex h-9 w-[3.375rem] shrink-0 items-center justify-center md:h-12 md:w-[4.5rem]"
         >
-          {/* Putaran dipegang CSS di elemen dalam; GSAP memakai transform di
-              pembungkusnya. Kalau ditumpuk di elemen yang sama, animasi CSS
-              menang atas inline style dan skala GSAP hilang. */}
-          <span data-spinner className="absolute will-change-transform">
-            <span className="intro-ring border-cream/15 border-t-cream block h-8 w-8 rounded-full border-2 md:h-10 md:w-10" />
-          </span>
-
           {/* logo.svg, bukan Emblem lagi. Berkasnya adalah plat putih penuh
               dengan mark digunting di dalamnya, jadi di atas tirai charcoal ia
               terbaca sebagai KARTU putih — kebetulan itu justru menyambung ke
@@ -352,6 +360,17 @@ export default function Intro() {
         >
           {hero("line1")} {hero("line2")} {hero("line3")}
         </span>
+
+        <span
+          data-micro
+          className="text-cream/35 absolute top-full left-1/2 mt-10 -translate-x-1/2 font-mono text-[9px] tracking-[0.22em] whitespace-nowrap uppercase opacity-0 md:mt-14"
+        >
+          Preparing the first frame
+        </span>
+      </div>
+
+      <div className="absolute inset-x-6 bottom-8 z-10 mx-auto h-px max-w-52 overflow-hidden bg-cream/12 md:bottom-10">
+        <span data-meter className="bg-cream block h-full w-full origin-left scale-x-0" />
       </div>
     </div>
   );

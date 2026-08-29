@@ -74,7 +74,7 @@ export default function StaggeredMenu({
   const pathname = usePathname();
   const lenis = useLenis();
 
-  // Keadaan awal: panel dan tiap lapisan diparkir di luar layar kanan.
+  // Keadaan awal: panel dan tiap lapisan diparkir di luar layar atas.
   useEffect(() => {
     const ctx = gsap.context(() => {
       const panel = panelRef.current;
@@ -87,13 +87,13 @@ export default function StaggeredMenu({
         : [];
       preLayerElsRef.current = layers;
 
-      // x: 0 wajib. CSS memarkir panel & lapisan dengan transform:
-      // translateX(100%) sebagai penjaga sebelum hidrasi, dan GSAP membaca
-      // transform yang sudah ada itu sebagai basis x = lebar panel dalam px.
-      // xPercent menumpuk di atas basis itu, jadi tanpa reset ini "terbuka"
-      // (xPercent 0) tetap menyisakan geseran satu layar penuh — panelnya
+      // y: 0 wajib. CSS memarkir panel & lapisan dengan transform:
+      // translateY(-100%) sebagai penjaga sebelum hidrasi, dan GSAP membaca
+      // transform yang sudah ada itu sebagai basis y = tinggi panel dalam px.
+      // yPercent menumpuk di atas basis itu, jadi tanpa reset ini "terbuka"
+      // (yPercent 0) tetap menyisakan geseran setinggi panel — panelnya
       // beranimasi, label-labelnya beranimasi, tapi tak ada yang terlihat.
-      gsap.set([panel, ...layers], { xPercent: 100, x: 0 });
+      gsap.set([panel, ...layers], { yPercent: -100, y: 0 });
       gsap.set(plusHRef.current, { transformOrigin: "50% 50%", rotate: 0 });
       gsap.set(plusVRef.current, { transformOrigin: "50% 50%", rotate: 90 });
       gsap.set(icon, { rotate: 0, transformOrigin: "50% 50%" });
@@ -125,8 +125,8 @@ export default function StaggeredMenu({
     layers.forEach((el, i) => {
       tl.fromTo(
         el,
-        { xPercent: 100 },
-        { xPercent: 0, duration: 0.5, ease: "power4.out" },
+        { yPercent: -100 },
+        { yPercent: 0, duration: 0.5, ease: "power4.out" },
         i * 0.07,
       );
     });
@@ -135,8 +135,8 @@ export default function StaggeredMenu({
     const panelDuration = 0.65;
     tl.fromTo(
       panel,
-      { xPercent: 100 },
-      { xPercent: 0, duration: panelDuration, ease: "power4.out" },
+      { yPercent: -100 },
+      { yPercent: 0, duration: panelDuration, ease: "power4.out" },
       panelAt,
     );
 
@@ -177,7 +177,7 @@ export default function StaggeredMenu({
     closeTweenRef.current?.kill();
 
     closeTweenRef.current = gsap.to([...preLayerElsRef.current, panel], {
-      xPercent: 100,
+      yPercent: -100,
       duration: 0.32,
       ease: "power3.in",
       overwrite: "auto",

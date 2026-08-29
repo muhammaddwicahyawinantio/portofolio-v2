@@ -114,6 +114,11 @@ model HeroSection {
   headline_id     String  @db.Text
   subheadline_en  String?
   subheadline_id  String?
+  paragraph_en    String? @db.Text
+  paragraph_id    String? @db.Text
+  // Social proof / mini metrics, mis. "99% Kepuasan Klien" — array string, satu baris per item.
+  metrics_en      Json?
+  metrics_id      Json?
   ctaText_en      String?
   ctaText_id      String?
   ctaUrl          String?
@@ -199,15 +204,17 @@ model Certification {
 }
 
 model Testimonial {
-  id         String  @id @default(cuid())
-  clientName String
-  position   String
-  content_en String  @db.Text
-  content_id String  @db.Text
-  photo      String?
-  order      Int     @default(0)
+  id        String   @id @default(uuid())
+  name      String
+  position  String?
+  content   String   @db.Text
+  rating    Int      @default(5)
+  avatar    String?
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([order])
+  @@index([isActive, createdAt])
 }
 
 model MediaGalleryItem {
@@ -312,6 +319,29 @@ model AdminUser {
   name         String
   avatar       String?
   createdAt    DateTime @default(now())
+}
+
+model DwiAiSession {
+  id        String   @id @default(uuid())
+  sessionId String   @unique
+  ipAddress String?
+  messages  Json
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+}
+
+model DwiAiSetting {
+  id                  String   @id @default(uuid())
+  assistantName       String   @default("Dwi AI")
+  systemPrompt        String   @db.Text
+  behaviorDescription String?  @db.Text
+  temperature         Float    @default(0.7)
+  maxTokens           Int      @default(4000)
+  model               String   @default("llama-3.3-70b-versatile")
+  isActive            Boolean  @default(true)
+  updatedAt           DateTime @updatedAt
 }
 
 // ── Undangan pernikahan digital ──────────────────────────────────────────────

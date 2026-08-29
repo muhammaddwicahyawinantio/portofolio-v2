@@ -20,6 +20,16 @@ const SIZES = {
   md: "px-7 py-4 text-xs",
   /** Untuk kartu sempit — grid layanan sampai empat kolom. */
   sm: "px-4 py-2.5 text-[10px]",
+  /**
+   * Tombol ikon: persegi, TANPA padding mendatar. 44px bukan angka estetis —
+   * itu target sentuh minimum, dan tombol ini duduk berulang di daftar kartu
+   * yang sering dipakai dengan ibu jari. `justify-center` wajib karena BASE
+   * memakai inline-flex yang rata kiri.
+   *
+   * Pemakainya WAJIB mengoper `aria-label`: isinya cuma ikon, dan ikon tidak
+   * punya nama yang bisa dibacakan pembaca layar.
+   */
+  icon: "size-11 justify-center",
 };
 
 /**
@@ -35,8 +45,9 @@ const SIZES = {
  */
 const VARIANTS = {
   charcoal:
-    "border-charcoal bg-charcoal text-cream hover:border-charcoal-soft hover:bg-charcoal-soft",
-  cream: "border-cream bg-cream text-ink hover:border-cream-deep hover:bg-cream-deep",
+    "border-charcoal bg-charcoal text-cream hover:border-ink hover:bg-cream hover:text-ink",
+  cream:
+    "border-cream bg-cream text-ink hover:border-charcoal hover:bg-charcoal hover:text-cream",
   /**
    * Untuk CTA yang BERULANG di dalam kartu. Lima pil charcoal identik dalam satu
    * layar (halaman Services) bikin porsi gelap tersebar rata: lima titik fokus,
@@ -48,7 +59,7 @@ const VARIANTS = {
    * yang lolos ambang kontras non-teks 3:1. Bukan untuk CTA tunggal sebuah
    * halaman — itu tetap `charcoal`.
    */
-  ghost: "border-line text-ink hover:border-sand-deep hover:text-sand-deep",
+  ghost: "border-line text-ink hover:border-charcoal hover:bg-charcoal hover:text-cream",
 };
 
 export default function Button({
@@ -58,6 +69,7 @@ export default function Button({
   size = "md",
   variant = "charcoal",
   type = "button",
+  "aria-label": ariaLabel,
 }: {
   children: ReactNode;
   href?: string;
@@ -65,6 +77,8 @@ export default function Button({
   size?: keyof typeof SIZES;
   variant?: keyof typeof VARIANTS;
   type?: "button" | "submit";
+  /** Wajib untuk `size="icon"` — tombol tanpa teks tidak punya nama. */
+  "aria-label"?: string;
 }) {
   const cls = clsx(BASE, SIZES[size], VARIANTS[variant], className);
 
@@ -75,19 +89,19 @@ export default function Button({
     // MediaShowcase untuk tautan ke luar situs.
     if (/^https?:\/\//.test(href)) {
       return (
-        <a href={href} target="_blank" rel="noreferrer" className={cls}>
+        <a href={href} target="_blank" rel="noreferrer" className={cls} aria-label={ariaLabel}>
           {children}
         </a>
       );
     }
     return (
-      <Link href={href} className={cls}>
+      <Link href={href} className={cls} aria-label={ariaLabel}>
         {children}
       </Link>
     );
   }
   return (
-    <button type={type} className={cls}>
+    <button type={type} className={cls} aria-label={ariaLabel}>
       {children}
     </button>
   );

@@ -1,6 +1,8 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import {
   ArrowUpRight,
+  BarChart3,
   Bell,
   FolderKanban,
   Globe,
@@ -9,6 +11,7 @@ import {
   MessageSquare,
   Pencil,
   Plus,
+  Search,
   Star,
   TrendingDown,
   TrendingUp,
@@ -16,17 +19,21 @@ import {
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-/* Aksen tetap hemat (docs/design.md): monokrom, warna hanya menyala di ikon &
-   garis tren. Tiga seri donut TETAP tiga warna — di grafik, warna itu yang
-   membedakan seri, bukan hiasan — tapi ketiganya diturunkan ke versi teduh
-   yang terbaca di atas kertas, dan amber ditarik tepat ke --gold. */
 const ACCENT = {
-  violet: "#6e6486",
-  green: "#5c6b3a",
-  amber: "#c0a075",
-  ink: "#1e1c1a",
-  inkSoft: "#57534b",
-  line: "#d7cfbf",
+  blue: "#2563eb",
+  cyan: "#0891b2",
+  violet: "#7c3aed",
+  emerald: "#059669",
+  amber: "#d97706",
+  rose: "#e11d48",
+  slate: "#475569",
+  skySoft: "#dbeafe",
+  cyanSoft: "#cffafe",
+  violetSoft: "#ede9fe",
+  emeraldSoft: "#d1fae5",
+  amberSoft: "#fef3c7",
+  roseSoft: "#ffe4e6",
+  line: "#dbe3f0",
 } as const;
 
 /* ── helpers ─────────────────────────────────────────────────────────────── */
@@ -66,6 +73,12 @@ function smoothPath(pts: { x: number; y: number }[]): string {
 /* ── stat cards ──────────────────────────────────────────────────────────── */
 
 const STAT_ICON = { projects: FolderKanban, websites: Globe, services: Layers, messages: Mail };
+const STAT_META = {
+  projects: { color: ACCENT.blue, bg: ACCENT.skySoft, label: "Project pipeline" },
+  websites: { color: ACCENT.cyan, bg: ACCENT.cyanSoft, label: "Live surfaces" },
+  services: { color: ACCENT.violet, bg: ACCENT.violetSoft, label: "Offers" },
+  messages: { color: ACCENT.rose, bg: ACCENT.roseSoft, label: "Inbox" },
+} as const;
 
 function StatCard({
   label,
@@ -81,16 +94,31 @@ function StatCard({
   tone?: "up" | "accent" | "muted";
 }) {
   const Icon = STAT_ICON[icon];
+  const meta = STAT_META[icon];
   const hintColor =
-    tone === "up" ? "text-success" : tone === "accent" ? "text-gold-ink" : "text-ink-soft";
+    tone === "up" ? "text-emerald-700" : tone === "accent" ? "text-rose-700" : "text-ink-soft";
+  const style = {
+    "--stat-accent": meta.color,
+    "--stat-bg": meta.bg,
+  } as CSSProperties;
 
   return (
-    <div className="card-glow border-line bg-card rounded-card shadow-card flex flex-col justify-between gap-6 border p-6">
+    <div
+      className="admin-card admin-stat-card card-glow border-line bg-card rounded-card shadow-card relative flex flex-col justify-between gap-6 overflow-hidden border p-6"
+      style={style}
+    >
       <div className="flex items-start justify-between">
-        <p className="text-ink-soft font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
-          {label}
-        </p>
-        <Icon className="text-ink-soft h-5 w-5 shrink-0" strokeWidth={1.5} aria-hidden />
+        <div>
+          <p className="text-ink-soft font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+            {label}
+          </p>
+          <p className="mt-1 text-[11px] font-medium" style={{ color: meta.color }}>
+            {meta.label}
+          </p>
+        </div>
+        <span className="admin-icon-badge" aria-hidden>
+          <Icon className="h-5 w-5 shrink-0" strokeWidth={1.7} />
+        </span>
       </div>
       <div>
         <p className="font-display text-4xl leading-none font-medium tracking-[-0.01em]">
@@ -138,10 +166,22 @@ function VisitorChart({ stats }: { stats: { date: Date; count: number }[] }) {
     : "";
 
   return (
-    <section className="border-line bg-card rounded-card shadow-card border p-6">
+    <section className="admin-card border-line bg-card rounded-card shadow-card border p-6">
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h2 className="font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+          <h2 className="flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+            <span
+              className="admin-section-icon"
+              style={
+                {
+                  "--section-accent": ACCENT.blue,
+                  "--section-bg": ACCENT.skySoft,
+                } as CSSProperties
+              }
+              aria-hidden
+            >
+              <BarChart3 className="h-4 w-4" strokeWidth={1.7} />
+            </span>
             Visitor Statistics
           </h2>
           <p className="text-ink-soft mt-2 text-xs">Last {stats.length} days</p>
@@ -153,7 +193,7 @@ function VisitorChart({ stats }: { stats: { date: Date; count: number }[] }) {
           {pct !== null ? (
             <p
               className={`mt-1.5 flex items-center justify-end gap-1 text-xs ${
-                pct >= 0 ? "text-success" : "text-gold-ink"
+                pct >= 0 ? "text-emerald-700" : "text-rose-700"
               }`}
             >
               {pct >= 0 ? (
@@ -180,8 +220,9 @@ function VisitorChart({ stats }: { stats: { date: Date; count: number }[] }) {
           >
             <defs>
               <linearGradient id="visitorFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={ACCENT.ink} stopOpacity="0.28" />
-                <stop offset="100%" stopColor={ACCENT.ink} stopOpacity="0" />
+                <stop offset="0%" stopColor={ACCENT.blue} stopOpacity="0.24" />
+                <stop offset="54%" stopColor={ACCENT.cyan} stopOpacity="0.12" />
+                <stop offset="100%" stopColor={ACCENT.blue} stopOpacity="0" />
               </linearGradient>
             </defs>
             {/* gridlines seperempat — hairline, tak menuntut perhatian */}
@@ -192,7 +233,7 @@ function VisitorChart({ stats }: { stats: { date: Date; count: number }[] }) {
                 x2={W - padX}
                 y1={padTop + innerH * f}
                 y2={padTop + innerH * f}
-                stroke="rgba(17,17,16,0.08)"
+                stroke="rgba(37,99,235,0.12)"
                 strokeWidth="1"
               />
             ))}
@@ -200,13 +241,13 @@ function VisitorChart({ stats }: { stats: { date: Date; count: number }[] }) {
             <path
               d={line}
               fill="none"
-              stroke={ACCENT.ink}
+              stroke={ACCENT.blue}
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
-            <circle cx={pts.at(-1)!.x} cy={pts.at(-1)!.y} r="3.5" fill={ACCENT.ink} />
+            <circle cx={pts.at(-1)!.x} cy={pts.at(-1)!.y} r="3.5" fill={ACCENT.cyan} />
           </svg>
           <ul className="text-ink-soft mt-3 flex justify-between text-[10px] tracking-[0.15em] uppercase">
             {stats.map((s) => (
@@ -230,14 +271,33 @@ function ContentDonut({ data }: { data: { label: string; value: number; color: s
   let offset = 0;
 
   return (
-    <section className="border-line bg-card rounded-card shadow-card flex flex-col border p-6">
-      <h2 className="mb-6 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+    <section className="admin-card border-line bg-card rounded-card shadow-card flex flex-col border p-6">
+      <h2 className="mb-6 flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+        <span
+          className="admin-section-icon"
+          style={
+            {
+              "--section-accent": ACCENT.violet,
+              "--section-bg": ACCENT.violetSoft,
+            } as CSSProperties
+          }
+          aria-hidden
+        >
+          <Layers className="h-4 w-4" strokeWidth={1.7} />
+        </span>
         Content Mix
       </h2>
 
       <div className="flex items-center gap-6">
         <svg viewBox="0 0 120 120" className="h-28 w-28 shrink-0 -rotate-90" aria-hidden>
-          <circle cx="60" cy="60" r={R} fill="none" stroke="rgba(17,17,16,0.08)" strokeWidth="10" />
+          <circle
+            cx="60"
+            cy="60"
+            r={R}
+            fill="none"
+            stroke="rgba(37,99,235,0.12)"
+            strokeWidth="10"
+          />
           {total > 0 &&
             data.map((d) => {
               const len = (d.value / total) * C;
@@ -295,12 +355,23 @@ type Notification = {
 
 function Notifications({ items, now }: { items: Notification[]; now: number }) {
   return (
-    <section className="border-line bg-card rounded-card shadow-card border">
+    <section className="admin-card border-line bg-card rounded-card shadow-card overflow-hidden border">
       <div className="border-line flex items-center justify-between border-b px-6 py-5">
-        <h2 className="font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+        <h2 className="flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+          <span
+            className="admin-section-icon"
+            style={
+              {
+                "--section-accent": ACCENT.amber,
+                "--section-bg": ACCENT.amberSoft,
+              } as CSSProperties
+            }
+            aria-hidden
+          >
+            <Bell className="h-4 w-4" strokeWidth={1.7} />
+          </span>
           Notifications
         </h2>
-        <Bell className="text-ink-soft h-4 w-4" strokeWidth={1.5} aria-hidden />
       </div>
       {items.length === 0 ? (
         <p className="text-ink-soft px-6 py-10 text-sm">You&apos;re all caught up.</p>
@@ -308,17 +379,19 @@ function Notifications({ items, now }: { items: Notification[]; now: number }) {
         <ul>
           {items.map((n) => {
             const Icon = n.kind === "message" ? MessageSquare : Pencil;
-            const tint = n.kind === "message" ? ACCENT.green : ACCENT.violet;
+            const tint = n.kind === "message" ? ACCENT.emerald : ACCENT.violet;
+            const bg = n.kind === "message" ? ACCENT.emeraldSoft : ACCENT.violetSoft;
             return (
               <li
                 key={n.id}
-                className="border-line flex items-start gap-3 border-t px-6 py-4 first:border-t-0"
+                className="border-line hover:bg-cream-deep/55 flex items-start gap-3 border-t px-6 py-4 transition-colors first:border-t-0"
               >
                 <span
-                  className="border-line mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center border"
+                  className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px]"
+                  style={{ backgroundColor: bg, color: tint }}
                   aria-hidden
                 >
-                  <Icon className="h-4 w-4" strokeWidth={1.5} style={{ color: tint }} />
+                  <Icon className="h-4 w-4" strokeWidth={1.6} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm">{n.title}</p>
@@ -337,8 +410,8 @@ function Notifications({ items, now }: { items: Notification[]; now: number }) {
 }
 
 const QUICK_ACTIONS = [
-  { href: "/admin/projects", label: "Add New Project" },
-  { href: "/admin/websites", label: "Add New Website" },
+  { href: "/admin/projects", label: "Add New Project", color: ACCENT.blue, bg: ACCENT.skySoft },
+  { href: "/admin/websites", label: "Add New Website", color: ACCENT.cyan, bg: ACCENT.cyanSoft },
 ];
 
 /* ── page ────────────────────────────────────────────────────────────────── */
@@ -388,12 +461,12 @@ export default async function AdminDashboard() {
   ]);
 
   const contentMix = [
-    { label: "Projects", value: projects, color: ACCENT.ink },
+    { label: "Projects", value: projects, color: ACCENT.blue },
     { label: "Services", value: services, color: ACCENT.violet },
-    { label: "Websites", value: websites, color: ACCENT.inkSoft },
-    { label: "Features", value: features, color: ACCENT.green },
+    { label: "Websites", value: websites, color: ACCENT.cyan },
+    { label: "Features", value: features, color: ACCENT.emerald },
     { label: "Testimonials", value: testimonials, color: ACCENT.amber },
-    { label: "Media", value: media, color: ACCENT.line },
+    { label: "Media", value: media, color: ACCENT.slate },
   ].filter((d) => d.value > 0);
 
   // Feed notifikasi = pesan belum dibaca + proyek yang baru diperbarui, digabung
@@ -436,18 +509,23 @@ export default async function AdminDashboard() {
             })}
           </p>
         </div>
-        <Link
-          href="/admin/messages"
-          className="border-line hover:border-ink relative flex items-center gap-2 border px-4 py-2.5 text-xs transition-colors"
-        >
-          <Bell className="h-4 w-4" strokeWidth={1.5} aria-hidden />
-          Notifications
-          {unread > 0 ? (
-            <span className="text-cream bg-gold ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold">
-              {unread}
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href="/admin/projects" className="admin-search-chip">
+            <span className="admin-search-icon" aria-hidden>
+              <Search className="h-4 w-4" strokeWidth={1.7} />
             </span>
-          ) : null}
-        </Link>
+            Search content
+          </Link>
+          <Link href="/admin/messages" className="admin-notification-chip">
+            <Bell className="h-4 w-4" strokeWidth={1.6} aria-hidden />
+            Notifications
+            {unread > 0 ? (
+              <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold">
+                {unread}
+              </span>
+            ) : null}
+          </Link>
+        </div>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -475,12 +553,24 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
-        <section className="border-line bg-card rounded-card shadow-card border">
+        <section className="admin-card border-line bg-card rounded-card shadow-card overflow-hidden border">
           <div className="border-line flex items-center justify-between border-b px-6 py-5">
-            <h2 className="font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+            <h2 className="flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
+              <span
+                className="admin-section-icon"
+                style={
+                  {
+                    "--section-accent": ACCENT.rose,
+                    "--section-bg": ACCENT.roseSoft,
+                  } as CSSProperties
+                }
+                aria-hidden
+              >
+                <Mail className="h-4 w-4" strokeWidth={1.7} />
+              </span>
               Incoming Messages
             </h2>
-            <Link href="/admin/messages" className="text-ink-soft hover:text-ink text-xs">
+            <Link href="/admin/messages" className="text-xs text-blue-700 hover:text-blue-900">
               View All
             </Link>
           </div>
@@ -503,7 +593,7 @@ export default async function AdminDashboard() {
                   {recentMessages.slice(0, 5).map((m) => (
                     <tr
                       key={m.id}
-                      className="border-line hover:bg-cream-deep/50 border-t transition-colors"
+                      className="border-line border-t transition-colors hover:bg-sky-50/70"
                     >
                       <td className="px-6 py-4">{m.name}</td>
                       <td className="text-ink-soft px-6 py-4">{m.subject}</td>
@@ -518,13 +608,13 @@ export default async function AdminDashboard() {
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium whitespace-nowrap ${
                             m.isRead
-                              ? "border-line text-ink-soft"
-                              : "border-gold/40 bg-gold/10 text-gold-ink"
+                              ? "border-slate-200 bg-slate-50 text-slate-600"
+                              : "border-rose-200 bg-rose-50 text-rose-700"
                           }`}
                         >
                           <span
                             className={`h-1.5 w-1.5 rounded-full ${
-                              m.isRead ? "bg-ink-soft/50" : "bg-gold-ink"
+                              m.isRead ? "bg-slate-400" : "bg-rose-500"
                             }`}
                             aria-hidden
                           />
@@ -534,7 +624,7 @@ export default async function AdminDashboard() {
                       <td className="px-6 py-4">
                         <Link
                           href="/admin/messages"
-                          className="text-ink-soft hover:text-ink inline-flex items-center gap-1"
+                          className="inline-flex items-center gap-1 text-blue-700 hover:text-blue-900"
                         >
                           View
                           <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
@@ -551,9 +641,20 @@ export default async function AdminDashboard() {
         <div className="flex flex-col gap-4">
           <Notifications items={notifications} now={now} />
 
-          <section className="border-line bg-card rounded-card shadow-card border p-6">
+          <section className="admin-card border-line bg-card rounded-card shadow-card border p-6">
             <h2 className="mb-6 flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
-              <Star className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+              <span
+                className="admin-section-icon"
+                style={
+                  {
+                    "--section-accent": ACCENT.amber,
+                    "--section-bg": ACCENT.amberSoft,
+                  } as CSSProperties
+                }
+                aria-hidden
+              >
+                <Star className="h-4 w-4" strokeWidth={1.7} />
+              </span>
               Quick Actions
             </h2>
             <div className="flex flex-col gap-3">
@@ -561,7 +662,13 @@ export default async function AdminDashboard() {
                 <Link
                   key={action.href}
                   href={action.href}
-                  className="border-line hover:border-ink hover:bg-cream-deep flex items-center gap-3 border border-dashed px-5 py-4 text-sm transition-colors"
+                  className="admin-action-link flex items-center gap-3 rounded-[14px] border px-5 py-4 text-sm transition-colors"
+                  style={
+                    {
+                      "--action-color": action.color,
+                      "--action-bg": action.bg,
+                    } as CSSProperties
+                  }
                 >
                   <Plus className="h-4 w-4 shrink-0" strokeWidth={1.5} aria-hidden />
                   {action.label}

@@ -39,7 +39,7 @@ export default function Countdown({ date }: { date: string | Date | null }) {
         {cells.map(([n, label]) => (
           <div
             key={label}
-            className="min-w-16 rounded-xl border border-[var(--w-accent)]/30 bg-white/40 px-3 py-4"
+            className="min-w-16 rounded-xl border border-[var(--w-accent)]/30 bg-white/40 px-3 py-4 backdrop-blur-sm"
           >
             <div className="font-[family-name:var(--w-font-display)] text-3xl text-[var(--w-primary)]">
               {n}

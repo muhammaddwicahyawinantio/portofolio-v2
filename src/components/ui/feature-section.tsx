@@ -62,7 +62,15 @@ export function FeatureSteps({
       //
       // ponytail: diukur sekali saat dipasang. Memutar ponsel ke lanskap tidak
       // menghitung ulang; tambahkan listener resize kalau itu jadi masalah.
-      if (el.getBoundingClientRect().height > window.innerHeight) return;
+      //
+      // Slack dinaikkan dari 72px/10vh ke 120px/16vh: ambang lama membuat
+      // pakunya nonaktif di banyak layar umum begitu teks fitur dari CMS
+      // sedikit lebih panjang dari draf awal. Slack lebih besar = paku lebih
+      // sering aktif, tapi kelebihan tinggi dalam rentang slack ini tetap ikut
+      // TERPOTONG selama dipaku (baca komentar di atas) — jangan naikkan lagi
+      // tanpa alasan kuat, upgrade sesungguhnya adalah ukur ulang saat resize.
+      const maxPinnedHeight = window.innerHeight + Math.min(120, window.innerHeight * 0.16);
+      if (el.getBoundingClientRect().height > maxPinnedHeight) return;
 
       setPinned(true);
       ScrollTrigger.create({
@@ -99,12 +107,15 @@ export function FeatureSteps({
   // efeknya. Dari md ke atas semuanya kembali ke nilai lama; tampilan desktop
   // tidak berubah sedikit pun.
   return (
-    <div ref={rootRef} className="flex min-h-svh flex-col justify-center py-3 md:py-6">
-      <h2 className="font-display mb-4 text-center text-[clamp(1.25rem,3vw,2rem)] leading-[1.05] font-medium tracking-[-0.01em] text-balance md:mb-6">
+    <div
+      ref={rootRef}
+      className="feature-steps-shell flex min-h-svh flex-col justify-start pt-28 pb-6 md:justify-center md:pt-24 md:pb-8"
+    >
+      <h2 className="font-rampart-one font-display mx-auto mb-4 max-w-4xl text-center text-[clamp(1.35rem,3.2vw,2.65rem)] leading-[0.92] font-medium tracking-[-0.005em] text-balance md:mb-5">
         {title}
       </h2>
 
-      <div className="grid items-stretch gap-4 md:grid-cols-2 md:gap-8">
+      <div className="feature-steps-grid grid items-center gap-3 md:grid-cols-2 md:gap-6">
         {/* Di ponsel daftar ini dibaca sebagai TABEL: baris-baris dengan
             hairline pemisah, penanda langkah rata atas di kolom kirinya. Tanpa
             itu empat blok teks 3 baris cuma menempel satu sama lain tanpa tepi,
@@ -115,7 +126,7 @@ export function FeatureSteps({
             dengan `first:pt-0 last:pb-0`: hasilnya setinggi `gap-4` yang lama,
             jadi garisnya gratis. Dari md ke atas kembali persis seperti semula.
             Tampilan desktop memang tidak diubah sama sekali. */}
-        <ol className="divide-line order-2 flex flex-col justify-center gap-0 divide-y md:order-1 md:gap-4 md:divide-y-0">
+        <ol className="divide-line order-2 flex flex-col justify-center gap-0 divide-y md:order-1 md:gap-2.5 md:divide-y-0">
           {features.map((feature, index) => {
             const active = !pinned || index === current;
             const done = !pinned || index <= current;
@@ -123,37 +134,38 @@ export function FeatureSteps({
             return (
               <motion.li
                 key={feature.slug}
-                className="py-2 first:pt-0 last:pb-0 md:py-0"
+                className="feature-step-row py-1.5 first:pt-0 last:pb-0 md:py-0"
                 initial={false}
-                animate={{ opacity: active ? 1 : 0.3 }}
-                transition={{ duration: 0.5 }}
+                animate={{ opacity: active ? 1 : 0.34, x: active ? 0 : -8 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                data-active={active ? "true" : "false"}
               >
                 {/* Dulu SELURUH baris ini satu <Link>. Diubah jadi <div> karena
                     tombol Explore di bawah juga sebuah tautan, dan <a> di dalam
                     <a> bukan HTML yang valid. Kelasnya dipertahankan apa adanya
                     supaya `group-hover:` pada judul tetap bekerja — hover-nya
                     kini dipicu div yang sama persis. */}
-                <div className="group flex items-start gap-3 md:items-center md:gap-4">
+                <div className="group flex items-start gap-2.5 md:items-center md:gap-3">
                   <span
                     className={cn(
-                      "mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition-transform duration-500 md:mt-0 md:size-7",
+                      "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border transition-transform duration-500 md:mt-0 md:size-6",
                       done
                         ? "bg-charcoal border-charcoal text-cream scale-110"
                         : "bg-card border-line text-ink-soft",
                     )}
                   >
                     {done ? (
-                      <Check aria-hidden className="size-3 md:size-3.5" />
+                      <Check aria-hidden className="size-2.5 md:size-3" />
                     ) : (
-                      <span className="text-xs font-semibold md:text-sm">{index + 1}</span>
+                      <span className="text-[10px] font-semibold md:text-xs">{index + 1}</span>
                     )}
                   </span>
 
                   <span className="flex-1">
-                    <span className="font-display group-hover:text-ink-soft block text-sm font-medium tracking-[-0.01em] transition-colors md:text-base">
+                    <span className="feature-step-title font-display group-hover:text-ink-soft block text-sm leading-tight font-medium tracking-[-0.005em] transition-colors md:text-base">
                       {feature.title}
                     </span>
-                    <span className="text-ink-soft mt-1 block text-[0.6875rem] leading-[1.5] md:text-xs md:leading-[1.55]">
+                    <span className="feature-step-copy text-ink-soft mt-1 block text-xs leading-[1.45] md:text-[0.82rem] md:leading-[1.5]">
                       {feature.content}
                     </span>
                     {/* ghost: empat langkah = empat CTA yang berulang. Solid
@@ -164,7 +176,7 @@ export function FeatureSteps({
                       href={feature.link ?? `/features/${feature.slug}`}
                       size="sm"
                       variant="ghost"
-                      className="mt-1.5 md:mt-2"
+                      className="feature-step-button mt-1.5 md:mt-1.5"
                     >
                       {exploreLabel}
                     </Button>
@@ -180,7 +192,7 @@ export function FeatureSteps({
             sempit kolomnya bertumpuk, jadi di sana tetap perlu tinggi tetap. */}
         <FeatureLink
           href={features[current].link ?? `/features/${features[current].slug}`}
-          className="border-line rounded-card relative order-1 block h-[96px] overflow-hidden border transition-opacity duration-300 hover:opacity-90 md:order-2 md:h-auto"
+          className="border-line rounded-card relative order-1 block h-[clamp(150px,30svh,220px)] overflow-hidden border transition-opacity duration-300 hover:opacity-90 md:order-2 md:h-[min(48svh,390px)] md:self-center lg:h-[min(46svh,420px)]"
         >
           <AnimatePresence mode="wait">
             {features.map((feature, index) =>
@@ -195,11 +207,7 @@ export function FeatureSteps({
                 >
                   {feature.image ? (
                     // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase
-                    <img
-                      src={feature.image}
-                      alt={feature.title}
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={feature.image} alt={feature.title} className="h-full w-full object-cover" />
                   ) : (
                     <div className="bg-cream-deep h-full w-full" />
                   )}

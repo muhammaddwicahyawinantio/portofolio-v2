@@ -33,6 +33,10 @@
   background-color: var(--se-frame-bg, transparent);
   background-image: var(--se-frame-image, none);
   background-size: var(--se-frame-size, auto);
+  /* Bingkainya berubah rasio saat memuai. Untuk plester berpetak posisi tidak
+     berpengaruh, tapi untuk FOTO (`--se-frame-size: cover`) inilah yang menjaga
+     pusat gambar tetap di tengah alih-alih tersangkut di sudut kiri-atas. */
+  background-position: center;
   background-blend-mode: multiply;
 }
 

@@ -20,7 +20,7 @@ export default function Events({ events }: { events: WeddingPreviewData["events"
         {events.map((e) => (
           <div
             key={e.id}
-            className="rounded-2xl border border-[var(--w-accent)]/30 bg-white/40 p-6 text-center"
+            className="rounded-2xl border border-[var(--w-accent)]/30 bg-white/40 p-6 text-center backdrop-blur-sm"
           >
             <h3 className="font-[family-name:var(--w-font-display)] text-2xl text-[var(--w-primary)]">
               {e.title}

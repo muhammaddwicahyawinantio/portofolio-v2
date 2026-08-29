@@ -58,15 +58,15 @@ assert.ok(testimonials);
 const optional = parseFields(
   testimonials,
   form({
-    clientName: "A",
-    position: "B",
-    content_en: "C",
-    content_id: "D",
-    photo: "",
-    order: "0",
+    name: "A",
+    position: "",
+    content: "C",
+    rating: "5",
+    avatar: "",
   }),
 );
-assert.equal(optional.photo, null, "opsional yang kosong harus null");
+assert.equal(optional.position, null, "position publik opsional harus konsisten");
+assert.equal(optional.avatar, null, "opsional yang kosong harus null");
 
 // 5. Select hanya menerima opsi yang terdaftar.
 const media = getResource("media-gallery");

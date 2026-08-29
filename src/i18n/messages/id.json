@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Dwi Studio — Satu studio, lima medium",
-    "description": "Web, motion, 3D, suara, dan film, dirancang dan dibangun satu tangan."
+    "title": "DwiStudio — Jasa Pembuatan Website & Solusi Digital",
+    "description": "DwiStudio menyediakan jasa pembuatan website profesional, landing page, company profile, e-commerce, undangan digital, ERP, e-learning, dan sistem web custom untuk bisnis, brand, dan kebutuhan personal."
   },
   "nav": {
     "about": "Tentang",
@@ -9,7 +9,7 @@
     "services": "Layanan",
     "products": "Produk",
     "contact": "Kontak",
-    "getInTouch": "Hubungi saya"
+    "getInTouch": "Mari bicara"
   },
   "menu": {
     "open": "Buka menu",
@@ -21,23 +21,25 @@
     "switchLabel": "Ganti bahasa"
   },
   "hero": {
-    "line1": "Satu studio.",
-    "line2": "Lima",
-    "line3": "medium.",
-    "lead": "Web, motion, 3D, suara, dan film — dirancang dan dibangun satu tangan.",
-    "scroll": "Gulir ke bawah",
-    "scrollHint": "Untuk memulai ceritanya"
+    "line1": "Bangun.",
+    "line2": "Tumbuh,",
+    "line3": "secara digital.",
+    "lead": "DwiStudio merancang dan mengembangkan website, aplikasi web, serta solusi digital yang menggabungkan desain modern, performa, dan fungsi yang benar-benar dibutuhkan bisnis.",
+    "scroll": "Jelajahi",
+    "scrollHint": "Lihat layanan dan karya kami"
   },
   "cta": {
-    "eyebrow": "Kontak",
-    "heading": "Punya sesuatu untuk dibuat?",
+    "eyebrow": "Mulai proyek",
+    "heading": "Punya ide yang ingin diwujudkan secara digital?",
     "action": "Mulai proyek",
     "ready": "Siap mulai?"
   },
   "about": {
     "eyebrow": "Tentang",
-    "title": "Tentang Saya",
-    "lead": "Dwi Studio bekerja lintas web, motion, 3D, suara, dan film. Setiap proyek dirancang dan dibangun tangan yang sama, dari awal sampai akhir.",
+    "title": "Tentang DwiStudio",
+    "metaTitle": "Tentang DwiStudio — Web Development & Digital Studio",
+    "metaDescription": "Kenali DwiStudio, studio pengembangan digital yang berfokus pada pembuatan website profesional, aplikasi web, dan solusi digital sesuai kebutuhan.",
+    "lead": "DwiStudio adalah studio pengembangan digital yang membantu bisnis, brand, dan individu membangun website serta sistem digital yang profesional, fungsional, dan mudah dikembangkan.",
     "storyTitle": "Perjalanan",
     "workTitle": "Pengalaman Kerja",
     "educationTitle": "Pendidikan",
@@ -46,7 +48,7 @@
     "institutionLabel": "Institusi",
     "skillsTitle": "Keahlian & Perkakas",
     "certificationsTitle": "Sertifikasi",
-    "valuesTitle": "Cara Saya Bekerja",
+    "valuesTitle": "Cara Kami Bekerja",
     "cvPreview": "Lihat CV",
     "cvDownload": "Unduh CV",
     "cvLoading": "Memuat CV…",
@@ -55,7 +57,7 @@
     "values": {
       "one": {
         "title": "Baca dulu, baru tulis",
-        "body": "Saya menelusuri seluruh jalurnya sebelum menyentuh papan ketik. Perbaikan tercepat yang salah tempat cuma menambah bug kedua."
+        "body": "Kami menelusuri seluruh kebutuhannya sebelum menyentuh papan ketik. Perbaikan tercepat yang salah tempat cuma menambah masalah kedua."
       },
       "two": {
         "title": "Sekecil mungkin",
@@ -63,7 +65,7 @@
       },
       "three": {
         "title": "Serahkan yang bisa kamu jalankan",
-        "body": "Setiap proyek pulang dengan CMS-nya sendiri. Kamu tidak perlu menghubungi saya untuk mengganti satu kalimat."
+        "body": "Setiap proyek pulang dengan CMS-nya sendiri. Anda tidak perlu menghubungi kami untuk mengganti satu kalimat."
       }
     },
     "mediaTitle": "Musik & Film",
@@ -71,40 +73,46 @@
     "filmTitle": "Film"
   },
   "projects": {
-    "eyebrow": "Karya",
-    "title": "Karya terpilih.",
-    "lead": "Studi kasus muncul di sini begitu diterbitkan.",
+    "eyebrow": "Portofolio",
+    "title": "Proyek terpilih.",
+    "metaTitle": "Portofolio Website & Web Development | DwiStudio",
+    "metaDescription": "Lihat pilihan proyek website dan sistem digital yang dikembangkan DwiStudio dengan fokus pada desain, performa, pengalaman pengguna, dan teknologi.",
+    "lead": "Beberapa website dan sistem digital yang dikembangkan dengan fokus pada kebutuhan bisnis, pengalaman pengguna, dan implementasi teknologi yang tepat.",
     "role": "Peran",
     "year": "Tahun",
     "client": "Klien",
-    "visitSite": "Kunjungi situs",
+    "visitSite": "Kunjungi website",
     "back": "Kembali ke proyek",
-    "openHint": "Klik panel yang terbuka untuk membuka studi kasusnya",
+    "openHint": "Double click / double tap panel untuk membuka studi kasusnya",
     "readMore": "Lihat proyek"
   },
   "contact": {
     "eyebrow": "Kontak",
-    "title": "Mulai proyek.",
-    "lead": "Ceritakan apa yang mau kamu buat dan kapan kamu butuh.",
+    "title": "Mari bicarakan proyek Anda.",
+    "metaTitle": "Konsultasi Pembuatan Website | DwiStudio",
+    "metaDescription": "Diskusikan kebutuhan website, landing page, e-commerce, ERP, e-learning, atau aplikasi web custom bersama DwiStudio.",
+    "lead": "Ceritakan website atau sistem yang ingin Anda bangun. DwiStudio akan membantu mengarahkan kebutuhan, ruang lingkup, dan pendekatan pengembangan yang sesuai.",
     "breadcrumb": "Kontak / Konsultasi",
-    "point1": "Ceritakan tujuan proyek dan siapa yang kamu tuju",
-    "point2": "Saya balas dengan cakupan, jadwal, dan angka yang jelas",
-    "point3": "Kamu terima situs beserta CMS yang bisa kamu jalankan sendiri",
+    "point1": "Ceritakan tujuan proyek dan siapa yang Anda tuju",
+    "point2": "DwiStudio membalas dengan cakupan, jadwal, dan estimasi yang jelas",
+    "point3": "Anda menerima situs beserta CMS yang bisa dikelola sendiri",
     "trustedBy": "Kata klien",
-    "privacy": "Dengan mengirim formulir ini kamu setuju datamu disimpan hanya untuk membalas pesan ini. Tidak dibagikan ke pihak lain, dan tidak dipakai untuk kirim promosi.",
+    "privacy": "Dengan mengirim formulir ini, Anda menyetujui data disimpan hanya untuk membalas pesan ini. Tidak dibagikan ke pihak lain, dan tidak digunakan untuk mengirim promosi.",
     "infoSocialTitle": "Kanal lain",
     "infoLocationTitle": "Lokasi & status",
     "infoReplyTitle": "Waktu balas",
-    "infoReplyBody": "Semua pesan saya baca dan saya balas sendiri, biasanya dalam satu sampai dua hari kerja.",
+    "infoReplyBody": "Setiap pesan dibaca dan dibalas langsung, biasanya dalam satu sampai dua hari kerja.",
     "qrFallback": "Buat ngopi"
   },
   "services": {
     "eyebrow": "Layanan",
-    "title": "Paket & harga.",
-    "lead": "Lima cara bekerja sama, mulai dari undangan pernikahan sampai sistem custom.",
+    "title": "Solusi web untuk berbagai kebutuhan.",
+    "metaTitle": "Jasa Pembuatan Website & Web Development | DwiStudio",
+    "metaDescription": "Layanan pembuatan website DwiStudio mencakup landing page, company profile, e-commerce, undangan digital, ERP, e-learning, dan aplikasi web custom.",
+    "lead": "Pilih layanan yang sesuai dengan kebutuhan Anda. Setiap website dikembangkan secara responsif, terstruktur, dan dapat disesuaikan dengan kebutuhan bisnis maupun personal.",
     "priceFrom": "Mulai dari",
     "explore": "Jelajahi",
-    "builder": "Builder",
+    "builder": "Jasa Website",
     "digitalProduct": "Produk Digital"
   },
   "products": {
@@ -120,20 +128,20 @@
     "message": "Pesan",
     "send": "Kirim pesan",
     "sending": "Mengirim…",
-    "success": "Terima kasih — pesanmu masuk. Semua saya baca dan saya balas sendiri.",
-    "errorRequired": "Mohon isi semua kolom.",
-    "errorEmail": "Alamat email itu sepertinya keliru.",
-    "errorRate": "Terlalu banyak pesan dari koneksi ini. Coba lagi satu jam lagi.",
-    "errorGeneric": "Terjadi kesalahan. Coba lagi."
+    "success": "Terima kasih. Pesan Anda sudah diterima dan akan ditinjau secepatnya.",
+    "errorRequired": "Mohon lengkapi semua kolom yang wajib diisi.",
+    "errorEmail": "Mohon masukkan alamat email yang valid.",
+    "errorRate": "Terlalu banyak permintaan dari koneksi ini. Silakan coba kembali beberapa saat lagi.",
+    "errorGeneric": "Terjadi kesalahan saat mengirim pesan. Silakan coba kembali."
   },
   "notFound": {
     "eyebrow": "404",
-    "title": "Halaman ini tidak ada.",
-    "lead": "Tautannya mungkin sudah usang. Kembali ke beranda.",
+    "title": "Halaman tidak ditemukan",
+    "lead": "Halaman yang Anda cari tidak tersedia atau mungkin telah dipindahkan.",
     "action": "Kembali ke beranda"
   },
   "footer": {
-    "statement": "Terbuka untuk proyek terpilih.",
+    "statement": "Membangun website dan solusi digital yang dirancang untuk kebutuhan nyata.",
     "rights": "Hak cipta dilindungi.",
     "builtWith": "Dibangun dengan",
     "terms": "Syarat Layanan",
@@ -155,11 +163,11 @@
     "updated": "Terakhir diperbarui 23 Agustus 2026",
     "terms": {
       "title": "Syarat Layanan",
-      "lead": "Yang kamu setujui saat memakai situs ini atau memesan pekerjaan dari Dwi Studio.",
+      "lead": "Yang kamu setujui saat memakai situs ini atau memesan pekerjaan dari DwiStudio.",
       "sections": [
         {
           "heading": "Dengan siapa kamu berurusan",
-          "body": "Dwi Studio adalah praktik desain dan pengembangan satu orang di Banjarmasin, Indonesia, dijalankan oleh M. Dwi Cahya Winantio. Semua yang ada di situs ini ditulis, dirancang, dan dibangun satu tangan."
+          "body": "DwiStudio adalah praktik desain dan pengembangan satu orang di Banjarmasin, Indonesia, dijalankan oleh M. Dwi Cahya Winantio. Semua yang ada di situs ini ditulis, dirancang, dan dibangun satu tangan."
         },
         {
           "heading": "Memakai situs ini",

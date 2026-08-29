@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/animations/Reveal";
 import Button from "@/components/ui/Button";
 import { iconFor } from "@/lib/icons";
+import { ShoppingCart } from "lucide-react";
 
 /** Ikon garis untuk emoji yang dikenal, monogram huruf untuk sisanya. */
 function FallbackMark({ value }: { value: string }) {
@@ -59,8 +60,27 @@ function ExploreCard({ item, exploreLabel }: { item: ExploreItem; exploreLabel: 
         <p className="text-ink-soft line-clamp-2 text-[11px] leading-[1.6] text-pretty">
           {item.description}
         </p>
-        <Button href={item.href} size="sm" variant="ghost" className="mt-1">
-          {exploreLabel}
+        {/* Ikon, bukan kata. Dua belas tombol "EXPLORE" identik berjejer di satu
+            layar membuat labelnya berhenti berarti — yang tersisa cuma dua belas
+            baris huruf kapital yang sama persis. Keranjang menyampaikan hal yang
+            sama dalam satu bentuk, dan menyisakan ruang untuk judul kartunya.
+
+            Labelnya TIDAK hilang, ia pindah ke aria-label: teks terjemahan yang
+            sama, kini dibacakan pembaca layar alih-alih dicetak dua belas kali.
+            Tombol ikon tanpa nama adalah tombol tanpa arti bagi yang tidak
+            melihatnya.
+
+            strokeWidth 1.5 dan size-5 menyamakannya dengan ikon Lucide di kotak
+            fallback kartu ini — satu keluarga garis pada satu ukuran, bukan dua.
+            Di size-4 ia terbaca hilang di tengah pil 44px-nya. */}
+        <Button
+          href={item.href}
+          size="icon"
+          variant="ghost"
+          className="mt-1"
+          aria-label={exploreLabel}
+        >
+          <ShoppingCart aria-hidden className="size-5" strokeWidth={1.5} />
         </Button>
       </div>
     </article>
@@ -80,7 +100,7 @@ function Column({
 
   return (
     <div>
-      <h3 className="font-display border-line mb-6 border-b pb-4 text-[clamp(1.1rem,2.2vw,1.6rem)] leading-tight font-medium tracking-[-0.01em]">
+      <h3 className="home-service-heading font-rampart-one font-display border-line mb-6 border-b pb-4 text-[clamp(1.55rem,3.8vw,3rem)] leading-[1.02] font-medium tracking-[-0.01em]">
         {heading}
       </h3>
       {/* targets="li": tiap baris masuk bergantian, pola yang sama dengan
@@ -131,9 +151,12 @@ export default async function ExploreColumns({
     description: id ? row.description_id : row.description_en,
     image: row.image,
     fallback: row.icon,
-    // Tidak ada halaman /services/{slug} di situs ini, jadi tanpa link dari
-    // CMS tombolnya jatuh ke /contact — tujuan CTA kartu layanan sebelumnya.
-    href: row.link ?? "/contact",
+    // SATU tujuan untuk seluruh kolom, bukan `row.link` per baris. Kolom ini
+    // etalase ringkas dari halaman Services; tombolnya membuka etalase penuhnya,
+    // dan di sanalah tiap layanan punya kartu lengkapnya sendiri. Situs ini juga
+    // tidak punya halaman /services/{slug}, jadi tautan per baris tak pernah
+    // benar-benar mendarat di detail item yang diklik.
+    href: "/services",
   }));
 
   const productItems: ExploreItem[] = products.map((row) => ({
@@ -142,7 +165,9 @@ export default async function ExploreColumns({
     description: id ? row.description_id : row.description_en,
     image: row.image,
     fallback: row.title.charAt(0),
-    href: row.link,
+    // Pasangan dari kolom kiri: /products, BUKAN /product. Route tunggalnya
+    // tidak ada di app/[locale] dan akan jatuh ke catch-all [...rest].
+    href: "/products",
   }));
 
   return (

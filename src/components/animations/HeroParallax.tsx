@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 /**
- * Parallax kedalaman untuk hero. Dua laju berbeda saat tirai cream naik
- * menutupi foto sticky: foto (background) mendorong-masuk pelan (scale), teks
- * (foreground) keluar ke atas lebih cepat sambil memudar. Kesan kedalaman —
- * latar mendorong maju, judul lewat lebih dekat lalu pergi.
+ * Gerak hero: parallax kedalaman dan transisi header.
+ *
+ * Dua laju berbeda saat tirai cream naik menutupi latar sticky: latar
+ * (background) mendorong-masuk pelan (scale), teks (foreground) keluar ke atas
+ * lebih cepat sambil memudar. Kesan kedalaman — latar mendorong maju, judul
+ * lewat lebih dekat lalu pergi.
  *
  * Headless (return null), pola sama seperti Intro: menemukan elemennya lewat
  * data-attribute alih-alih membungkus, jadi Hero tetap server component.
@@ -18,7 +20,7 @@ import { gsap } from "@/lib/gsap";
  * transform yang sama.
  *
  * Rentang scroll dipatok angka (0 → tinggi viewport), bukan trigger element:
- * hero itu position:sticky, dan pengukuran start/end ScrollTrigger dari elemen
+ *  itu position:sticky, dan pengukuran start/end ScrollTrigger dari elemen
  * sticky sering meleset. Satu layar pertama = persis durasi tirai menutup hero.
  */
 export default function HeroParallax() {
@@ -26,6 +28,22 @@ export default function HeroParallax() {
     const photo = document.querySelector<HTMLElement>("[data-hero-photo]");
     const text = document.querySelector<HTMLElement>("[data-hero-text]");
     if (!photo || !text) return;
+
+    // Header beralih ke cream selama hero masih di layar. Ini bukan gerak,
+    // melainkan keterbacaan, jadi tetap berlaku untuk reduced-motion.
+    const headerTint = ScrollTrigger.create({
+      // start:-1, BUKAN 0. ScrollTrigger menghitung aktif sebagai
+      // `scroll > start`, jadi pada scrollY tepat 0 — keadaan halaman saat
+      // dibuka — trigger ber-start 0 justru TIDAK aktif dan kelasnya tak pernah
+      // menempel. Diverifikasi: dengan start 0, header tetap ink di atas hero.
+      start: -1,
+      // Dikurangi tinggi bilah header: yang harus berganti warna itu pita paling
+      // atas layar, dan lembar `.paper` sudah lewat di bawah header sekitar 72px
+      // sebelum ia menutup hero sepenuhnya.
+      end: () => window.innerHeight - 72,
+      invalidateOnRefresh: true,
+      toggleClass: { targets: document.documentElement, className: "over-hero" },
+    });
 
     const mm = gsap.matchMedia();
     // Hanya jalan kalau pengguna tidak meminta reduced motion — jadi tidak ada
@@ -52,7 +70,13 @@ export default function HeroParallax() {
       };
     });
 
-    return () => mm.revert();
+    return () => {
+      headerTint.kill();
+      // kill() tidak selalu melepas kelas yang sedang menempel; kalau tertinggal,
+      // header jadi cream di atas halaman kertas setelah navigasi klien.
+      document.documentElement.classList.remove("over-hero");
+      mm.revert();
+    };
   }, []);
 
   return null;

@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Dwi Studio — One studio, five mediums",
-    "description": "Web, motion, 3D, sound, and film, designed and built by one hand."
+    "title": "DwiStudio — Web Development & Digital Solutions",
+    "description": "DwiStudio builds professional websites, landing pages, company profiles, e-commerce platforms, digital invitations, ERP, e-learning platforms, and custom web systems."
   },
   "nav": {
     "about": "About",
@@ -9,7 +9,7 @@
     "services": "Services",
     "products": "Products",
     "contact": "Contact",
-    "getInTouch": "Get in touch"
+    "getInTouch": "Let's talk"
   },
   "menu": {
     "open": "Open menu",
@@ -21,23 +21,25 @@
     "switchLabel": "Change language"
   },
   "hero": {
-    "line1": "One studio.",
-    "line2": "Five",
-    "line3": "mediums.",
-    "lead": "Web, motion, 3D, sound, and film — designed and built by one hand.",
-    "scroll": "Scroll down",
-    "scrollHint": "To begin the story"
+    "line1": "Build.",
+    "line2": "Grow,",
+    "line3": "go digital.",
+    "lead": "DwiStudio designs and builds websites, web apps, and digital solutions that combine modern design, performance, and the features your business actually needs.",
+    "scroll": "Explore",
+    "scrollHint": "See our services and work"
   },
   "cta": {
-    "eyebrow": "Contact",
-    "heading": "Have something to make?",
+    "eyebrow": "Start a project",
+    "heading": "Have an idea you want to bring online?",
     "action": "Start a project",
     "ready": "Ready to begin?"
   },
   "about": {
     "eyebrow": "About",
-    "title": "About Me",
-    "lead": "Dwi Studio works across web, motion, 3D, sound, and film. Every project is designed and built by the same hands, start to finish.",
+    "title": "About DwiStudio",
+    "metaTitle": "About DwiStudio — Web Development & Digital Studio",
+    "metaDescription": "Meet DwiStudio, a digital studio focused on building professional websites, web apps, and digital solutions tailored to your needs.",
+    "lead": "DwiStudio is a digital studio that helps businesses, brands, and individuals build professional, functional websites and digital systems that are easy to grow.",
     "storyTitle": "The Journey",
     "workTitle": "Work Experience",
     "educationTitle": "Education",
@@ -46,7 +48,7 @@
     "institutionLabel": "Institution",
     "skillsTitle": "Skills & Tools",
     "certificationsTitle": "Certifications",
-    "valuesTitle": "How I Work",
+    "valuesTitle": "How We Work",
     "cvPreview": "View CV",
     "cvDownload": "Download CV",
     "cvLoading": "Loading CV…",
@@ -55,7 +57,7 @@
     "values": {
       "one": {
         "title": "Read before writing",
-        "body": "I trace the whole path before touching the keyboard. The fastest fix in the wrong place is just a second bug."
+        "body": "We trace the whole requirement before touching the keyboard. The fastest fix in the wrong place is just a second problem."
       },
       "two": {
         "title": "As small as it goes",
@@ -63,7 +65,7 @@
       },
       "three": {
         "title": "Hand over something you can run",
-        "body": "Every project ships with its own CMS. You never need to call me to change a sentence."
+        "body": "Every project ships with its own CMS. You never need to call us to change a sentence."
       }
     },
     "mediaTitle": "Music & Film",
@@ -71,41 +73,47 @@
     "filmTitle": "Film"
   },
   "projects": {
-    "eyebrow": "Work",
-    "title": "Selected work.",
-    "lead": "Case studies appear here as they are published.",
+    "eyebrow": "Portfolio",
+    "title": "Selected projects.",
+    "metaTitle": "Website & Web Development Portfolio | DwiStudio",
+    "metaDescription": "See a selection of websites and digital systems built by DwiStudio, focused on design, performance, user experience, and the right technology.",
+    "lead": "A selection of websites and digital systems built with a focus on business needs, user experience, and the right technology choices.",
     "role": "Role",
     "year": "Year",
     "client": "Client",
-    "visitSite": "Visit live site",
+    "visitSite": "Visit website",
     "back": "Back to projects",
-    "openHint": "Click the open panel to open its case study",
+    "openHint": "Double click / double tap a panel to open its case study",
     "readMore": "Read more"
   },
   "contact": {
     "eyebrow": "Contact",
-    "title": "Start a project.",
-    "lead": "Tell me what you are making and when you need it.",
+    "title": "Let's talk about your project.",
+    "metaTitle": "Website Development Consultation | DwiStudio",
+    "metaDescription": "Discuss your website, landing page, e-commerce, ERP, e-learning, or custom web application needs with DwiStudio.",
+    "lead": "Tell us about the website or system you want to build. DwiStudio will help scope the requirements and the right development approach.",
     "breadcrumb": "Contact / Consultation",
-    "point1": "Tell me the project goal and who it is for",
-    "point2": "I reply with a clear scope, timeline, and number",
+    "point1": "Tell us the project goal and who it is for",
+    "point2": "DwiStudio replies with a clear scope, timeline, and estimate",
     "point3": "You receive the site plus a CMS you can run yourself",
     "trustedBy": "What clients say",
     "privacy": "By submitting this form you agree your details are stored only to answer this message. They are not shared with anyone else, and never used for marketing.",
     "infoSocialTitle": "Elsewhere",
     "infoLocationTitle": "Location & status",
     "infoReplyTitle": "Response time",
-    "infoReplyBody": "I read and answer every message myself, usually within one to two working days.",
+    "infoReplyBody": "Every message is read and answered directly, usually within one to two working days.",
     "qrFallback": "Buy me a coffee"
   },
   "services": {
     "eyebrow": "Services",
-    "title": "Packages & pricing.",
-    "lead": "Five ways to work together, from a wedding invitation to a fully custom system.",
+    "title": "Web solutions for every need.",
+    "metaTitle": "Website Development Services | DwiStudio",
+    "metaDescription": "DwiStudio's website development services cover landing pages, company profiles, e-commerce, digital invitations, ERP, e-learning, and custom web applications.",
+    "lead": "Choose the service that fits your needs. Every website is built responsive, well-structured, and adaptable to business or personal requirements.",
     "priceFrom": "Starting from",
     "explore": "Explore",
-    "builder": "Builder",
-    "digitalProduct": "Digital Product"
+    "builder": "Web Development",
+    "digitalProduct": "Digital Products"
   },
   "products": {
     "eyebrow": "Digital products",
@@ -120,20 +128,20 @@
     "message": "Message",
     "send": "Send message",
     "sending": "Sending…",
-    "success": "Thanks — your message is in. I read every one and reply myself.",
-    "errorRequired": "Please fill in every field.",
-    "errorEmail": "That email address does not look right.",
-    "errorRate": "Too many messages from this connection. Try again in an hour.",
-    "errorGeneric": "Something went wrong. Please try again."
+    "success": "Thanks — your message has been received and will be reviewed shortly.",
+    "errorRequired": "Please fill in every required field.",
+    "errorEmail": "Please enter a valid email address.",
+    "errorRate": "Too many requests from this connection. Please try again shortly.",
+    "errorGeneric": "Something went wrong while sending your message. Please try again."
   },
   "notFound": {
     "eyebrow": "404",
-    "title": "This page does not exist.",
-    "lead": "The link may be out of date. Head back to the homepage.",
+    "title": "Page not found",
+    "lead": "The page you're looking for isn't available or may have moved.",
     "action": "Back to home"
   },
   "footer": {
-    "statement": "Available for select work.",
+    "statement": "Building websites and digital solutions designed for real business needs.",
     "rights": "All rights reserved.",
     "builtWith": "Built with",
     "terms": "Terms of Service",
@@ -155,11 +163,11 @@
     "updated": "Last updated 23 August 2026",
     "terms": {
       "title": "Terms of Service",
-      "lead": "What you agree to when you use this site or commission work from Dwi Studio.",
+      "lead": "What you agree to when you use this site or commission work from DwiStudio.",
       "sections": [
         {
           "heading": "Who you are dealing with",
-          "body": "Dwi Studio is a one-person design and development practice in Banjarmasin, Indonesia, run by M. Dwi Cahya Winantio. Everything on this site is written, designed, and built by one hand."
+          "body": "DwiStudio is a one-person design and development practice in Banjarmasin, Indonesia, run by M. Dwi Cahya Winantio. Everything on this site is written, designed, and built by one hand."
         },
         {
           "heading": "Using this site",

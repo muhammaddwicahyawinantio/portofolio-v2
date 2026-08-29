@@ -6,7 +6,7 @@ import Section from "@/components/wedding/shared/Section";
 import Eyebrow from "@/components/wedding/shared/Eyebrow";
 
 const INPUT =
-  "w-full rounded-lg border border-[var(--w-accent)]/40 bg-white/60 px-4 py-2.5 text-sm text-[#2E2A26] outline-none transition-colors focus:border-[var(--w-primary)]";
+  "w-full rounded-lg border border-[var(--w-accent)]/40 bg-white/60 px-4 py-2.5 text-sm text-[#2E2A26] outline-none backdrop-blur-sm transition-colors focus:border-[var(--w-primary)]";
 
 const ATTENDANCE_LABELS: Record<string, string> = {
   attending: "Hadir",

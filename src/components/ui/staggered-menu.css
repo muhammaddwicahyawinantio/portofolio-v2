@@ -27,7 +27,7 @@
   cursor: pointer;
   color: var(--color-cream, #f6f1e7);
   font-weight: 600;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   line-height: 1;
@@ -66,9 +66,9 @@
 
 .sm-icon {
   position: relative;
-  width: 13px;
-  height: 13px;
-  flex: 0 0 13px;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -100,9 +100,9 @@
   right: 0.75rem;
   width: min(calc(100vw - 1.5rem), 22rem);
   max-height: calc(100dvh - 1.5rem);
-  /* Panel diparkir dengan translateX(100%) = selebar dirinya sendiri. Karena
+  /* Panel diparkir dengan translateY(-100%) = setinggi dirinya sendiri. Karena
      surface-nya kini menjorok 0.75rem dari tepi layar, geseran itu menyisakan
-     sepotong bingkai selebar jorokan tadi masih terlihat saat menu tertutup;
+     sepotong bingkai setinggi jorokan tadi masih terlihat saat menu tertutup;
      overflow di sini yang memotongnya. */
   overflow: hidden;
   z-index: 55;
@@ -119,7 +119,7 @@
 .sm-prelayer {
   position: absolute;
   inset: 0;
-  transform: translateX(100%);
+  transform: translateY(-100%);
 }
 
 .staggered-menu-panel {
@@ -137,7 +137,7 @@
   padding: 5rem 1.5rem 1.75rem;
   overflow-y: auto;
   pointer-events: auto;
-  transform: translateX(100%);
+  transform: translateY(-100%);
 }
 
 .sm-panel-inner {

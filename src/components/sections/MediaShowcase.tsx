@@ -28,7 +28,7 @@ export default async function MediaShowcase({
   return (
     <div className="grid gap-14 md:grid-cols-2 md:gap-12">
       <div>
-        <h2 className="font-display border-line mb-6 border-b pb-3 text-lg font-medium tracking-[-0.01em]">
+        <h2 className="font-rampart-one font-display border-line mb-6 border-b pb-3 text-lg font-medium tracking-[-0.01em]">
           {musicTitle}
         </h2>
         {/* Reveal targets="li" sama seperti kolom film: kartunya masuk
@@ -46,7 +46,7 @@ export default async function MediaShowcase({
       </div>
 
       <div>
-        <h2 className="font-display border-line mb-6 border-b pb-3 text-lg font-medium tracking-[-0.01em]">
+        <h2 className="font-rampart-one font-display border-line mb-6 border-b pb-3 text-lg font-medium tracking-[-0.01em]">
           {filmTitle}
         </h2>
         <Reveal targets="li">

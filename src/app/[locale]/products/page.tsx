@@ -29,11 +29,11 @@ export default function ProductsPage({ params }: { params: Promise<{ locale: str
   const t = useTranslations("products");
 
   return (
-    <>
+    <div className="interior-page">
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
       <Container className="pb-24 md:pb-36">
         <ProductList locale={locale} exploreLabel={t("explore")} />
       </Container>
-    </>
+    </div>
   );
 }

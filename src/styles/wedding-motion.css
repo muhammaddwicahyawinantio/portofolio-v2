@@ -3,6 +3,34 @@
    motion is allowed, so no-JS and reduced-motion always render final content.
    .is-visible plays the reveal. */
 
+/* Ambient page wash — same technique as the "Desert Horizon" gradient
+   recipe (soft radial bands stacked top-to-bottom), retinted with each
+   invitation's OWN palette instead of a fixed hue: gold accent near the
+   cover, dusty secondary through the middle, primary grounding the close.
+   Percent-based so it reads consistently whether the invitation is short
+   or long. Painted as background-image (not a separate element), so it
+   works identically on the public page and inside the admin phone-frame
+   preview — no position:fixed to leak out of that nested scroller. */
+.w-ambient-bg {
+  background-image:
+    radial-gradient(
+      65% 22% at 50% 4%,
+      color-mix(in srgb, var(--w-accent) 26%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      75% 26% at 50% 48%,
+      color-mix(in srgb, var(--w-secondary) 20%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      75% 24% at 50% 94%,
+      color-mix(in srgb, var(--w-primary) 18%, transparent) 0%,
+      transparent 70%
+    );
+  background-repeat: no-repeat;
+}
+
 .wm {
   will-change: opacity, transform;
 }

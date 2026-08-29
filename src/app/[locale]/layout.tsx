@@ -2,40 +2,38 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import { Spectral, Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
+import {
+  DM_Mono,
+  DM_Sans,
+  IBM_Plex_Mono,
+  Rampart_One,
+  Space_Grotesk,
+} from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { SocialFab } from "@/components/layout/SocialFab";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import CustomCursor from "@/components/animations/CustomCursor";
 import Intro from "@/components/animations/Intro";
-import GutterRule from "@/components/ui/GutterRule";
+import { DwiAiTrigger } from "@/components/dwiai/DwiAiTrigger";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, alternates, localePath } from "@/lib/seo";
+import { getSocialLinks } from "@/lib/social-links";
 import "@/styles/globals.css";
 
-/**
- * Spectral untuk display (design.md §3): serif editorial yang bobot 500–600-nya
- * memang digambar, bukan disintesis browser — dan italic-nya ikut dimuat karena
- * §3 memakainya untuk satu-dua kata penekanan di dalam judul, bukan sebagai
- * miring palsu.
- *
- * Plus Jakarta Sans untuk teks: seluruh subtitle, label, dan eyebrow di situs
- * ini kecil (10–14px) dan banyak yang uppercase ber-tracking lebar. Ia tetap
- * terbaca di ukuran itu, dan huruf-huruf terbukanya menyeimbangkan Spectral
- * yang jauh lebih berkarakter.
- */
-const display = Spectral({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-display-family",
-  display: "swap",
-});
-
-const body = Plus_Jakarta_Sans({
+/** DM Sans untuk body dan isi deskripsi di seluruh halaman publik. */
+const body = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body-family",
+  display: "swap",
+});
+
+/** Space Grotesk untuk judul item/kartu seperti "ChatGPT Plus". */
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display-family",
   display: "swap",
 });
 
@@ -49,6 +47,22 @@ const mono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-mono-family",
+  display: "swap",
+});
+
+/** Rampart One untuk judul section pilihan yang butuh aksen lebih display. */
+const rampartOne = Rampart_One({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-rampart-one-family",
+  display: "swap",
+});
+
+/** DM Mono untuk label kecil seperti "OPENAI". */
+const label = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-label-family",
   display: "swap",
 });
 
@@ -66,17 +80,44 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(SITE_URL),
-    title: { default: t("title"), template: "%s — Dwi Studio" },
+    title: { default: t("title"), template: "%s — DwiStudio" },
     description: t("description"),
     alternates: alternates(locale),
     openGraph: {
       type: "website",
-      siteName: "Dwi Studio",
+      siteName: "DwiStudio",
       title: t("title"),
       description: t("description"),
       locale: locale === "id" ? "id_ID" : "en_US",
       url: localePath(locale),
     },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+    },
+  };
+}
+
+/** JSON-LD Organization + WebSite — hanya field yang benar-benar ada datanya. */
+function organizationJsonLd(locale: string, title: string, description: string, sameAs: string[]) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: "DwiStudio",
+        url: SITE_URL,
+        description,
+        sameAs,
+      },
+      {
+        "@type": "WebSite",
+        name: "DwiStudio",
+        url: `${SITE_URL}${localePath(locale)}`,
+        inLanguage: locale === "id" ? "id-ID" : "en-US",
+      },
+    ],
   };
 }
 
@@ -92,15 +133,36 @@ export default async function LocaleLayout({
 
   // Wajib sebelum render supaya halaman tetap bisa di-prerender statis.
   setRequestLocale(locale);
-  const messages = await getMessages();
+  const [messages, socials, t] = await Promise.all([
+    getMessages(),
+    getSocialLinks(),
+    getTranslations({ locale, namespace: "meta" }),
+  ]);
+  const jsonLd = organizationJsonLd(
+    locale,
+    t("title"),
+    t("description"),
+    socials.map((s) => s.url),
+  );
 
   return (
-    <html lang={locale} className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html
+      lang={locale}
+      className={`${body.variable} ${display.variable} ${mono.variable} ${rampartOne.variable} ${label.variable}`}
+    >
       {/* Tanpa bg-*: gradasi cream didefinisikan di globals.css, dan utility
             background apa pun di sini akan menimpanya. */}
       {/* Tanpa text-*: warna teks dipegang `body` di globals.css. Utility di sini
             menang atas @layer base, dan akan memaksa seluruh teks jadi satu warna. */}
       <body className="font-body">
+        {/* JSON.stringify tidak meng-escape "</script>", yang secara literal
+            akan menutup tag ini lebih awal kalau muncul di dalam string mana
+            pun (mis. deskripsi CMS). Ganti "<" jadi escape unicode menutup
+            celah itu tanpa mengubah data JSON-nya. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
         <NextIntlClientProvider messages={messages}>
           <CustomCursor />
           {/* Intro wajib di dalam SmoothScroll: ia memanggil useLenis() untuk
@@ -109,14 +171,11 @@ export default async function LocaleLayout({
           <SmoothScroll>
             <Intro />
             <Header />
-            {/* relative: GutterRule diukur terhadap <main>, jadi garisnya
-                berhenti tepat di mana footer mulai. */}
-            <main className="relative">
-              <GutterRule />
-              {children}
-            </main>
+            <main className="relative">{children}</main>
             <Footer />
           </SmoothScroll>
+          <DwiAiTrigger />
+          <SocialFab socials={socials} />
         </NextIntlClientProvider>
       </body>
     </html>

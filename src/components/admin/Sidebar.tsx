@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import clsx from "clsx";
 import {
   LayoutDashboard,
@@ -41,6 +41,26 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { signOutAction } from "@/lib/admin/actions";
+
+const SECTION_ACCENTS = {
+  dashboard: { color: "#2563eb", bg: "#dbeafe" },
+  content: { color: "#7c3aed", bg: "#ede9fe" },
+  about: { color: "#0891b2", bg: "#cffafe" },
+  services: { color: "#059669", bg: "#d1fae5" },
+  weddings: { color: "#e11d48", bg: "#ffe4e6" },
+  "ai-chat": { color: "#d97706", bg: "#fef3c7" },
+  settings: { color: "#475569", bg: "#e2e8f0" },
+} as const;
+
+type NavTone = keyof typeof SECTION_ACCENTS;
+
+function sectionStyle(key: string): CSSProperties {
+  const tone = SECTION_ACCENTS[key as NavTone] ?? SECTION_ACCENTS.dashboard;
+  return {
+    "--section-accent": tone.color,
+    "--section-bg": tone.bg,
+  } as CSSProperties;
+}
 
 /* Struktur navigasi CMS. Dua level: ikon rail (section) → panel detail (item).
    Setiap item menunjuk ke rute /admin/[resource] yang SUDAH ada — hanya label &
@@ -112,10 +132,10 @@ const NAV: NavSection[] = [
   },
   {
     key: "ai-chat",
-    label: "AI Chat",
+    label: "Dwi AI",
     icon: Bot,
-    href: "/admin/ai-chat",
-    hint: "Assistant workspace — draft copy and ideas. Coming online soon.",
+    href: "/admin/dwiai-settings",
+    hint: "Assistant settings for the public Dwi AI widget.",
   },
   {
     key: "settings",
@@ -141,6 +161,7 @@ function sectionForPath(pathname: string): string {
   // Prefix match for standalone sections with sub-routes (mis. editor undangan
   // /admin/wedding-invitations/[id]). "/admin" dilewati agar tidak menang atas
   // semua path.
+  if (pathname === "/admin/ai-chat") return "ai-chat";
   for (const s of NAV) {
     if (s.href && s.href !== "/admin" && pathname.startsWith(s.href)) return s.key;
   }
@@ -164,9 +185,9 @@ function Rail({
   onToggleCollapse?: () => void;
 }) {
   return (
-    <div className="border-line flex w-16 shrink-0 flex-col items-center gap-1 border-r py-4">
+    <div className="admin-rail border-line flex w-16 shrink-0 flex-col items-center gap-1 border-r py-4">
       <div
-        className="border-line mb-2 flex h-10 w-10 items-center justify-center rounded-[12px] border"
+        className="admin-rail-logo border-line mb-2 flex h-10 w-10 items-center justify-center rounded-[12px] border"
         aria-hidden
       >
         <PenTool className="text-ink h-5 w-5" strokeWidth={1.5} />
@@ -176,17 +197,16 @@ function Rail({
         const owns = s.key === activeKey;
         const shown = s.key === openKey;
         const Icon = s.icon;
+        const style = sectionStyle(s.key);
         const cls = clsx(
           RAIL_BTN,
-          owns
-            ? "bg-cream-deep text-ink"
-            : shown
-              ? "bg-cream-deep/60 text-ink"
-              : "text-ink-soft hover:bg-cream-deep/40 hover:text-ink",
+          "admin-rail-button",
+          owns && "is-active",
+          shown && !owns && "is-open",
         );
         const tick = owns ? (
           <span
-            className="bg-gold-ink absolute top-1/2 left-0 h-5 w-[3px] -translate-y-1/2 rounded-full"
+            className="admin-rail-tick absolute top-1/2 left-0 h-5 w-[3px] -translate-y-1/2 rounded-full"
             aria-hidden
           />
         ) : null;
@@ -199,6 +219,7 @@ function Rail({
             aria-label={s.label}
             onClick={() => onSelect(s.key)}
             className={cls}
+            style={style}
           >
             {tick}
             <Icon className="h-5 w-5" strokeWidth={1.5} />
@@ -212,6 +233,7 @@ function Rail({
             aria-expanded={shown}
             onClick={() => onSelect(s.key)}
             className={cls}
+            style={style}
           >
             {tick}
             <Icon className="h-5 w-5" strokeWidth={1.5} />
@@ -226,7 +248,8 @@ function Rail({
             onClick={onToggleCollapse}
             title={collapsed ? "Expand panel" : "Collapse panel"}
             aria-label={collapsed ? "Expand panel" : "Collapse panel"}
-            className="text-ink-soft hover:bg-cream-deep/40 hover:text-ink flex h-11 w-11 items-center justify-center rounded-[12px] transition-colors"
+            className="admin-rail-button flex h-11 w-11 items-center justify-center rounded-[12px] transition-colors"
+            style={sectionStyle("settings")}
           >
             {collapsed ? (
               <PanelLeftOpen className="h-5 w-5" strokeWidth={1.5} />
@@ -240,7 +263,8 @@ function Rail({
             type="submit"
             title="Sign out"
             aria-label="Sign out"
-            className="text-ink-soft hover:bg-cream-deep/40 hover:text-danger flex h-11 w-11 items-center justify-center rounded-[12px] transition-colors"
+            className="admin-rail-button hover:text-danger flex h-11 w-11 items-center justify-center rounded-[12px] transition-colors"
+            style={sectionStyle("weddings")}
           >
             <LogOut className="h-5 w-5" strokeWidth={1.5} />
           </button>
@@ -261,14 +285,22 @@ function Panel({
   pathname: string;
   onClose?: () => void;
 }) {
+  const SectionIcon = section.icon;
+  const style = sectionStyle(section.key);
+
   return (
-    <div className="border-line flex h-full w-[232px] flex-col border-r">
+    <div className="admin-panel border-line flex h-full w-[232px] flex-col border-r" style={style}>
       <div className="border-line flex items-center justify-between gap-2 border-b px-5 py-4">
-        <div className="min-w-0">
-          <p className="text-ink font-mono text-[12px] font-medium tracking-[0.14em] uppercase">
-            Dwi CMS
-          </p>
-          <p className="text-ink-soft mt-0.5 truncate text-xs">{name}</p>
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="admin-panel-mark" aria-hidden>
+            <SectionIcon className="h-4 w-4" strokeWidth={1.7} />
+          </span>
+          <div className="min-w-0">
+            <p className="text-ink font-mono text-[12px] font-medium tracking-[0.14em] uppercase">
+              Dwi CMS
+            </p>
+            <p className="text-ink-soft mt-0.5 truncate text-xs">{name}</p>
+          </div>
         </div>
         {onClose ? (
           <button
@@ -284,7 +316,7 @@ function Panel({
 
       <div className="flex items-center gap-2 px-5 pt-5 pb-2">
         <span className="eyebrow">{section.label}</span>
-        <span className="bg-line h-px flex-1" aria-hidden />
+        <span className="admin-panel-line h-px flex-1" aria-hidden />
       </div>
 
       {section.items ? (
@@ -299,17 +331,15 @@ function Panel({
                     href={it.href}
                     aria-current={active ? "page" : undefined}
                     className={clsx(
-                      "flex items-center gap-3 rounded-[10px] px-3 py-2 text-sm transition-colors",
-                      active
-                        ? "bg-cream-deep text-ink"
-                        : "text-ink-soft hover:bg-cream-deep/50 hover:text-ink",
+                      "admin-panel-link flex items-center gap-3 rounded-[10px] px-3 py-2 text-sm transition-colors",
+                      active && "is-active",
                     )}
                   >
                     <Icon className="h-4 w-4 shrink-0" strokeWidth={1.5} aria-hidden />
                     <span className="truncate">{it.label}</span>
                     {active ? (
                       <span
-                        className="bg-gold-ink ml-auto h-1.5 w-1.5 shrink-0 rounded-full"
+                        className="admin-panel-dot ml-auto h-1.5 w-1.5 shrink-0 rounded-full"
                         aria-hidden
                       />
                     ) : null}
@@ -360,7 +390,7 @@ export default function Sidebar({ name }: { name: string }) {
   return (
     <>
       {/* ── Desktop: rail + panel (sticky, sejajar konten) ─────────────────── */}
-      <aside className="bg-card sticky top-0 hidden h-screen shrink-0 lg:flex">
+      <aside className="admin-sidebar bg-card sticky top-0 hidden h-screen shrink-0 lg:flex">
         <Rail
           activeKey={activeKey}
           openKey={openKey}
@@ -379,10 +409,10 @@ export default function Sidebar({ name }: { name: string }) {
       </aside>
 
       {/* ── Mobile: top bar + drawer ───────────────────────────────────────── */}
-      <div className="border-line bg-card/95 fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b px-4 backdrop-blur lg:hidden">
+      <div className="admin-mobile-bar border-line bg-card/95 fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b px-4 backdrop-blur lg:hidden">
         <div className="flex items-center gap-2.5">
           <span
-            className="border-line flex h-8 w-8 items-center justify-center rounded-[10px] border"
+            className="admin-rail-logo border-line flex h-8 w-8 items-center justify-center rounded-[10px] border"
             aria-hidden
           >
             <PenTool className="text-ink h-4 w-4" strokeWidth={1.5} />
@@ -417,7 +447,7 @@ export default function Sidebar({ name }: { name: string }) {
         inert={!mobileOpen}
         aria-hidden={!mobileOpen}
         className={clsx(
-          "bg-card fixed inset-y-0 left-0 z-50 flex transition-transform duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden",
+          "admin-sidebar bg-card fixed inset-y-0 left-0 z-50 flex transition-transform duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >

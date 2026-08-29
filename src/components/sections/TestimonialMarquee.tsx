@@ -11,21 +11,15 @@ import Marquee from "@/components/ui/marquee";
  * Referensinya memakai LiquidCard (backdrop-filter dengan feDisplacementMap,
  * dan dua set box-shadow raksasa untuk terang/gelap). Itu tidak dipakai:
  * seluruh situs ini satu tema cream, dan kartunya sudah punya bahasa sendiri —
- * .card-glow + border-line + bg-card. Bintang rating juga tidak ada, karena
- * model Testimonial memang tidak menyimpan rating; menaruh lima bintang penuh
- * yang tidak berasal dari data mana pun sama saja mengarang ulasan.
+ * Komponen lama ini masih dipakai sebagai fallback di halaman lain; homepage
+ * sekarang memakai marquee ringan di ContactPanel.
  */
-export default async function TestimonialMarquee({
-  locale,
-  title,
-}: {
-  locale: string;
-  title: string;
-}) {
-  const rows = await prisma.testimonial.findMany({ orderBy: { order: "asc" } });
+export default async function TestimonialMarquee({ title }: { locale: string; title: string }) {
+  const rows = await prisma.testimonial.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" },
+  });
   if (rows.length === 0) return null;
-
-  const id = locale === "id";
 
   return (
     <div>
@@ -38,14 +32,14 @@ export default async function TestimonialMarquee({
             className="card-glow border-line bg-card rounded-card flex w-72 shrink-0 flex-col justify-between gap-5 border p-5 md:w-80"
           >
             <blockquote className="text-ink-soft text-sm leading-[1.7] text-pretty">
-              “{id ? row.content_id : row.content_en}”
+              &quot;{row.content}&quot;
             </blockquote>
 
             <figcaption className="flex items-center gap-3">
-              {row.photo ? (
+              {row.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase
                 <img
-                  src={row.photo}
+                  src={row.avatar}
                   alt=""
                   loading="lazy"
                   className="border-line size-10 shrink-0 rounded-full border object-cover"
@@ -58,17 +52,19 @@ export default async function TestimonialMarquee({
                   aria-hidden
                   className="bg-cream-deep text-ink/30 font-display flex size-10 shrink-0 items-center justify-center rounded-full text-base leading-none font-medium"
                 >
-                  {row.clientName.charAt(0)}
+                  {row.name.charAt(0)}
                 </span>
               )}
 
               <span className="min-w-0">
                 <span className="font-display block truncate text-sm font-medium tracking-[-0.01em]">
-                  {row.clientName}
+                  {row.name}
                 </span>
-                <span className="text-ink-soft block truncate font-mono text-[10px] tracking-[0.08em] uppercase">
-                  {row.position}
-                </span>
+                {row.position ? (
+                  <span className="text-ink-soft block truncate font-mono text-[10px] tracking-[0.08em] uppercase">
+                    {row.position}
+                  </span>
+                ) : null}
               </span>
             </figcaption>
           </figure>

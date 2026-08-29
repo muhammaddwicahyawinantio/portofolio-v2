@@ -1,37 +1,34 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { isVideoUrl, toStringArray } from "@/lib/media";
-import Reveal from "@/components/animations/Reveal";
-import ProjectAccordion, { type ProjectPanel } from "@/components/sections/ProjectAccordion";
+import ColorChangeCards, { type ShowcaseCard } from "@/components/ui/color-change-card";
+
+const FALLBACK_IMAGE =
+  "https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
 export default async function ProjectShowcase({ locale }: { locale: string }) {
-  // Featured duluan, sisanya menyusul: akordeon dengan satu panel terlihat
-  // rusak, jadi barisnya selalu diisi sampai enam proyek kalau ada.
+  // 2x2 grid → empat kartu, featured duluan.
   const rows = await prisma.project.findMany({
     where: { archived: false },
     orderBy: [{ featured: "desc" }, { order: "asc" }],
-    take: 6,
+    take: 4,
   });
   if (rows.length === 0) return null;
 
-  const panels: ProjectPanel[] = rows.map((row) => {
+  const cards: ShowcaseCard[] = rows.map((row) => {
     const gallery = toStringArray(row.images).filter((url) => !isVideoUrl(url));
     const image =
       (row.coverImage && !isVideoUrl(row.coverImage) ? row.coverImage : null) ??
       gallery[0] ??
-      "/images/placeholder-1.jpg";
+      FALLBACK_IMAGE;
 
     return {
       slug: row.slug,
-      title: locale === "id" ? row.title_id : row.title_en,
-      category: row.category,
+      heading: locale === "id" ? row.title_id : row.title_en,
+      description: locale === "id" ? row.description_id : row.description_en,
       image,
     };
   });
 
-  return (
-    <Reveal>
-      <ProjectAccordion panels={panels} />
-    </Reveal>
-  );
+  return <ColorChangeCards cards={cards} />;
 }

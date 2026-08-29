@@ -16,7 +16,7 @@ export default function Gift({ gifts }: { gifts: WeddingPreviewData["gifts"] }) 
         {gifts.map((g) => (
           <div
             key={g.id}
-            className="rounded-2xl border border-[var(--w-accent)]/30 bg-white/40 p-6 text-center"
+            className="rounded-2xl border border-[var(--w-accent)]/30 bg-white/40 p-6 text-center backdrop-blur-sm"
           >
             {g.providerName ? (
               <p className="font-medium text-[var(--w-primary)]">{g.providerName}</p>

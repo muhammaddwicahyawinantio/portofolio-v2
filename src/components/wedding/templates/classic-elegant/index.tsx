@@ -31,7 +31,7 @@ export default function ClassicElegant({ invitation, guestName, preview = false 
     <WeddingMotionProvider smoothScroll={anim.global.smoothScroll} preview={preview}>
       <main
         style={style}
-        className="min-h-screen bg-[var(--w-bg)] font-[family-name:var(--w-font-body)] text-[#2E2A26] antialiased"
+        className="w-ambient-bg min-h-screen bg-[var(--w-bg)] font-[family-name:var(--w-font-body)] text-[#2E2A26] antialiased"
       >
         <Cover invitation={invitation} guestName={guestName} preview={preview} />
         <SectionMotion preset={anim.sections.couple} preview={preview}>

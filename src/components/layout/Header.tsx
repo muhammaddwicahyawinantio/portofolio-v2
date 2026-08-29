@@ -1,9 +1,18 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LocaleSwitch from "@/components/layout/LocaleSwitch";
-import Emblem from "@/components/ui/Emblem";
+import Lottie from "@/components/ui/lottie";
 import PillNav from "@/components/ui/pill-nav";
+import { ShinyContent, shinyButtonAnimation, shinyButtonClassName } from "@/components/ui/shiny-button";
 import { NAV } from "@/lib/nav";
+
+// Link next-intl dianimasikan langsung — CTA ini harus tetap tautan (navigasi
+// ke /contact), bukan <button> tanpa aksi seperti ShinyButton generiknya.
+const MotionLink = motion.create(Link);
 
 /**
  * Melayang tanpa background maupun border. Navigasinya PillNav dari ReactBits:
@@ -16,16 +25,34 @@ import { NAV } from "@/lib/nav";
 export default function Header() {
   const t = useTranslations("nav");
   const tMenu = useTranslations("menu");
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsScrolled(window.scrollY > 50);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   const toItem = (item: (typeof NAV)[number]) => ({ label: t(item.key), href: item.href });
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex w-full max-w-[80rem] flex-col items-center gap-3 px-5 py-4 md:flex-row md:justify-between md:gap-6 md:px-8 md:py-5 lg:px-12">
+      <div
+        data-scrolled={isScrolled ? "true" : "false"}
+        className="site-header-shell mx-auto flex flex-row items-center justify-between gap-2 px-2.5 py-2 md:gap-6 md:px-3 md:py-2.5"
+      >
         <div className="pointer-events-auto">
           <PillNav
-            logo={<Emblem className="h-full w-full" />}
-            logoAriaLabel="Dwi Studio"
+            logo={
+              <Lottie
+                src="/lottie/cats-cats-cats/animations/12345.json"
+                className="nav-cat-icon"
+              />
+            }
+            logoClassName="pill-logo-cat"
+            logoAriaLabel="DwiStudio"
+            animateLogoOnHover={false}
             menuLabel={tMenu("open")}
             closeMenuLabel={tMenu("close")}
             items={NAV.map(toItem)}
@@ -41,7 +68,13 @@ export default function Header() {
           />
         </div>
 
-        <div className="pointer-events-auto flex items-center gap-4 md:gap-6">
+        {/* Ditandai, bukan diberi warna di sini: dua anak ini satu-satunya isi
+            header yang mewarisi ink dari body — PillNav membawa pil ber-fill
+            sendiri, jadi ia terbaca di atas apa pun. Di atas hero video mereka
+            beralih ke cream lewat `.over-hero` (globals.css). Penanda ini
+            juga yang menjaga PillNav TIDAK ikut dibalik: pil-nya ber-fill terang
+            dengan teks ink, dan membalikkannya jadi cream-di-atas-cream. */}
+        <div data-header-actions className="pointer-events-auto flex items-center gap-2.5 md:gap-6">
           <LocaleSwitch />
           <CtaLink href="/contact">{t("getInTouch")}</CtaLink>
         </div>
@@ -51,26 +84,13 @@ export default function Header() {
 }
 
 /**
- * CTA terpisah dari navbar: pill berbingkai yang isinya disapu dari kiri
- * (origin-left scale-x) lalu panahnya bergeser sedikit ke kanan.
+ * CTA terpisah dari navbar: pill "shiny button" — sama persis efeknya dengan
+ * ShinyButton, cuma akarnya <a> (lewat motion.create) supaya tetap tautan.
  */
 function CtaLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      className="group border-line hover:border-charcoal hover:text-cream relative isolate inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[10px] font-semibold tracking-[0.2em] whitespace-nowrap uppercase transition-colors duration-300 md:px-5 md:text-[11px]"
-    >
-      <span
-        aria-hidden
-        className="bg-charcoal absolute inset-0 -z-10 origin-left scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100"
-      />
-      {children}
-      <span
-        aria-hidden
-        className="transition-transform duration-300 ease-out group-hover:translate-x-1"
-      >
-        &#8594;
-      </span>
-    </Link>
+    <MotionLink href={href} {...shinyButtonAnimation} className={shinyButtonClassName}>
+      <ShinyContent>{children}</ShinyContent>
+    </MotionLink>
   );
 }

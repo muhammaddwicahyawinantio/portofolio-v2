@@ -13,9 +13,8 @@ import {
 
 export type FooterNavLink = { href: string; label: string };
 
-/** Dua baris wordmark latar footer. Satu daftar, satu set prop Shuffle —
-    animasinya dijamin identik tanpa menyalin propnya dua kali. */
-const WORDMARK = ["Dwi Studio", "Available for Work"];
+/** Wordmark latar footer. */
+const WORDMARK = ["DwiStudio"];
 
 /**
  * Tumpukan teknologi yang benar-benar dipakai situs ini — cocokkan dengan
@@ -82,7 +81,7 @@ export default function Footer1({
           Yang dipangkas untuk memendekkan footer HANYA ruang — padding, gap,
           dan jarak ke pembatas. Ukuran teks dan ikon sengaja dibiarkan besar:
           itu permintaannya, dan memang di situ perbaikannya. */}
-      <footer className="paper-deep text-ink border-line relative w-full overflow-hidden border-t pt-10 pb-6 md:pt-12 md:pb-7">
+      <footer className="monochrome-dark paper-deep text-ink border-line relative w-full overflow-hidden border-t pt-10 pb-6 md:pt-12 md:pb-7">
         <noscript>
           <style>{NO_JS_FALLBACK}</style>
         </noscript>
@@ -115,7 +114,7 @@ export default function Footer1({
                 // rootMargin 0 memicunya begitu masuk layar.
                 threshold={0}
                 rootMargin="0px"
-                className="font-display text-ink/[0.07] w-full text-center text-[clamp(1.75rem,9vw,6rem)] leading-[1.05] font-medium tracking-[-0.01em] uppercase"
+                className="font-rampart-one font-display text-ink/[0.07] w-full text-center text-[clamp(1.75rem,9vw,6rem)] leading-[1.05] font-medium tracking-[-0.01em] uppercase"
               />
             ))}
           </ScrollScrub>
@@ -130,6 +129,10 @@ export default function Footer1({
             variants={containerVariants}
             className="relative z-10 flex flex-col items-center gap-5"
           >
+            <motion.div data-footer-reveal variants={itemVariants}>
+              <SocialCloud links={socials} className="text-ink" />
+            </motion.div>
+
             {/* Kalimat penutup studio. Naik dari text-lg/xl: ini satu-satunya
                 kalimat di footer, dan sebelumnya ia lebih kecil dari tautan
                 navigasi di bawahnya. */}
@@ -164,10 +167,6 @@ export default function Footer1({
                 </motion.div>
               ))}
             </motion.nav>
-
-            <motion.div data-footer-reveal variants={itemVariants}>
-              <SocialCloud links={socials} className="text-ink" />
-            </motion.div>
           </motion.div>
         </Container>
 
@@ -197,7 +196,7 @@ export default function Footer1({
                 ))}
               </p>
               <p className="mt-1.5">
-                &copy; {new Date().getFullYear()} Dwi Studio. {rights}
+                &copy; {new Date().getFullYear()} DwiStudio. {rights}
               </p>
             </div>
 

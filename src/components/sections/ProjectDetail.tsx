@@ -37,7 +37,7 @@ export default async function ProjectDetail({ locale, slug }: { locale: string; 
           <p className="eyebrow mb-8">{row.category}</p>
           <h1
             data-headline
-            className="font-display max-w-4xl text-[clamp(1.9rem,5.5vw,4rem)] leading-[1.05] font-medium tracking-[-0.01em] text-balance"
+            className="font-rampart-one font-display max-w-4xl text-[clamp(1.9rem,5.5vw,4rem)] leading-[1.05] font-medium tracking-[-0.01em] text-balance"
           >
             {title}
           </h1>

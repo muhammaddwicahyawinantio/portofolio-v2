@@ -36,6 +36,7 @@ export type PillNavItem = {
  */
 export default function PillNav({
   logo,
+  logoClassName,
   logoAriaLabel = "Home",
   items,
   desktopItems = items,
@@ -45,10 +46,12 @@ export default function PillNav({
   hoveredPillTextColor = "var(--color-cream)",
   pillTextColor,
   initialLoadAnimation = false,
+  animateLogoOnHover = true,
   menuLabel = "Menu",
   closeMenuLabel = "Close",
 }: {
   logo: ReactNode;
+  logoClassName?: string;
   logoAriaLabel?: string;
   /** Daftar lengkap; inilah yang muncul di panel menu mobile. */
   items: PillNavItem[];
@@ -60,6 +63,7 @@ export default function PillNav({
   hoveredPillTextColor?: string;
   pillTextColor?: string;
   initialLoadAnimation?: boolean;
+  animateLogoOnHover?: boolean;
   menuLabel?: string;
   closeMenuLabel?: string;
 }) {
@@ -168,6 +172,7 @@ export default function PillNav({
   };
 
   const handleLogoEnter = () => {
+    if (!animateLogoOnHover) return;
     const img = logoImgRef.current;
     if (!img) return;
     logoTweenRef.current?.kill();
@@ -188,7 +193,7 @@ export default function PillNav({
         <Link
           ref={logoRef}
           href="/"
-          className="pill-logo"
+          className={clsx("pill-logo", logoClassName)}
           aria-label={logoAriaLabel}
           onMouseEnter={handleLogoEnter}
         >

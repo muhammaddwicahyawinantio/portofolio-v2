@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-const TRAIL_MAX = 20; // sampel jejak yang disimpan
-const DECAY = 0.045; // hilangnya "tinta" per frame
+const TRAIL_MAX = 12; // sampel jejak yang disimpan
+const DECAY = 0.08; // hilangnya "tinta" per frame
 const RING_IDLE = 5;
 const RING_HOVER = 15;
 const DOT_R = 2.5; // titik inti, ukurannya tetap
@@ -44,7 +44,7 @@ export default function CustomCursor() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
     const resize = () => {
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
@@ -64,10 +64,24 @@ export default function CustomCursor() {
     let targetR = RING_IDLE;
     let last = { x: -100, y: -100 };
     let frame = 0;
+    let drawing = false;
+
+    const needsFrame = () =>
+      trail.length > 0 ||
+      Math.abs(pointer.x - dot.x) > 0.4 ||
+      Math.abs(pointer.y - dot.y) > 0.4 ||
+      Math.abs(targetR - dot.r) > 0.08;
+
+    const wake = () => {
+      if (drawing || document.hidden) return;
+      drawing = true;
+      frame = requestAnimationFrame(draw);
+    };
 
     const onMove = (e: PointerEvent) => {
       pointer.x = e.clientX;
       pointer.y = e.clientY;
+      wake();
 
       const dx = pointer.x - last.x;
       const dy = pointer.y - last.y;
@@ -84,6 +98,7 @@ export default function CustomCursor() {
     const onOver = (e: Event) => {
       const el = e.target as Element | null;
       targetR = el?.closest?.(INTERACTIVE) ? RING_HOVER : RING_IDLE;
+      wake();
     };
 
     const draw = () => {
@@ -130,19 +145,33 @@ export default function CustomCursor() {
       ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
       ctx.stroke();
 
-      frame = requestAnimationFrame(draw);
+      if (needsFrame()) {
+        frame = requestAnimationFrame(draw);
+      } else {
+        drawing = false;
+      }
     };
-    frame = requestAnimationFrame(draw);
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        drawing = false;
+      } else {
+        wake();
+      }
+    };
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("resize", resize);
     document.addEventListener("mouseover", onOver);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("resize", resize);
       document.removeEventListener("mouseover", onOver);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       document.documentElement.classList.remove("has-custom-cursor");
     };
   }, []);

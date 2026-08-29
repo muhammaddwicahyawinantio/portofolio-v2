@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { gsap, SplitText } from "@/lib/gsap";
 import Container from "@/components/ui/Container";
+import Lottie from "@/components/ui/lottie";
 
 /**
  * SATU section penutup beranda: judul "Ready to begin?", formulir kontak, dan
@@ -19,9 +20,10 @@ import Container from "@/components/ui/Container";
  * lewat di atasnya. Di sini seluruh isi mengalir normal, jadi setinggi apa pun
  * ia tak pernah terpotong.
  *
- * Yang tersingkap adalah LEMBAR KEDUA (cream-1). Tanpa pergantian bidang
- * tirainya tak terlihat sama sekali: halaman di atasnya juga cream-0, jadi tak
- * ada apa pun untuk disingkap.
+ * Yang tersingkap adalah LEMBAR HANGAT — `.paper-warm-flat`, yaitu warna AKHIR
+ * sapuan `.paper-warm` milik section Services tepat di atasnya. Latar ini fixed,
+ * jadi ia tak bisa melanjutkan rampa; yang bisa ia lakukan adalah menyamai warna
+ * tempat rampa itu berhenti, sehingga sambungannya tak berpita.
  */
 export default function ReadyPanel({
   eyebrow,
@@ -100,14 +102,23 @@ export default function ReadyPanel({
           section, tidak tenggelam ke belakang <body>. clip-path sebenarnya sudah
           membuat stacking context sendiri, tapi itu efek samping — kalau suatu
           saat tirainya dilepas, `isolate` yang tetap menjaga urutannya. */}
-      <div aria-hidden className="ready-backdrop paper-deep pointer-events-none -z-10">
+      <div aria-hidden className="ready-backdrop paper-warm-flat pointer-events-none -z-10">
         {/* Satu-satunya kolam hangat di seluruh beranda, di sudut tempat halaman
             meminta pengunjung bertindak. Ikut terpaku bersama latarnya, jadi ia
             diam di sudut layar sementara isi section lewat di atasnya. */}
         <div className="sand-pool absolute inset-0" />
       </div>
 
-      <Container className="py-20 md:py-28">
+      <Lottie
+        src="/lottie/html-web-development/data.json"
+        className="pointer-events-none absolute top-6 left-3 z-0 aspect-square w-[clamp(6rem,18vw,15rem)] opacity-70 mix-blend-multiply sm:top-8 sm:left-8 lg:left-12"
+      />
+      <Lottie
+        src="/lottie/dynamic-coding/data.json"
+        className="pointer-events-none absolute top-6 right-3 z-0 aspect-square w-[clamp(6rem,18vw,15rem)] opacity-70 mix-blend-multiply sm:top-8 sm:right-8 lg:right-12"
+      />
+
+      <Container className="relative z-10 py-20 md:py-28">
         {/* Kepala section di tengah, isinya di bawah tetap rata kiri: formulir
             rata tengah tidak bisa dibaca sebagai formulir. `text-center` di
             pembungkus sekaligus menengahkan .eyebrow, yang inline-flex — `mx-auto`
@@ -124,7 +135,10 @@ export default function ReadyPanel({
               itu CSS tanpa @layer dan akan menang atas utility apa pun yang
               menabraknya — pelajaran dari `margin: 0` yang dulu membatalkan
               `mb-20` di sini. */}
-          <h2 ref={headRef} className="ready-heading font-display mx-auto max-w-[15ch]">
+          <h2
+            ref={headRef}
+            className="ready-heading home-contact-heading ready-heading-lowered font-rampart-one font-display mx-auto max-w-[15ch]"
+          >
             {heading}
           </h2>
         </div>
