@@ -1,44 +1,367 @@
 @import "tailwindcss";
 
 @theme {
-  /* Silver-gelatin monochrome — cast dingin, sengaja bukan cream/warm. */
-  --color-ink: #0a0a0b;
-  --color-ink-raised: #141417;
-  --color-graphite: #3a3b40;
-  --color-ash: #7a7c83;
-  --color-silver: #c3c6cc;
-  --color-paper: #edeff2;
+  /* Facelift "Kertas Kalkir" (rev. B). Nilai token diambil dari palet yang
+     ditetapkan brief — NAMA dibiarkan apa adanya (`gold` tetap `gold`, `line`
+     tetap `line`) supaya 400+ kelas `text-gold`/`border-line`/`bg-cream` di
+     src/ ikut berubah tanpa satu komponen pun disentuh. Peta namanya:
+       cream      → cream-0   (dasar halaman, satu lembar)
+       cream-deep → cream-1   (dua lembar bertumpuk)
+       line       → border    (hairline, kini beropacity)
+       gold       → sand      (aksen dekoratif)
+       gold-ink   → sand-ink  (turunan yang lolos AA untuk label 12px)
+     Tiga nama benar-benar baru: charcoal, charcoal-soft, sand-deep. */
+  --color-cream: #fafafa;
+  --color-cream-deep: #f4f4f5;
+  --color-card: #ffffff;
+  --color-ink: #09090b;
+  --color-ink-soft: #71717a;
+  /* Hairline beropacity, bukan hex pekat. Yang lama (#d7cfbf) duduk di 1.32:1
+     dan, dipakai 88 kali, menjadikan seluruh situs terbaca sebagai wireframe.
+     8% grafit = 1.16:1 — hadir, tidak berteriak. */
+  --color-line: #e4e4e7;
 
-  --font-display: var(--font-display-family), Georgia, serif;
+  /* GELAP = elemen solid & dekoratif SAJA (tombol, tirai intro, scrim foto,
+     badge). Sengaja dipisah dari `ink` supaya warna teks dan warna benda gelap
+     tidak lagi memakai satu token — aturan 4 brief jadi dijaga oleh nama,
+     bukan oleh disiplin. `charcoal-soft` = kepekatan kedua untuk hover/pressed. */
+  --color-charcoal: #0d0d0d;
+  --color-charcoal-soft: #262626;
+
+  /* Aksen hangat: satu hue, tiga kepekatan.
+     `gold`      #c6a26f — DEKORATIF saja (2.2:1 di cream). Jangan untuk teks.
+     `sand-deep` #9b7b4c — 3.7:1: angka besar, garis, tick, tepi hover, dan
+                           semua pemakaian NON-teks (ambang WCAG non-teks 3:1).
+     `gold-ink`  #7f653e — 5.1:1 di cream-0, 4.7:1 di cream-1: satu-satunya yang
+                           boleh membawa teks kecil (eyebrow, label, tag 12px).
+                           Nilai brief (#9b7b4c) hanya 3.3–3.7:1, di bawah AA. */
+  --color-gold: #a1a1aa;
+  --color-sand-deep: #71717a;
+  --color-gold-ink: #52525b;
+
+  /* Alias shadcn-style ke palet yang sama, supaya komponen registry
+     (bg-background, text-muted-foreground, dst) langsung nempel tanpa diedit. */
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-muted-foreground: var(--color-ink-soft);
+  --color-accent: var(--color-gold);
+
+  /* Status validasi dari token, bukan merah/hijau default browser. Oxblood
+     hangat (bukan merah menyala) untuk error, olive teduh untuk sukses — dua-
+     duanya duduk di keluarga kertas/pensil, bukan warna sistem. Lolos AA di
+     atas cream & card. Alias `destructive` disediakan untuk komponen shadcn. */
+  --color-danger: #3f3f46;
+  --color-success: #27272a;
+  --color-destructive: var(--color-danger);
+
+  /* Radius diperketat 14px → 4px. Kartu di situs ini adalah LEMBAR kertas, dan
+     kertas punya sudut siku. 14px membuatnya terbaca sebagai panel aplikasi.
+     Tombol tetap pill (999px) — ia benda lain: kontrol, bukan lembar. */
+  --radius-card: 8px;
+
+  /* Bayangan tinggal bayangan KONTAK. Halo ambient 48px yang lama adalah satu-
+     satunya hal yang memisahkan kartu dari latar (card vs cream cuma 1.03:1),
+     dan hasilnya kartu mengambang seperti panel Material. Sekarang yang
+     memisahkan adalah hairline + pergantian bidang; bayangan hanya menempelkan
+     kartu ke kertas. Hover masih diberi angkatan kecil supaya interaksi
+     tetap terbaca. */
+  --shadow-card: 0 1px 2px rgba(9, 9, 11, 0.04);
+  --shadow-card-hover: 0 0 0 1px rgba(9, 9, 11, 0.08), 0 18px 42px -26px rgba(9, 9, 11, 0.32);
+
+  --font-display: var(--font-display-family), system-ui, sans-serif;
   --font-body: var(--font-body-family), system-ui, sans-serif;
+  --font-label: var(--font-label-family), system-ui, sans-serif;
+  /* Utility/data face — membawa suara teknis "drafting". */
+  --font-mono: var(--font-mono-family), ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ── Plester kertas ───────────────────────────────────────────────────────
+   Dua lapis, persis seperti batu kapur/plester pada referensi foto:
+
+     1. AWAN tonal besar dan lembut  → `--paper-mottle`, di sini
+     2. BINTIK halus                 → grain di body::after, sudah ada
+
+   Lapis awan ini SIFAT KERTASNYA, bukan film di atas segalanya: ia dipasang
+   sebagai background-image pada bidang cream saja, jadi ia tidak pernah jatuh
+   di atas foto hero atau bidang charcoal. Foto tidak butuh awan plester.
+
+   Cara kerjanya: feTurbulence menghasilkan derau abu-abu, lalu feComponentTransfer
+   memampatkan rentang terangnya ke 0.885–1.0 dan memaksa alpha ke 1. Dipadu
+   `background-blend-mode: multiply`, hasilnya mengalikan warna cream di
+   bawahnya — jadi bercaknya MEWARISI kehangatan cream (beige lebih tua), bukan
+   menimpanya dengan abu-abu. Itu sebabnya ia terbaca hangat seperti di foto
+   tanpa satu pun hue baru masuk ke palet.
+
+   baseFrequency 0.009 pada viewBox 400 + background-size 900px = bercak selebar
+   ~250px: cukup besar untuk lolos uji blur (satu tarikan tenang, bukan ramai).
+   stitchTiles menjadikannya bersambung mulus antar-ubin. */
+:root {
+  --paper-mottle: none;
+  --paper-mottle-size: auto;
+  /* Ujung hangat sapuan penutup. Di :root, bukan di dalam .paper-warm: dua kelas
+     yang berbeda harus mendarat pada nilai yang sama persis (lihat di bawah). */
+  --paper-warm-end: var(--color-cream-deep);
+  --paper-wash: linear-gradient(
+    180deg,
+    var(--color-cream) 0%,
+    var(--color-cream) 58%,
+    var(--color-cream-deep) 100%
+  );
+}
+
+/**
+ * Bidang kertas. `.paper` = satu lembar (cream-0), `.paper-deep` = dua lembar
+ * bertumpuk (cream-1). Keduanya memakai plester yang sama persis, jadi kedua
+ * ply terbaca sebagai MATERIAL yang sama pada kedalaman berbeda — bukan dua
+ * bahan berbeda.
+ *
+ * Sengaja TIDAK dipasang pada `bg-card`: kartu adalah lembar bersih di atas
+ * meja, dan menaruh tekstur di sana berarti mengulangnya puluhan kali dalam
+ * satu layar — kesalahan yang sama dengan .blueprint-grid dulu.
+ */
+.paper {
+  background-color: var(--color-cream);
+  background-image: linear-gradient(180deg, #fafafa 0%, #f4f4f5 100%);
+}
+
+.paper-deep {
+  background-color: var(--color-cream-deep);
+  background-image: linear-gradient(180deg, var(--color-cream-deep), var(--color-cream));
+}
+
+/**
+ * Lembar hangat — dipakai bersama section Services dan section Contact supaya
+ * keduanya terbaca sebagai SATU bidang penutup halaman, bukan dua lembar
+ * berbeda yang kebetulan berurutan.
+ *
+ * Dua kelas, satu sapuan:
+ *   `.paper-warm`      Services — RAMPA-nya: cream-0 di atas, turun ke cream-1,
+ *                      berakhir di cream-1 bernoda sand.
+ *   `.paper-warm-flat` Contact  — bidang DATAR tepat pada warna akhir rampa itu,
+ *                      jadi tepi bawah Services dan tepi atas Contact bertemu
+ *                      pada nilai yang sama persis: tidak ada pita reset di
+ *                      sambungannya.
+ *
+ * Sudutnya 180deg (tegak lurus), BUKAN miring: latar Contact terpaku ke viewport
+ * (`.ready-backdrop` fixed), jadi ia tidak bisa melanjutkan rampa apa pun — ia
+ * hanya bisa menyamai SATU warna. Rampa miring akan berakhir pada warna yang
+ * berbeda-beda di sepanjang tepi bawah Services, dan bidang datar mana pun cuma
+ * cocok di satu titik. Tegak lurus membuat seluruh tepi itu satu nilai.
+ *
+ * Kehangatannya ditumpuk lewat color-mix dari token, bukan hex baru: kalau
+ * --color-gold digeser suatu saat, sapuan ini ikut bergeser. Plesternya sama
+ * dengan .paper/.paper-deep — materialnya tidak berubah, cuma nadanya.
+ */
+.paper-warm,
+.paper-warm-flat {
+  background-color: var(--paper-warm-end);
+  background-image: linear-gradient(180deg, var(--color-cream-deep), var(--color-cream));
+}
+
+.paper-warm {
+  background-image: linear-gradient(180deg, var(--color-cream-deep), var(--color-cream));
+}
+
+/* Homepage surface: every page section is white; the footer is intentionally
+   kept outside this scope so it can remain the single black surface. */
+.homepage-main,
+.homepage-paper {
+  background-color: #fff;
+  background-image: none;
+  color: var(--color-ink);
+}
+
+.homepage-main .paper-warm,
+.homepage-main .paper-warm-flat,
+.homepage-main .ready-backdrop,
+.homepage-main #contact {
+  background-color: #fff;
+  background-image: none;
+}
+
+/* ── Feature / "How the work runs" ───────────────────────────────────────
+   Hanya menguatkan bidang section, bukan geometri kartu. Layer pseudo absolute
+   berada di belakang Container, sehingga ukuran dan logic FeatureShowcase tetap
+   sama. */
+.feature-run-field {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #fff;
+  background-image: none;
+}
+
+.feature-run-field > * {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-run-field::before,
+.feature-run-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0;
+}
+
+.feature-run-field::before {
+  display: none;
+}
+
+.feature-run-field::after {
+  display: none;
+}
+
+.feature-step-row {
+  position: relative;
+}
+
+.feature-step-row::before {
+  content: "";
+  position: absolute;
+  left: -0.8rem;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transform-origin: center;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-step-row[data-active="true"]::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+@keyframes feature-field-drift {
+  from {
+    transform: translate3d(-1.5%, -0.5%, 0);
+  }
+  to {
+    transform: translate3d(1.5%, 0.5%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-run-field::after {
+    animation: none;
+  }
+}
+
+/**
+ * Latar halaman interior: bukan cream datar, tapi sapuan kertas bertingkat
+ * memakai token yang sama. Grid tipisnya sengaja geometris dan pelan supaya
+ * halaman About/Projects/Services/Products/Contact terasa hidup tanpa berubah
+ * jadi palet baru.
+ */
+.interior-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--color-cream);
+  background-image:
+    radial-gradient(70% 42% at 84% 6%, rgba(9, 9, 11, 0.075), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #fafafa 44%, #f4f4f5 100%);
+  background-size: auto, auto;
+}
+
+.interior-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(9, 9, 11, 0.055) 0 1px, transparent 1px 7.5rem),
+    repeating-linear-gradient(0deg, rgba(9, 9, 11, 0.035) 0 1px, transparent 1px 5.5rem);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+}
+
+.interior-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scope inversi untuk section gelap. Nama token lama dipertahankan agar semua
+   komponen yang sudah ada otomatis mengikuti sistem monochrome yang sama. */
+.monochrome-dark {
+  --color-cream: #0d0d0d;
+  --color-cream-deep: #1a1a1a;
+  --color-card: #171717;
+  --color-ink: #fafafa;
+  --color-ink-soft: #a1a1aa;
+  --color-line: #27272a;
+  --color-charcoal: #ffffff;
+  --color-charcoal-soft: #e4e4e7;
+  --color-gold: #71717a;
+  --color-sand-deep: #a1a1aa;
+  --color-gold-ink: #d4d4d8;
+  --paper-warm-end: #0d0d0d;
+  --mono-overlay: #0d0d0d;
+  --mono-on-overlay: #ffffff;
+  color: var(--color-ink);
+}
+
+.monochrome-dark.paper-warm,
+.monochrome-dark.paper-deep {
+  background-color: #0d0d0d;
+  background-image: linear-gradient(180deg, #0d0d0d 0%, #18181b 54%, #0d0d0d 100%);
 }
 
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Base dinaikkan 15px → 16px: teks kecil di situs ini (label, caption,
+       subhead) terasa terlalu mungil. Satu tuas rem menaikkan semuanya
+       serempak; judul besar dipatok vw, jadi tak ikut membengkak. */
+    font-size: 16px;
+  }
+
+  body {
+    /* Sapuan vertikal: cream-0 bertahan sampai 58%, lalu turun ke cream-1 di
+       kaki halaman, jadi footer (yang memang cream-1) TIBA, bukan berganti
+       mendadak. Satu arah, satu keluarga hue.
+       `attachment` dilepas: sapuan ini milik dokumen, bukan milik jendela.
+       Beranda menimpanya dengan bidang `.paper` sendiri (lihat page.tsx) karena
+       di sana ritme sudah datang dari pergantian lembar antar-section. */
+    background-color: var(--color-cream);
+    background-image: var(--paper-wash);
+    background-size: auto;
+    color: var(--color-ink);
+  }
+
+  /* design.md §3: serif editorial untuk judul, bobot 500–600 dan TIDAK lebih.
+     Ditaruh di base supaya heading tanpa utility apa pun tetap benar; utility
+     Tailwind di komponen tetap menang kalau memang perlu beda. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1;
+    color: var(--color-ink);
   }
 
   ::selection {
-    background: var(--color-paper);
+    /* Gold sebagai highlight — pemakaian kecil yang memang diizinkan §2. */
+    background: #d4d4d8;
     color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-paper);
+    outline: 2px solid var(--color-ink);
     outline-offset: 3px;
-  }
-
-  /* Grain sinematik tipis di atas seluruh halaman, di bawah header/menu/intro/
-     cursor (z-index rendah) supaya tidak pernah menutupi UI, dan non-interaktif. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 30;
-    opacity: 0.035;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -50,6 +373,1036 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+.font-rampart-one {
+  font-family: var(--font-rampart-one-family), sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+/**
+ * Eyebrow — perangkat struktural yang diulang di atas tiap section
+ * (design.md §3 + §5). Dot gold kecil, lalu teks uppercase ber-tracking lebar.
+ * Kelas CSS, bukan komponen React: ia dipakai dari <p>, <dt>, dan <span> di
+ * belasan berkas, dan tidak membawa perilaku apa pun yang perlu dibungkus.
+ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+.font-mono.uppercase {
+  font-family: var(--font-label);
+  font-size: 0.92em;
+  font-weight: 400;
+}
+
+main p:not(.eyebrow):not([class*="font-mono"]),
+main blockquote,
+main .text-pretty:not(h1):not(h2):not(h3):not(.eyebrow):not([class*="font-mono"]),
+main
+  span.text-ink-soft:not([class*="font-mono"]):not([class*="text-[9px]"]):not(
+    [class*="text-[10px]"]
+  ):not([class*="text-[11px]"]) {
+  font-size: clamp(0.84rem, 0.12vw + 0.81rem, 0.92rem);
+  line-height: 1.56;
+}
+
+main .font-display:not(.font-rampart-one):is(h1, h2, h3, p, span) {
+  font-size: calc(1em * 1.18);
+}
+
+main .font-rampart-one.font-display:is(h1, h2, h3, p, span, div) {
+  font-size: calc(1em * 1.26);
+}
+
+main .feature-steps-shell > h2.font-rampart-one.font-display {
+  font-size: clamp(1.42rem, 3.35vw, 2.82rem);
+}
+
+main .feature-steps-shell .feature-step-title.font-display:not(.font-rampart-one) {
+  font-size: clamp(0.86rem, 0.78vw + 0.66rem, 1rem);
+  line-height: 1.08;
+}
+
+main .feature-steps-shell span.feature-step-copy.text-ink-soft:not([class*="font-mono"]) {
+  font-size: clamp(0.72rem, 0.2vw + 0.67rem, 0.8rem);
+  line-height: 1.44;
+}
+
+main .feature-steps-shell .feature-step-button {
+  gap: 0.45rem;
+  padding: 0.45rem 0.82rem;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  main .feature-steps-shell .feature-step-title.font-display:not(.font-rampart-one) {
+    font-size: clamp(0.92rem, 0.9vw, 1.08rem);
+  }
+
+  main .feature-steps-shell span.feature-step-copy.text-ink-soft:not([class*="font-mono"]) {
+    font-size: 0.76rem;
+    line-height: 1.44;
+  }
+
+  main .feature-steps-shell .feature-step-button {
+    padding: 0.48rem 0.9rem;
+  }
+}
+
+/* Tanda registrasi drafting (+), bukan bullet bulat — memutus kesan "dot label"
+   generik dan menyambung ke bahasa blueprint di seluruh situs. */
+.eyebrow::before {
+  content: "+";
+  flex: 0 0 auto;
+  font-family: var(--font-label);
+  font-size: 1.05em;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-ink-soft);
+}
+
+/* ── Header di atas hero ───────────────────────────────────────────────────
+   Kelas ini dipasang pada <html> oleh HeroParallax selama gulungan masih berada
+   di dalam satu layar pertama — rentang yang sama persis dengan hero sticky.
+
+   Hero sekarang berupa bidang putih polos. Header tetap memakai token ink
+   bawaan supaya kontrasnya stabil di atas bidang terang.
+
+   Yang ditimpa TOKEN-nya, bukan tiap utility satu per satu: `text-ink`,
+   `text-ink-soft`, dan `border-line` semuanya mengompilasi ke
+   `var(--color-*)`, jadi mendeklarasikan ulang variabelnya di induk membalik
+   ketiganya sekaligus — tanpa perang specificity dengan @layer utilities.
+
+   Discope ke <html> tetap dipertahankan untuk lifecycle HeroParallax, namun
+   tidak lagi membalik warna action header. */
+
+.site-header-shell {
+  width: calc(100% - 2.5rem);
+  max-width: 80rem;
+  margin-top: 1rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  transform-origin: top center;
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+  backdrop-filter: blur(18px) saturate(115%);
+  transition:
+    width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.site-header-shell[data-scrolled="true"] {
+  width: calc(100% - 1.5rem);
+  max-width: 54rem;
+  border-color: rgba(228, 228, 231, 0.86);
+  background: rgba(250, 250, 250, 0.82);
+  box-shadow: 0 14px 44px -28px rgba(9, 9, 11, 0.5);
+}
+
+.locale-switch,
+[data-header-actions] > div:first-child {
+  gap: 0.75rem;
+}
+
+.locale-flag,
+[data-header-actions] > div:first-child img {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+@media (min-width: 768px) {
+  .locale-flag,
+  [data-header-actions] > div:first-child img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.over-hero .site-header-shell[data-scrolled="true"] {
+  border-color: rgba(228, 228, 231, 0.86);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14px 44px -28px rgba(9, 9, 11, 0.24);
+}
+
+@media (min-width: 768px) {
+  .site-header-shell[data-scrolled="true"] {
+    transform: scale(0.86);
+  }
+}
+
+@media (max-width: 767px) {
+  .site-header-shell {
+    width: calc(100% - 1.5rem);
+    margin-top: 0.6rem;
+    border-radius: 20px;
+  }
+
+  .site-header-shell[data-scrolled="true"] {
+    width: calc(100% - 2.25rem);
+    max-width: 24rem;
+  }
+}
+
+/* ── Hero drafting field ───────────────────────────────────────────────────
+   Visual utama sengaja dibangun dari token warna dan garis tipis. Ia memberi
+   hero sebuah fokus tanpa menambah media berat atau warna baru ke sistem. */
+.hero-canvas {
+  background-color: var(--color-card);
+}
+
+main .hero-heading {
+  max-width: min(72rem, 92vw);
+  font-size: clamp(3rem, 8.4vw, 7.25rem) !important;
+  line-height: 0.88;
+  letter-spacing: 0;
+}
+
+.hero-visual {
+  overflow: hidden;
+  background-color: var(--color-card);
+  color: var(--color-ink);
+  background-image: none;
+}
+
+/* Versi hero yang tenang: setelah ornamen di-undo, hanya transisi
+   hitam-putih yang tersisa sebagai latar. */
+.hero-grid,
+.hero-frame,
+.hero-orbit,
+.hero-crosshair,
+.hero-visual-label,
+.hero-visual-index {
+  display: none;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.52;
+  background-image:
+    linear-gradient(rgba(250, 250, 250, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(250, 250, 250, 0.08) 1px, transparent 1px);
+  background-size: clamp(4.5rem, 9vw, 8.5rem) clamp(4.5rem, 9vw, 8.5rem);
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+
+.hero-frame {
+  position: absolute;
+  border: 1px solid rgba(250, 250, 250, 0.23);
+  pointer-events: none;
+}
+
+.hero-frame-primary {
+  width: min(54vw, 52rem);
+  height: min(66vh, 38rem);
+  right: 8vw;
+  top: 15vh;
+  transform: rotate(-7deg);
+}
+
+.hero-frame-primary::before,
+.hero-frame-primary::after,
+.hero-frame-secondary::before,
+.hero-frame-secondary::after {
+  content: "";
+  position: absolute;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-color: var(--color-gold);
+  border-style: solid;
+}
+
+.hero-frame-primary::before {
+  top: -0.3rem;
+  left: -0.3rem;
+  border-width: 1px 0 0 1px;
+}
+
+.hero-frame-primary::after {
+  right: -0.3rem;
+  bottom: -0.3rem;
+  border-width: 0 1px 1px 0;
+}
+
+.hero-frame-secondary {
+  width: min(42vw, 38rem);
+  height: min(48vh, 28rem);
+  right: 20vw;
+  top: 25vh;
+  border-color: rgba(161, 161, 170, 0.35);
+  transform: rotate(9deg);
+}
+
+.hero-frame-secondary::before {
+  top: -0.3rem;
+  right: -0.3rem;
+  border-width: 1px 1px 0 0;
+}
+
+.hero-frame-secondary::after {
+  left: -0.3rem;
+  bottom: -0.3rem;
+  border-width: 0 0 1px 1px;
+}
+
+.hero-orbit {
+  position: absolute;
+  border: 1px solid rgba(250, 250, 250, 0.32);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-orbit-outer {
+  width: min(44vw, 34rem);
+  aspect-ratio: 1;
+  right: 17vw;
+  top: 15vh;
+}
+
+.hero-orbit-inner {
+  width: min(19vw, 14rem);
+  aspect-ratio: 1;
+  right: 29.5vw;
+  top: 31vh;
+  border-color: rgba(161, 161, 170, 0.72);
+}
+
+.hero-orbit-inner::after {
+  content: "";
+  position: absolute;
+  width: 0.45rem;
+  height: 0.45rem;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background: var(--color-gold);
+  transform: translate(-50%, -50%);
+}
+
+.hero-crosshair {
+  position: absolute;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid var(--color-gold);
+  opacity: 0.85;
+}
+
+.hero-crosshair::before,
+.hero-crosshair::after {
+  content: "";
+  position: absolute;
+  background: var(--color-gold);
+}
+
+.hero-crosshair::before {
+  width: 2.8rem;
+  height: 1px;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hero-crosshair::after {
+  width: 1px;
+  height: 2.8rem;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+}
+
+.hero-crosshair-top {
+  top: 18vh;
+  right: 11vw;
+}
+
+.hero-crosshair-bottom {
+  right: 43vw;
+  bottom: 22vh;
+  transform: scale(0.72);
+}
+
+.hero-visual-label,
+.hero-visual-index {
+  position: absolute;
+  color: rgba(250, 250, 250, 0.68);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hero-visual-label-top {
+  top: 10.5rem;
+  right: 3.5rem;
+}
+
+.hero-visual-label-side {
+  top: 50%;
+  left: 2.5rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.hero-visual-index {
+  right: 3.5rem;
+  bottom: 8.5rem;
+  color: var(--color-gold);
+}
+
+.hero-visual-index span {
+  margin: 0 0.35rem;
+  color: rgba(250, 250, 250, 0.4);
+}
+
+.hero-bottom-scrim,
+.hero-top-scrim {
+  pointer-events: none;
+}
+
+.hero-bottom-scrim {
+  background: transparent;
+}
+
+.hero-top-scrim {
+  background: transparent;
+}
+
+@media (max-width: 767px) {
+  .hero-frame-primary {
+    width: 78vw;
+    height: 48vh;
+    right: -8vw;
+    top: 18vh;
+  }
+
+  .hero-frame-secondary {
+    width: 66vw;
+    height: 34vh;
+    right: 2vw;
+    top: 29vh;
+  }
+
+  .hero-orbit-outer {
+    width: 68vw;
+    right: -4vw;
+    top: 20vh;
+  }
+
+  .hero-orbit-inner {
+    width: 28vw;
+    right: 29vw;
+    top: 36vh;
+  }
+
+  .hero-crosshair-top {
+    top: 19vh;
+    right: 8vw;
+  }
+
+  .hero-crosshair-bottom {
+    right: 61vw;
+    bottom: 26vh;
+  }
+
+  .hero-visual-label-top {
+    top: 8rem;
+    right: 1.5rem;
+  }
+
+  .hero-visual-label-side {
+    left: 1rem;
+  }
+
+  .hero-visual-index {
+    right: 1.5rem;
+    bottom: 9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-visual {
+    transform: none !important;
+  }
+}
+
+/* ── Signature: kolam sand ────────────────────────────────────────────────
+   SATU-SATUNYA titik hangat di seluruh beranda, membocor keluar dari sudut
+   kanan-bawah section Contact. Di situlah halaman ingin pengunjung bertindak,
+   jadi di situ pula satu-satunya fokus warna hangat ditaruh (aturan 2 + 6).
+   Kelas, bukan utility arbitrary, supaya nilainya tetap datang dari token.
+   Section pemakainya harus `relative`, dan isinya `relative` juga — elemen
+   absolut ini akan melukis di atas anak statis kalau tidak. */
+.sand-pool {
+  background-image: none;
+}
+
+/* ── Tirai section penutup "Ready to begin?" (ReadyPanel.tsx) ─────────────
+   clip-path memotong keturunan ber-`position: fixed` TANPA menjadikan dirinya
+   containing block. Jadi lapisan latar di dalamnya terpaku ke viewport, tapi
+   cuma terlihat di dalam kotak section ini: saat section naik ke layar,
+   latarnya tidak ikut menggulir — ia TERSINGKAP dari bawah.
+
+   Poligon penuh, bukan `overflow: hidden`: overflow tidak memotong elemen fixed
+   sama sekali.
+
+   Yang di-fixed HANYA latarnya. Isi section (judul, formulir, kartu QR, pita
+   testimoni) tetap mengalir normal di atasnya, jadi setinggi apa pun isinya tak
+   ada yang terpotong — pelajaran dari percobaan pertama, yang menaruh judul di
+   dalam panel fixed dan membuatnya teriris section berikutnya. */
+.ready-curtain {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.ready-backdrop {
+  position: fixed;
+  inset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Latar terpaku itu parallax. Untuk yang meminta gerak dikurangi ia jadi
+     bidang biasa yang ikut menggulir bersama section — warna dan komposisinya
+     sama persis, cuma tanpa efek tersingkapnya. */
+  .ready-backdrop {
+    position: absolute;
+  }
+}
+
+/* Judul bergradasi: pekat di atas, memudar ke bawah. `drop-shadow` versi asli
+   dibuang — di atas cream ia terbaca sebagai noda abu, bukan cahaya.
+   Ukurannya diturunkan dari 8vw/6rem: dulu ia berdiri sendiri di satu layar
+   kosong, sekarang ia kepala section yang di bawahnya langsung ada formulir. */
+.ready-heading {
+  /* TANPA `margin`, `max-width`, atau `text-align` di sini. Kelas ini CSS tanpa
+     @layer, jadi ia menang atas utility Tailwind yang duduk di @layer utilities
+     — `margin: 0` yang dulu ada di sini membuat `mb-20` pada elemennya tidak
+     pernah berlaku sama sekali. Kelas ini cuma memegang perlakuan TIPOGRAFI;
+     tata letaknya diserahkan ke utility di komponen. */
+  font-weight: 500;
+  font-size: clamp(3.1rem, 10.8vw, 8.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  color: var(--color-ink);
+}
+
+.ready-heading-lowered {
+  transform: translateY(1.25rem);
+}
+
+@media (min-width: 768px) {
+  .ready-heading-lowered {
+    transform: translateY(1.75rem);
+  }
+}
+
+/* Kotak masker per baris, dibuat SplitText. Katanya naik dari bawah kotak ini,
+   dan yang di luar kotak terpotong — itu yang membuat gerakannya terbaca
+   sebagai teks yang muncul, bukan memudar.
+
+   padding-bottom + margin-bottom yang saling meniadakan: tanpa itu `overflow:
+   hidden` memotong ekor huruf turun ("y" dan "g" di "Ready to begin?") pada
+   keadaan diamnya. Tata letaknya tidak berubah sedikit pun. */
+.ready-line {
+  overflow: hidden;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+/* Fill transparan HANYA kalau background-clip:text memang didukung; tanpa
+   penjaga ini, browser yang tidak mendukungnya menampilkan judul tak terlihat.
+   Gradiennya dipasang di KATA, bukan cuma di <h2>: begitu SplitText memotong,
+   kata-katanya jadi span yang di-translate, sedangkan gradien milik <h2> tetap
+   dilukis pada kotak <h2> — hasilnya tiap kata menampilkan potongan gradien dari
+   posisi yang salah selama ia bergerak. Di kata, gradiennya ikut kata itu.
+   `:has()` mematikan gradien <h2> begitu potongannya ada, supaya tidak dua
+   lapis. Sebelum SplitText jalan (dan pada reduced-motion, yang tidak pernah
+   memotong sama sekali), <h2>-lah yang memakainya. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .ready-heading:has(.ready-word) {
+    background-image: none;
+  }
+
+  .ready-heading,
+  .ready-word {
+    background-image: linear-gradient(
+      180deg,
+      var(--color-ink) 0%,
+      color-mix(in srgb, var(--color-ink) 34%, transparent) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* .blueprint-grid DIHAPUS. Ia signature arah desain sebelumnya, tapi ia
+   dirender di SETIAP kartu layanan — lima per layar — jadi signature-nya sudah
+   jadi wallpaper, dan kisinya bertabrakan dengan hairline 8% yang baru. Satu
+   bahasa tekstur (lembar + hairline), bukan dua. Penggantinya: gutter rule
+   (GutterRule.tsx), satu garis per halaman. */
+
+/* Pembatas dimensi: dua hairline mengapit label mono (indeks/koordinat/section).
+   Markup: <div class="dim-divider"><span>01 · SERVICES</span></div>. Tick pendek
+   di ujung-dalam meniru garis ukur gambar teknik. */
+.dim-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.dim-divider::before,
+.dim-divider::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--color-line);
+}
+.dim-divider > span {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-ink);
+}
+
+/**
+ * Admin CMS: visual system yang lebih modern namun tetap rapi untuk kerja
+ * berulang. Semua token discoped ke shell admin supaya halaman publik aman.
+ */
+.admin-shell {
+  --color-cream: #f8fbff;
+  --color-cream-deep: #eef4ff;
+  --color-card: rgba(255, 255, 255, 0.88);
+  --color-ink: #111827;
+  --color-ink-soft: #64748b;
+  --color-line: rgba(100, 116, 139, 0.18);
+  --color-gold: #7c3aed;
+  --color-gold-ink: #6d28d9;
+  --color-success: #059669;
+  --color-danger: #e11d48;
+  --shadow-card: 0 18px 44px -32px rgba(15, 23, 42, 0.42), 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-card-hover:
+    0 24px 54px -34px rgba(15, 23, 42, 0.5), 0 8px 22px -22px rgba(37, 99, 235, 0.6);
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.12), transparent 30%),
+    linear-gradient(225deg, rgba(124, 58, 237, 0.1), transparent 34%),
+    linear-gradient(180deg, #f8fbff 0%, #f3f6ff 48%, #f8fafc 100%);
+  color: var(--color-ink);
+}
+
+.admin-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(100, 116, 139, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 116, 139, 0.08) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent 82%);
+}
+
+.admin-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.78));
+  border-color: var(--color-line);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(16px) saturate(1.08);
+}
+
+.admin-stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, var(--stat-accent), transparent 74%);
+}
+
+.admin-stat-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7.5rem;
+  height: 7.5rem;
+  background:
+    linear-gradient(135deg, var(--stat-bg), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent);
+  transform: translate(26%, -34%);
+  opacity: 0.85;
+}
+
+.admin-stat-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-icon-badge,
+.admin-section-icon,
+.admin-search-icon,
+.admin-panel-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+}
+
+.admin-icon-badge {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.9rem;
+  color: var(--stat-accent);
+  background: var(--stat-bg);
+}
+
+.admin-section-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.75rem;
+  color: var(--section-accent);
+  background: var(--section-bg);
+}
+
+.admin-search-chip,
+.admin-notification-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.55rem;
+  gap: 0.55rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.75rem;
+  color: var(--color-ink);
+  box-shadow: 0 14px 32px -28px rgba(15, 23, 42, 0.55);
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.admin-search-chip:hover,
+.admin-notification-chip:hover {
+  transform: translateY(-1px);
+  background: #fff;
+  border-color: color-mix(in srgb, #2563eb 34%, var(--color-line));
+}
+
+.admin-search-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  color: #2563eb;
+  background: #dbeafe;
+}
+
+.admin-notification-chip {
+  color: #7f1d1d;
+  background: linear-gradient(180deg, #fff, #fff1f2);
+}
+
+.admin-notification-chip > span {
+  background: #e11d48;
+  color: #fff;
+}
+
+.admin-sidebar,
+.admin-mobile-bar {
+  border-color: var(--color-line);
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(18px) saturate(1.08);
+  box-shadow: 18px 0 60px -42px rgba(15, 23, 42, 0.35);
+}
+
+.admin-rail {
+  background: rgba(248, 250, 252, 0.72);
+}
+
+.admin-rail-logo {
+  background: linear-gradient(135deg, #fff, #eef4ff);
+  color: #2563eb;
+}
+
+.admin-rail-button {
+  color: var(--color-ink-soft);
+}
+
+.admin-rail-button:hover,
+.admin-rail-button.is-open {
+  color: var(--section-accent);
+  background: var(--section-bg);
+}
+
+.admin-rail-button.is-active {
+  color: var(--section-accent);
+  background: var(--section-bg);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--section-accent) 22%, transparent),
+    0 10px 24px -18px var(--section-accent);
+}
+
+.admin-rail-tick,
+.admin-panel-dot,
+.admin-panel-line {
+  background: var(--section-accent);
+}
+
+.admin-panel {
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.admin-panel-mark {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.75rem;
+  color: var(--section-accent);
+  background: var(--section-bg);
+}
+
+.admin-panel-line {
+  opacity: 0.4;
+}
+
+.admin-panel-link {
+  color: var(--color-ink-soft);
+}
+
+.admin-panel-link:hover {
+  color: var(--color-ink);
+  background: var(--section-bg);
+}
+
+.admin-panel-link.is-active {
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--section-bg) 78%, white);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--section-accent) 16%, transparent);
+}
+
+.admin-panel-link.is-active svg {
+  color: var(--section-accent);
+}
+
+.admin-action-link {
+  --action-color: #2563eb;
+  --action-bg: #dbeafe;
+  border-color: color-mix(in srgb, var(--action-color) 18%, var(--color-line));
+  background: linear-gradient(135deg, var(--action-bg), rgba(255, 255, 255, 0.86));
+  color: var(--color-ink);
+}
+
+.admin-action-link svg {
+  color: var(--action-color);
+}
+
+.admin-action-link:hover {
+  border-color: color-mix(in srgb, var(--action-color) 42%, var(--color-line));
+  transform: translateY(-1px);
+}
+
+/**
+ * Kartu yang mengangkat diri saat hover. Menggantikan tepi-menyala versi
+ * gelap: di atas cream yang membedakan layer adalah bayangan dan garis, bukan
+ * cahaya. :focus-within ikut disertakan supaya pemakai papan ketik dapat
+ * isyarat yang sama.
+ */
+.card-glow {
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.card-glow:hover,
+.card-glow:focus-within {
+  /* sand-deep, bukan sand: ini tepi non-teks, dan sand-deep yang lolos ambang
+     kontras 3:1 untuk elemen non-teks. Dicampur ke transparan (bukan ke
+     --color-line, yang kini sudah beropacity sendiri) supaya hasilnya tetap
+     hairline dan tidak menumpuk dua alpha. */
+  border-color: color-mix(in srgb, var(--color-ink) 28%, transparent);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+.card-glow img {
+  filter: grayscale(1) contrast(1.04);
+}
+
+.card-glow img {
+  transition:
+    filter 0.45s ease,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fade-in halus untuk elemen yang muncul: halaman login saat load, bubble chat
+   baru di AI Chat. fill-mode `both` supaya blok reduced-motion (durasi 0.01ms)
+   menjadikannya langsung tampil penuh, bukan menghilang. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes dwiai-panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(18px, 18px, 0) scale(0.72);
+    border-radius: 999px;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    border-radius: 1rem;
+  }
+}
+
+@keyframes dwiai-panel-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(18px, 18px, 0) scale(0.9);
+  }
+}
+
+@keyframes dwiai-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dwiai-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.dwiai-panel {
+  animation: dwiai-panel-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform, opacity;
+}
+
+.dwiai-panel[data-state="closing"] {
+  animation: dwiai-panel-out 0.18s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+.dwiai-overlay {
+  animation: dwiai-overlay-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
+}
+
+.dwiai-overlay[data-state="closing"] {
+  animation: dwiai-overlay-out 0.16s ease both;
+}
+
+.dwiai-bubble-enter {
+  animation: fade-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/**
+ * Marquee — pita kartu berjalan. Animasi CSS murni, tanpa satu baris JS pun,
+ * jadi komponen pemakainya tetap bisa jadi server component.
+ *
+ * Jaraknya dipegang satu variabel karena dipakai dua kali: sebagai `gap` flex
+ * DAN di dalam translateX. Kalau keduanya bisa melenceng, sambungan tiap
+ * putaran akan tersendat.
+ */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--marquee-gap)));
+  }
+}
+
+.marquee {
+  --marquee-gap: 1rem;
+  --marquee-duration: 48s;
+  display: flex;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+  /* Tepi memudar: tanpa ini kartu terpotong mendadak di batas container dan
+     pitanya terbaca sebagai daftar yang kepotong, bukan aliran yang menerus. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--marquee-gap);
+  animation: marquee var(--marquee-duration) linear infinite;
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-always:hover .marquee-track,
+.marquee-always:focus-within .marquee-track {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Blok reduced-motion di @layer base memangkas SEMUA durasi jadi 0.01ms.
+     Untuk pita ini artinya ia melompat ke posisi akhir lalu diam — terlihat
+     rusak, bukan tenang. Jadi animasinya dimatikan penuh, salinan duplikat
+     disembunyikan, dan pitanya dijadikan bisa digulir tangan. */
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+  .marquee-track[aria-hidden="true"] {
+    display: none;
   }
 }
 
@@ -84,4 +1437,52 @@
 
 .intro-failsafe {
   animation: intro-failsafe 0s linear 11s forwards;
+}
+
+/* Latar halaman Contact. Bukan fade: clip-path-nya yang bergerak, dari bingkai
+   kecil di tengah sampai penuh — gambarnya benar-benar memuai membuka halaman.
+   fill-mode `both` wajib; tanpa itu ia balik ke bingkai kecil setelah selesai,
+   dan blok prefers-reduced-motion di atas (durasi 0.01ms) menjadikannya
+   langsung tampil penuh, bukan hilang. */
+@keyframes backdrop-expand {
+  from {
+    clip-path: inset(42% 46%);
+    transform: scale(1.15);
+  }
+  to {
+    clip-path: inset(0%);
+    transform: scale(1);
+  }
+}
+
+.backdrop-expand {
+  animation: backdrop-expand 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Heading pilihan di homepage. Aturan global Rampart One sengaja mengecilkan
+   judul dekoratif secara umum; lima class ini adalah pengecualian eksplisit
+   untuk heading yang menjadi penanda section. */
+/* Turun dari clamp(5rem, 22vw, 18rem): itu dikalibrasi untuk "Portofolio"
+   (eyebrow lama). Wordmark "Dwi Studio" yang menggantikannya butuh langit-langit
+   jauh lebih rendah — di layar lebar 18rem meluber keluar Container (lihat
+   riwayat commit). 8rem sejajar dengan .home-contact-heading (8.2rem), heading
+   besar lain di beranda ini. */
+main .home-work-heading {
+  font-size: clamp(2.75rem, 10vw, 8rem) !important;
+}
+
+main .home-benefits-heading {
+  font-size: clamp(2.1rem, 5.4vw, 4.25rem) !important;
+}
+
+main .home-service-heading {
+  font-size: clamp(1.55rem, 3.8vw, 3rem) !important;
+}
+
+main .home-contact-heading {
+  font-size: clamp(3.1rem, 10.8vw, 8.2rem) !important;
+}
+
+main .home-stories-heading {
+  font-size: clamp(1.9rem, 4.6vw, 3.5rem) !important;
 }

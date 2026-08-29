@@ -48,11 +48,11 @@ model Website {
 }
 
 model Service {
-  id             String @id @default(cuid())
+  id             String  @id @default(cuid())
   name_en        String
   name_id        String
-  description_en String @db.Text
-  description_id String @db.Text
+  description_en String  @db.Text
+  description_id String  @db.Text
   icon           String
   priceLabel     String
   features_en    Json
@@ -60,21 +60,161 @@ model Service {
   benefits_en    Json
   benefits_id    Json
   image          String?
+  // Tujuan tombol Explore, cerminan Product.link. Tidak ada /services/{slug}
+  // di situs ini, jadi kosong -> jatuh ke /contact seperti CTA sebelumnya.
+  link           String?
+  order          Int     @default(0)
+
+  @@index([order])
+}
+
+// Produk digital yang dijual lewat Lynk.id. `title` tunggal, bukan bilingual:
+// isinya nama merek ("ChatGPT Plus") yang tidak diterjemahkan — pola yang sama
+// dipakai Website.name dan FilmItem.title. Yang berupa prosa tetap _en/_id.
+// Tidak ada kolom harga: checkout dan harganya dipegang halaman Lynk.id, jadi
+// menyimpannya di sini berarti dua sumber kebenaran yang bisa berbeda.
+model Product {
+  id             String  @id @default(cuid())
+  title          String
+  subtitle_en    String
+  subtitle_id    String
+  description_en String  @db.Text
+  description_id String  @db.Text
+  image          String?
+  link           String
+  order          Int     @default(0)
+
+  @@index([order])
+}
+
+model Feature {
+  id             String  @id @default(cuid())
+  slug           String  @unique
+  title_en       String
+  title_id       String
+  description_en String  @db.Text
+  description_id String  @db.Text
+  image          String?
+  // Tujuan tombol Explore. Kosong -> jatuh ke /features/{slug}, halaman detail
+  // yang memang sudah ada. Jadi kolom ini menimpa, bukan menggantikan, slug.
+  link           String?
+  order          Int     @default(0)
+
+  @@index([order])
+}
+
+// Singleton (pola FooterContent) — hero homepage, dulu hardcoded di i18n.
+// headline disimpan multi-baris: satu baris teks = satu baris judul. Baris
+// pertama tegak, sisanya italic — persis bentuk "One studio. / Five mediums."
+// yang sudah tampil, tapi jumlah barisnya bebas.
+model HeroSection {
+  id              String  @id @default("hero")
+  backgroundImage String?
+  headline_en     String  @db.Text
+  headline_id     String  @db.Text
+  subheadline_en  String?
+  subheadline_id  String?
+  paragraph_en    String? @db.Text
+  paragraph_id    String? @db.Text
+  // Social proof / mini metrics, mis. "99% Kepuasan Klien" — array string, satu baris per item.
+  metrics_en      Json?
+  metrics_id      Json?
+  ctaText_en      String?
+  ctaText_id      String?
+  ctaUrl          String?
+}
+
+// Alasan klien memilih studio ini. `icon` emoji, bukan unggahan: pola yang
+// sama dengan Service.icon, dan satu karakter tidak butuh berkas.
+model Benefit {
+  id             String @id @default(cuid())
+  icon           String
+  title_en       String
+  title_id       String
+  description_en String @db.Text
+  description_id String @db.Text
   order          Int    @default(0)
 
   @@index([order])
 }
 
-model Testimonial {
-  id         String  @id @default(cuid())
-  clientName String
-  position   String
-  content_en String  @db.Text
-  content_id String  @db.Text
-  photo      String?
-  order      Int     @default(0)
+// Singleton. Kolom kanan section Contact di homepage — QR code + labelnya.
+model ContactSettings {
+  id         String  @id @default("contact")
+  qrImage    String?
+  qrLabel_en String?
+  qrLabel_id String?
+}
+
+model About {
+  id                  String  @id @default(cuid())
+  title_en            String
+  title_id            String
+  location            String
+  status_en           String
+  status_id           String
+  shortDescription_en String  @db.Text
+  shortDescription_id String  @db.Text
+  motto_en            String  @db.Text
+  motto_id            String  @db.Text
+  cvFile              String?
+  fullStory_en        String  @db.Text
+  fullStory_id        String  @db.Text
+  // Array URL potret, bentuknya sama dengan Project.images dan dibaca lewat
+  // toStringArray(). Halaman About menampilkannya sebagai DriftWall 5 kolom.
+  images              Json?
+}
+
+model WorkExperience {
+  id      String @id @default(cuid())
+  company String
+  role_en String
+  role_id String
+  period  String
+  order   Int    @default(0)
 
   @@index([order])
+}
+
+model Education {
+  id          String @id @default(cuid())
+  institution String
+  period      String
+  order       Int    @default(0)
+
+  @@index([order])
+}
+
+model Skill {
+  id    String  @id @default(cuid())
+  title String
+  icon  String?
+  order Int     @default(0)
+
+  @@index([order])
+}
+
+model Certification {
+  id    String  @id @default(cuid())
+  name  String
+  image String?
+  order Int     @default(0)
+
+  @@index([order])
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  position  String?
+  content   String   @db.Text
+  rating    Int      @default(5)
+  avatar    String?
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, createdAt])
 }
 
 model MediaGalleryItem {
@@ -179,4 +319,199 @@ model AdminUser {
   name         String
   avatar       String?
   createdAt    DateTime @default(now())
+}
+
+model DwiAiSession {
+  id        String   @id @default(uuid())
+  sessionId String   @unique
+  ipAddress String?
+  messages  Json
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+}
+
+model DwiAiSetting {
+  id                  String   @id @default(uuid())
+  assistantName       String   @default("Dwi AI")
+  systemPrompt        String   @db.Text
+  behaviorDescription String?  @db.Text
+  temperature         Float    @default(0.7)
+  maxTokens           Int      @default(4000)
+  model               String   @default("llama-3.3-70b-versatile")
+  isActive            Boolean  @default(true)
+  updatedAt           DateTime @updatedAt
+}
+
+// ── Undangan pernikahan digital ──────────────────────────────────────────────
+// Konten single-language (Indonesia), locale-free — TIDAK pakai suffix _en/_id
+// seperti model studio di atas. Satu invitation = parent + beberapa koleksi anak.
+
+enum WeddingStatus {
+  draft
+  published
+  archived
+}
+
+enum WeddingGiftType {
+  bank
+  ewallet
+  address
+  qris
+}
+
+enum WeddingAttendance {
+  attending
+  not_attending
+  maybe
+}
+
+model WeddingInvitation {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  status       WeddingStatus @default(draft)
+  templateSlug String        @default("classic-elegant")
+
+  brideName     String
+  groomName     String
+  brideFullName String?
+  groomFullName String?
+  brideParents  String? @db.Text
+  groomParents  String? @db.Text
+  bridePhoto    String?
+  groomPhoto    String?
+
+  openingText String? @db.Text
+  quoteText   String? @db.Text
+  storyTitle  String?
+  storyText   String? @db.Text
+  coverImage  String?
+  musicUrl    String?
+
+  primaryColor    String @default("#5A6B4E")
+  secondaryColor  String @default("#B98A7A")
+  accentColor     String @default("#C9A15A")
+  backgroundColor String @default("#F7F3EC")
+  fontDisplay     String @default("cormorant")
+  fontBody        String @default("jost")
+
+  isMusicEnabled     Boolean @default(true)
+  isRsvpEnabled      Boolean @default(true)
+  isGuestbookEnabled Boolean @default(true)
+
+  // Preset animasi per-section + global. Bentuknya divalidasi lewat
+  // animation-presets.ts (parseAnimationSettings) di batas baca/tulis — kolom
+  // Json bebas skema, jadi keamanannya ada di parser, bukan di database.
+  animationSettings Json?
+
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  events   WeddingEvent[]
+  gallery  WeddingGallery[]
+  gifts    WeddingGift[]
+  guests   WeddingGuest[]
+  rsvps    WeddingRsvp[]
+  messages WeddingMessage[]
+
+  @@index([status])
+}
+
+model WeddingEvent {
+  id           String   @id @default(cuid())
+  invitationId String
+  title        String
+  date         DateTime
+  startTime    String?
+  endTime      String?
+  venueName    String?
+  venueAddress String?  @db.Text
+  mapsUrl      String?
+  description  String?  @db.Text
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, order])
+}
+
+model WeddingGallery {
+  id           String   @id @default(cuid())
+  invitationId String
+  imageUrl     String
+  caption      String?
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, order])
+}
+
+model WeddingGift {
+  id            String          @id @default(cuid())
+  invitationId  String
+  type          WeddingGiftType
+  providerName  String?
+  accountNumber String?
+  accountName   String?
+  address       String?         @db.Text
+  qrImage       String?
+  notes         String?         @db.Text
+  order         Int             @default(0)
+  createdAt     DateTime        @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, order])
+}
+
+model WeddingGuest {
+  id           String   @id @default(cuid())
+  invitationId String
+  name         String
+  slug         String
+  phone        String?
+  groupName    String?
+  createdAt    DateTime @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  rsvps      WeddingRsvp[]
+
+  @@unique([invitationId, slug])
+  @@index([invitationId])
+}
+
+model WeddingRsvp {
+  id               String            @id @default(cuid())
+  invitationId     String
+  guestId          String?
+  guestName        String
+  attendanceStatus WeddingAttendance
+  guestCount       Int               @default(1)
+  message          String?           @db.Text
+  createdAt        DateTime          @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guest      WeddingGuest?     @relation(fields: [guestId], references: [id], onDelete: SetNull)
+
+  @@index([invitationId, createdAt])
+}
+
+model WeddingMessage {
+  id           String   @id @default(cuid())
+  invitationId String
+  guestName    String
+  message      String   @db.Text
+  isVisible    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  invitation WeddingInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, createdAt])
 }

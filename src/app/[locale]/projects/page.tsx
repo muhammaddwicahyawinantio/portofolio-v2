@@ -18,8 +18,9 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "projects" });
 
   return {
-    title: t("title"),
-    description: t("lead"),
+    // absolute: lihat catatan di about/page.tsx — metaTitle sudah bawa "DwiStudio".
+    title: { absolute: t("metaTitle") },
+    description: t("metaDescription"),
     alternates: alternates(locale, "/projects"),
   };
 }
@@ -31,13 +32,13 @@ export default function ProjectsPage({ params }: { params: Promise<{ locale: str
   const t = useTranslations("projects");
 
   return (
-    <>
-      <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
+    <div className="interior-page">
+      <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} centered />
       <Section className="pt-0">
         <Container>
-          <ProjectList locale={locale} />
+          <ProjectList locale={locale} readMoreLabel={t("readMore")} />
         </Container>
       </Section>
-    </>
+    </div>
   );
 }

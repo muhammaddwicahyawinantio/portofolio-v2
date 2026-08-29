@@ -1,14 +1,18 @@
 "use client";
 
-import { Fragment } from "react";
 import clsx from "clsx";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
+const FLAG: Record<string, string> = {
+  en: "/images/icons8-us-flag-48.png",
+  id: "/images/icons8-indonesia-48.png",
+};
+
 /**
  * Route-aware: usePathname dari next-intl mengembalikan path tanpa prefix locale,
- * jadi /id/about -> "/about" dan tombol EN mengarah ke /about, ID ke /id/about.
+ * jadi /en/about -> "/about" dan tombol ID mengarah ke /about, EN ke /en/about.
  */
 export default function LocaleSwitch() {
   const pathname = usePathname();
@@ -16,29 +20,26 @@ export default function LocaleSwitch() {
   const t = useTranslations("locale");
 
   return (
-    <div
-      aria-label={t("switchLabel")}
-      className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] uppercase"
-    >
-      {routing.locales.map((locale, i) => (
-        <Fragment key={locale}>
-          {i > 0 && (
-            <span aria-hidden className="text-graphite">
-              /
-            </span>
+    <div aria-label={t("switchLabel")} className="locale-switch flex items-center gap-3">
+      {routing.locales.map((locale) => (
+        <Link
+          key={locale}
+          href={pathname}
+          locale={locale}
+          aria-label={t(locale)}
+          aria-current={locale === active ? "true" : undefined}
+          className={clsx(
+            "block transition-opacity duration-300 hover:opacity-100",
+            locale === active ? "opacity-100" : "opacity-55",
           )}
-          <Link
-            href={pathname}
-            locale={locale}
-            aria-current={locale === active ? "true" : undefined}
-            className={clsx(
-              "hover:text-paper transition-colors duration-300",
-              locale === active ? "text-paper" : "text-ash",
-            )}
-          >
-            {t(locale)}
-          </Link>
-        </Fragment>
+        >
+          <img
+            src={FLAG[locale]}
+            alt=""
+            aria-hidden
+            className="locale-flag h-5 w-5 rounded-sm object-cover md:h-6 md:w-6"
+          />
+        </Link>
       ))}
     </div>
   );

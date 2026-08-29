@@ -58,15 +58,15 @@ assert.ok(testimonials);
 const optional = parseFields(
   testimonials,
   form({
-    clientName: "A",
-    position: "B",
-    content_en: "C",
-    content_id: "D",
-    photo: "",
-    order: "0",
+    name: "A",
+    position: "",
+    content: "C",
+    rating: "5",
+    avatar: "",
   }),
 );
-assert.equal(optional.photo, null, "opsional yang kosong harus null");
+assert.equal(optional.position, null, "position publik opsional harus konsisten");
+assert.equal(optional.avatar, null, "opsional yang kosong harus null");
 
 // 5. Select hanya menerima opsi yang terdaftar.
 const media = getResource("media-gallery");
@@ -156,4 +156,77 @@ assert.equal(
   "url opsional yang dikosongkan harus null, bukan string kosong",
 );
 
-console.log("parseFields: 10 cek lolos");
+// 11. Hero singleton: headline wajib, tapi subheadline/CTA boleh kosong —
+// hero harus tetap tampil walau tombolnya belum diisi. Field opsional itu
+// SENGAJA tidak lewat helper bilingual(), yang selalu menyetel required.
+const hero = getResource("hero");
+assert.ok(hero, "resource hero harus ada");
+const heroForm = {
+  backgroundImage: "",
+  headline_en: "One studio.\nFive mediums.",
+  headline_id: "Satu studio.\nLima medium.",
+  subheadline_en: "",
+  subheadline_id: "",
+  ctaText_en: "",
+  ctaText_id: "",
+  ctaUrl: "",
+};
+const parsedHero = parseFields(hero, form(heroForm));
+assert.equal(parsedHero.ctaUrl, null, "CTA URL kosong harus null, bukan string kosong");
+assert.equal(parsedHero.subheadline_en, null, "subheadline kosong harus null");
+assert.equal(
+  parsedHero.headline_en,
+  "One studio.\nFive mediums.",
+  "newline di headline harus utuh — satu baris teks = satu baris judul",
+);
+assert.throws(
+  () => parseFields(hero, form({ ...heroForm, headline_en: "  " })),
+  /Headline \(EN\) is required/,
+  "headline tetap wajib",
+);
+
+// 12. Benefits: icon emoji wajib, kalau kosong section-nya merender kartu buntung.
+const benefits = getResource("benefits");
+assert.ok(benefits, "resource benefits harus ada");
+const benefitForm = {
+  icon: "🛠️",
+  title_en: "Built by a professional",
+  title_id: "Dikerjakan profesional",
+  description_en: "One developer, start to finish.",
+  description_id: "Satu developer, dari awal sampai selesai.",
+  order: "1",
+};
+assert.equal(parseFields(benefits, form(benefitForm)).icon, "🛠️");
+assert.throws(
+  () => parseFields(benefits, form({ ...benefitForm, icon: "" })),
+  /Icon \(emoji\) is required/,
+  "benefit tanpa icon harus ditolak",
+);
+
+// 13. Explore link di Features & Services lewat penjagaan skema url yang sama —
+// nilainya dirender langsung ke <a href> publik lewat <Button>.
+const features = getResource("features");
+assert.ok(features, "resource features harus ada");
+const featureForm = {
+  title_en: "Research & Direction",
+  title_id: "Riset & Arah",
+  slug: "riset-dan-arah",
+  link: "",
+  description_en: "EN copy",
+  description_id: "Teks ID",
+  image: "",
+  order: "1",
+};
+assert.equal(
+  parseFields(features, form(featureForm)).link,
+  null,
+  "Explore Link kosong harus null — Hero/FeatureSteps yang menentukan fallback-nya",
+);
+assert.equal(parseFields(features, form({ ...featureForm, link: "/services" })).link, "/services");
+assert.throws(
+  () => parseFields(features, form({ ...featureForm, link: "javascript:alert(1)" })),
+  /must start with http/,
+  "Explore Link tidak boleh jadi jalan masuk stored XSS",
+);
+
+console.log("parseFields: 13 cek lolos");

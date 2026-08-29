@@ -1,71 +1,96 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LocaleSwitch from "@/components/layout/LocaleSwitch";
+import Lottie from "@/components/ui/lottie";
+import PillNav from "@/components/ui/pill-nav";
+import { ShinyContent, shinyButtonAnimation, shinyButtonClassName } from "@/components/ui/shiny-button";
 import { NAV } from "@/lib/nav";
 
+// Link next-intl dianimasikan langsung — CTA ini harus tetap tautan (navigasi
+// ke /contact), bukan <button> tanpa aksi seperti ShinyButton generiknya.
+const MotionLink = motion.create(Link);
+
 /**
- * Melayang tanpa background maupun border — tidak ada state scroll, tidak ada
- * backdrop-blur. Wordmark di kiri, navigasi di tengah, dan seluruh tautan
- * terlihat di semua ukuran layar (tidak ada hamburger).
+ * Melayang tanpa background maupun border. Navigasinya PillNav dari ReactBits:
+ * lambang bulat di kiri, lalu deretan pil yang tersapu lingkaran saat hover.
+ *
+ * PillNav sendiri hanya berisi lambang dan pil. LocaleSwitch dan CTA "Get in
+ * touch" tetap berdiri di kanan sebagai elemen terpisah, seperti sebelumnya —
+ * keduanya bukan tautan navigasi dan tidak ada tempatnya di dalam pil.
  */
 export default function Header() {
   const t = useTranslations("nav");
+  const tMenu = useTranslations("menu");
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsScrolled(window.scrollY > 50);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  const toItem = (item: (typeof NAV)[number]) => ({ label: t(item.key), href: item.href });
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex w-full max-w-[92rem] flex-col items-center gap-3 px-6 py-5 md:flex-row md:justify-between md:gap-6 md:px-12 md:py-7 lg:px-20">
-        <Link
-          href="/"
-          className="pointer-events-auto text-[11px] font-semibold tracking-[0.3em] whitespace-nowrap uppercase md:text-xs"
-        >
-          Dwi Studio
-        </Link>
+      <div
+        data-scrolled={isScrolled ? "true" : "false"}
+        className="site-header-shell mx-auto flex flex-row items-center justify-between gap-2 px-2.5 py-2 md:gap-6 md:px-3 md:py-2.5"
+      >
+        <div className="pointer-events-auto">
+          <PillNav
+            logo={
+              <Lottie
+                src="/lottie/cats-cats-cats/animations/12345.json"
+                className="nav-cat-icon"
+              />
+            }
+            logoClassName="pill-logo-cat"
+            logoAriaLabel="DwiStudio"
+            animateLogoOnHover={false}
+            menuLabel={tMenu("open")}
+            closeMenuLabel={tMenu("close")}
+            items={NAV.map(toItem)}
+            // Contact tidak jadi pil di desktop: CTA "Get in touch" di kanan
+            // navbar sudah menuju halaman yang sama, jadi pilnya cuma tautan
+            // kedua ke tujuan yang sama. Di mobile CTA itu tertutup panel saat
+            // menu terbuka, jadi di sana Contact tetap ada.
+            desktopItems={NAV.filter((item) => item.key !== "contact").map(toItem)}
+            baseColor="var(--color-charcoal)"
+            pillColor="var(--color-card)"
+            pillTextColor="var(--color-ink)"
+            hoveredPillTextColor="var(--color-cream)"
+          />
+        </div>
 
-        {/* Di desktop benar-benar di tengah viewport, bukan sekadar di tengah
-            sisa ruang: absolute + translate membuat posisinya tidak bergeser
-            saat lebar wordmark berubah karena bahasa. */}
-        <nav className="pointer-events-auto md:absolute md:left-1/2 md:-translate-x-1/2">
-          <ul className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1 sm:gap-x-2">
-            <li>
-              <LocaleSwitch />
-            </li>
-            {NAV.map((item) => (
-              <li key={item.key}>
-                <NavLink href={item.href}>{t(item.key)}</NavLink>
-              </li>
-            ))}
-            <li>
-              <NavLink href="/contact">{t("getInTouch")}</NavLink>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Penyeimbang lebar wordmark supaya nav yang absolute tidak pernah
-            bertabrakan dengannya di layar sedang. */}
-        <span aria-hidden className="hidden text-[11px] tracking-[0.3em] uppercase md:invisible md:block md:text-xs">
-          Dwi Studio
-        </span>
+        {/* Ditandai, bukan diberi warna di sini: dua anak ini satu-satunya isi
+            header yang mewarisi ink dari body — PillNav membawa pil ber-fill
+            sendiri, jadi ia terbaca di atas apa pun. Di atas hero video mereka
+            beralih ke cream lewat `.over-hero` (globals.css). Penanda ini
+            juga yang menjaga PillNav TIDAK ikut dibalik: pil-nya ber-fill terang
+            dengan teks ink, dan membalikkannya jadi cream-di-atas-cream. */}
+        <div data-header-actions className="pointer-events-auto flex items-center gap-2.5 md:gap-6">
+          <LocaleSwitch />
+          <CtaLink href="/contact">{t("getInTouch")}</CtaLink>
+        </div>
       </div>
     </header>
   );
 }
 
 /**
- * Fill on hover: blok solid menyapu naik dari dasar (scale-y-0 -> 100 dengan
- * origin-bottom) dan teks membalik jadi gelap. Blok di belakang teks lewat
- * -z-10 pada elemen absolute, jadi tidak perlu mengubah urutan DOM.
+ * CTA terpisah dari navbar: pill "shiny button" — sama persis efeknya dengan
+ * ShinyButton, cuma akarnya <a> (lewat motion.create) supaya tetap tautan.
  */
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function CtaLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      className="group hover:text-ink relative isolate inline-block px-2.5 py-1.5 text-[10px] font-semibold tracking-[0.2em] whitespace-nowrap uppercase transition-colors duration-300 md:px-3 md:text-[11px]"
-    >
-      <span
-        aria-hidden
-        className="bg-paper absolute inset-0 -z-10 origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100"
-      />
-      {children}
-    </Link>
+    <MotionLink href={href} {...shinyButtonAnimation} className={shinyButtonClassName}>
+      <ShinyContent>{children}</ShinyContent>
+    </MotionLink>
   );
 }

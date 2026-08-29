@@ -1,27 +1,42 @@
+import clsx from "clsx";
 import Container from "@/components/ui/Container";
 
+/**
+ * `centered` dipakai halaman Projects, yang kepalanya duduk di atas grid kartu
+ * tiga kolom — judul rata kiri di atas grid simetris terbaca miring sebelah.
+ * Halaman lain (Services, Products, detail Feature) tetap rata kiri: di sana
+ * isinya daftar rata kiri juga.
+ */
 export default function PageHeader({
   eyebrow,
   title,
   lead,
+  centered = false,
 }: {
   eyebrow: string;
   title: string;
   lead: string;
+  centered?: boolean;
 }) {
   return (
-    <section className="pt-40 pb-16 md:pt-56 md:pb-24">
-      <Container>
-        <p className="text-ash mb-8 text-[11px] font-semibold tracking-[0.3em] uppercase">
-          {eyebrow}
-        </p>
+    <section className="pt-24 pb-9 md:pt-32 md:pb-12">
+      <Container className={clsx(centered && "flex flex-col items-center text-center")}>
+        <p className="eyebrow mb-5">{eyebrow}</p>
         <h1
           data-headline
-          className="font-display max-w-4xl text-[clamp(2.5rem,8vw,7rem)] leading-[0.9] font-extrabold tracking-[-0.045em] text-balance"
+          className={clsx(
+            "font-rampart-one font-display text-[clamp(2.8rem,8vw,7rem)] leading-[0.95] font-semibold tracking-normal text-balance",
+            centered ? "max-w-3xl" : "max-w-4xl",
+          )}
         >
           {title}
         </h1>
-        <p className="text-silver mt-10 max-w-xl text-base leading-[1.65] text-pretty md:text-lg">
+        <p
+          className={clsx(
+            "text-ink-soft mt-6 text-base leading-[1.7] text-pretty md:text-lg",
+            centered ? "max-w-xl" : "max-w-lg",
+          )}
+        >
           {lead}
         </p>
       </Container>

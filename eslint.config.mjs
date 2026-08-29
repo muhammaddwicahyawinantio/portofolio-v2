@@ -18,7 +18,17 @@ const eslintConfig = [
     },
   },
   {
-    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts"],
+    // .claude/worktrees berisi salinan repo lengkap (termasuk node_modules dan
+    // file generated) — eslint tidak membaca .gitignore, jadi harus disebut di
+    // sini, kalau tidak setiap worktree ikut ter-lint.
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      ".claude/worktrees/**",
+    ],
   },
 ];
 

@@ -16,8 +16,9 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "services" });
 
   return {
-    title: t("title"),
-    description: t("lead"),
+    // absolute: lihat catatan di about/page.tsx — metaTitle sudah bawa "DwiStudio".
+    title: { absolute: t("metaTitle") },
+    description: t("metaDescription"),
     alternates: alternates(locale, "/services"),
   };
 }
@@ -29,11 +30,11 @@ export default function ServicesPage({ params }: { params: Promise<{ locale: str
   const t = useTranslations("services");
 
   return (
-    <>
+    <div className="interior-page">
       <PageHeader eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
       <Container className="pb-24 md:pb-36">
-        <ServiceGrid locale={locale} priceFromLabel={t("priceFrom")} inquireLabel={t("inquire")} />
+        <ServiceGrid locale={locale} priceFromLabel={t("priceFrom")} exploreLabel={t("explore")} />
       </Container>
-    </>
+    </div>
   );
 }

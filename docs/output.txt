@@ -1,0 +1,112 @@
+Laporan Akhir
+
+AUDIT
+
+- i18n sebelum perubahan: next-intl dengan locales: ["en","id"], defaultLocale: "en", localePrefix: "as-needed" → EN tanpa prefix, ID di /id/*.
+- Route behavior sebelum: / = English. Middleware sudah benar mengecualikan /admin, /api, /undangan, _next.
+- Hardcoded language ditemukan: minim — situs ini sudah disiplin, hampir semua copy publik lewat next-intl messages atau field bilingual _en/_id di database (bukan hardcode di komponen). Yang hardcode: brand string "Dwi Studio" (14 file, termasuk footer wordmark, header aria-label, admin login — hanya yang publik saya ubah), dan array WORK_BADGES/STACK yang memang sengaja statis (bukan konten terjemahan).
+- Temuan arsitektur penting: sebagian besar copy publik (Hero, About, Footer statement, Services, Projects, Products) datang dari database via prisma/seed.ts, bukan id.json/en.json — file messages itu isinya label UI (eyebrow, tombol, form). Jadi task ini menyentuh dua lapis: messages/*.json untuk label, seed.ts untuk konten.
+- Dummy content ditemukan: 5 project generik "Project 01–05" (kategori Branding/Motion/Photography — tidak relevan untuk web studio), 4 Website dummy Client Site N / example-N.com (ternyata tidak pernah dirender di halaman publik, hanya dipakai admin), Hero/meta masih berbunyi "One studio, five mediums / Web, motion, 3D, sound, film".
+
+I18N
+
+- File diubah: src/i18n/routing.ts (locale order + default + localeDetection: false), src/lib/seo.ts, src/components/layout/LocaleSwitch.tsx (komentar saja).
+- Default locale baru: id. / = Indonesia, /en = English.
+- Locale prefix: as-needed — ID tanpa prefix, EN dengan /en. /id dan /id/about otomatis 307 ke versi tanpa prefix (bukan 404).
+- Locale switch: tidak perlu diubah — sudah generik lewat <Link locale={locale}> dari next-intl, otomatis ikut config baru.
+- Bug nyata ditemukan & diperbaiki: next-intl secara default menegosiasikan locale dari header Accept-Language browser. Terverifikasi lewat curl -H "Accept-Language: en-US,en;q=0.9" localhost:3000/ → 307 ke /en — pengunjung ber-browser Inggris tidak pernah melihat versi Indonesia sama sekali, walau sudah default id. Diperbaiki dengan localeDetection: false di defineRouting() (opsi bawaan next-intl, bukan middleware custom). Setelah fix: / selalu Indonesia untuk semua Accept-Language.
+
+ROUTES
+
+Diverifikasi langsung ke server (curl, status code + Location header):
+
+/                          -> 200, ID ("Bangun.")
+/about                     -> 200, ID
+/services                  -> 200, ID
+/projects                  -> 200, ID
+/projects/mosh-madness     -> 200, ID
+/contact                   -> 200, ID
+/products                  -> 200, ID
+/en                        -> 200, EN ("Build.")
+/en/about                  -> 200, EN
+/en/services               -> 200, EN
+/en/projects                -> 200, EN
+/en/contact                -> 200, EN
+/en/products               -> 200, EN
+/id                        -> 307 -> /            (bukan 404/double-render)
+/id/about                  -> 307 -> /about
+/en/en/about               -> 404                  (tidak infinite double-prefix)
+
+Tidak ada redirect loop, /id/id/..., /en/en/... yang lolos, atau kehilangan locale antar halaman.
+
+CONTENT
+
+- Meta: title/description homepage, About, Services, Projects, Contact — persis string dari docs/seobasic.md.
+- Hero: headline diganti dari "Satu studio. Lima medium." → "Bangun. / Tumbuh, / secara digital." (EN: "Build. / Grow, / go digital."), struktur DOM/animasi Hero tidak disentuh (masih split per-baris, masih 1 elemen [data-headline], masih dari CMS via HeroSection dengan fallback i18n).
+- Homepage: eyebrow "Layanan" → tetap; CTA heading → "Punya ide yang ingin diwujudkan secara digital?"; badge kapabilitas homepage (SEO Optimized, Mobile-First, dst.) sudah relevan sejak awal, tidak diubah.
+- About: judul fallback "Tentang Saya" → "Tentang DwiStudio". Cerita personal (fullStory, riwayat kerja, pendidikan) sengaja TIDAK ditulis ulang — itu konten asli yang kredibel (perjalanan logistik → developer), bukan dummy generik, dan tetap konsisten dengan positioning "studio satu orang". Dicatat di NOTES sebagai keputusan sadar.
+- Services: H1 "Solusi web untuk berbagai kebutuhan." (sengaja lebih pendek dari draf SEO "Jasa Pembuatan Website untuk Berbagai Kebutuhan" — versi itu dipakai di <title>, bukan H1 raksasa clamp(2.8rem,8vw,7rem), supaya tidak wrap berlebihan di mobile). Deskripsi 5 layanan diperbarui mendekati draf content-languange.md (Undangan Pernikahan Digital dapat fitur "Nama tamu personal", "Amplop digital", dll.).
+- Projects/Contact: title & lead sesuai draf.
+- Products: tidak diubah — halaman ini sudah punya fitur digital product nyata (akun premium via Lynk.id, model Product di Prisma), jadi dipakai copy existing-nya, bukan copy generik dari doc (sesuai instruksi §14: "kalau sudah ada, update dummy existing saja").
+- Footer: statement "Terbuka untuk proyek terpilih." → "Membangun website dan solusi digital yang dirancang untuk kebutuhan nyata."
+- Brand rename Dwi Studio → DwiStudio: diterapkan di title template, OG siteName, footer wordmark, footer copyright, header logo aria-label — mengikuti spec eksplisit di kedua dokumen. Tidak disentuh di area admin/login, wedding templates, dan DwiAi chat (di luar scope task ini).
+
+DUMMY / SEED
+
+- Project: 5 dummy generik diganti concept project relevan (Undangan Pernikahan Digital, Company Profile, E-Commerce, LMS, Dashboard Bisnis), masing-masing diberi suffix (Concept)/(Konsep) di judul + client: null (field Klien otomatis tidak tampil) + deskripsi eksplisit "Proyek konsep" — supaya tidak terbaca sebagai klien nyata. Mosh Madness dipertahankan utuh sebagai case study nyata.
+- Website: 4 dummy Client Site N → nama concept (Business Website Concept, dst.) — prioritas rendah karena model ini terverifikasi tidak pernah tampil di halaman publik, hanya dipakai admin.
+- Service: 5 layanan (Undangan Digital, Landing Page, Company Profile/E-Commerce, ERP/E-Learning, Custom Web App) — deskripsi & fitur diperbarui, pricing dipertahankan.
+- Data real dipertahankan: Mosh Madness (project), Product (5 akun digital nyata), Testimonial, WorkExperience/Education/Skill/Certification (biografi asli).
+- Eksekusi seed: dijalankan terhadap mysql://root@localhost:3306/dwistudio (dikonfirmasi lokal, aman) via npm run db:seed. Catatan penting: HeroSection & FooterContent pakai pola upsert({update:{}}) yang sengaja tidak menimpa baris yang sudah ada (supaya reseed tidak menghapus editan CMS) — karena baris itu sudah ada dari seed sebelumnya, isi barunya tidak otomatis masuk lewat db:seed biasa. Saya push manual sekali lewat script terpisah (bukan mengubah pola seed.ts) supaya perilaku aman itu tetap berlaku untuk reseed berikutnya.
+
+SEO
+
+Default Search Language: Indonesia (/). English alternate: /en.
+
+Canonical (diverifikasi live): /services → canonical=http://.../services; /en/services → canonical=http://.../en/services.
+
+Hreflang: id, en, x-default (baru ditambahkan, mengarah ke versi ID) — di setiap halaman lewat helper alternates() yang sudah ada, tidak ada logic duplikat.
+
+Sitemap (src/app/sitemap.ts): 8 path statis (termasuk /services yang sudah ada) × 2 locale, plus route project dinamis (/projects/{slug} × 2 locale, non-archived, dengan lastModified dari updatedAt) — total 28 URL saat ini.
+
+Robots: Disallow: /admin, /api; Allow: /; sitemap URL — sudah benar dari awal, tidak diubah.
+
+Open Graph & Twitter: siteName/title/description per-locale di root layout + Twitter summary_large_image; project detail dapat OG/Twitter dinamis dari coverImage (kalau ada). Tidak menambahkan gambar OG generik karena tidak ada asset brand 1200×630 yang valid di public/images/ saat ini (lihat NOTES).
+
+Structured Data: JSON-LD Organization + WebSite di root layout, sameAs dari SocialLink yang benar-benar ada — tidak ada rating/review/statistik karangan. Di-escape aman (< → unicode) untuk mencegah XSS lewat data CMS.
+
+Semantic HTML: dicek — service card sudah pakai <h3> (bukan <div>), image alt sudah deskriptif (alt={service.name}, dst.), tidak ditemukan alt="image"/alt="photo" generik. Tidak ada perubahan diperlukan.
+
+Bug ditemukan & diperbaiki: <title> About/Services/Projects/Contact double brand suffix — "Jasa Pembuatan Website & Web Development | DwiStudio — DwiStudio". Sebabnya: metaTitle sudah membawa "| DwiStudio" sendiri, lalu template root ("%s — DwiStudio") menambahkannya lagi. Diperbaiki pakai title: { absolute: ... } (API Next.js resmi untuk lewati template parent), diverifikasi lewat curl — sekarang bersih di keempat halaman.
+
+FILES CHANGED
+
+src/i18n/routing.ts
+src/i18n/messages/id.json
+src/i18n/messages/en.json
+src/lib/seo.ts
+src/components/layout/LocaleSwitch.tsx   (komentar)
+src/components/layout/Header.tsx          (brand rename)
+src/components/ui/footer-section-1.tsx    (brand rename)
+src/app/[locale]/layout.tsx               (title template, OG, twitter, JSON-LD)
+src/app/[locale]/about/page.tsx
+src/app/[locale]/services/page.tsx
+src/app/[locale]/projects/page.tsx
+src/app/[locale]/projects/[slug]/page.tsx
+src/app/[locale]/contact/page.tsx
+src/app/sitemap.ts
+prisma/seed.ts
+src/middleware.ts sempat dicoba-ubah lalu dikembalikan (opsi localeDetection ternyata milik defineRouting, bukan createMiddleware) — hasil akhirnya identik dengan sebelum sesi ini, tidak ada diff.
+
+TEST RESULT
+
+lint:      0 errors, 6 warning (pre-existing, tidak terkait perubahan ini)
+typecheck: pass (termasuk guard parity id.json/en.json)
+build:     pass — 34 halaman digenerate, /id/* + /en/* untuk tiap route localized
+
+NOTES (di luar scope, tidak diimplementasikan)
+
+- Asset gambar rusak sejak sebelum task ini: seed.ts mereferensikan /images/hero.png & /images/placeholder-N.png yang tidak ada di public/images/ (yang ada malah hero.jpg/placeholder-N.jpg versi lama, sudah dihapus di working tree). Ini pre-existing, bukan disebabkan perubahan saya — project baru (concept projects) sengaja saya beri coverImage: null, images: [] alih-alih menambah referensi rusak baru. Upload gambar asli lewat CMS.
+- OG image generik belum ada asset 1200×630 yang representatif — sengaja tidak dipasang gambar OG situs-lebar daripada memasang yang salah/rusak.
+- ItemList/BreadcrumbList JSON-LD (seobasic.md §18-19) — disebut opsional di dokumen, dilewati untuk task ini.
+- Ceramah "wrap 4-baris" Hero di 360px: baris ke-3 "secara digital." bisa wrap jadi 2 baris di lebar 360px persis (tidak di 390px ke atas) — bukan overflow/terpotong, cuma pergeseran ritme baris karena komponen memang didesain menerima headline N-baris fleksibel dari CMS. Tidak diubah karena bukan "broken", tapi disebut di sini kalau mau dipoles lebih lanjut.

@@ -13,10 +13,16 @@ export async function generateMetadata({
   const row = await getProject(slug);
   if (!row) return {};
 
+  const title = locale === "id" ? row.title_id : row.title_en;
+  const description = locale === "id" ? row.description_id : row.description_en;
+  const images = row.coverImage ? [{ url: row.coverImage }] : undefined;
+
   return {
-    title: locale === "id" ? row.title_id : row.title_en,
-    description: locale === "id" ? row.description_id : row.description_en,
+    title,
+    description,
     alternates: alternates(locale, `/projects/${slug}`),
+    openGraph: { type: "article", title, description, images },
+    twitter: { card: "summary_large_image", title, description, images },
   };
 }
 

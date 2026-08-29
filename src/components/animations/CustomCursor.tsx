@@ -2,22 +2,32 @@
 
 import { useEffect, useRef } from "react";
 
-const TRAIL_MAX = 26; // sampel jejak yang disimpan
-const DECAY = 0.045; // hilangnya "tinta" per frame
-const RING_IDLE = 7;
-const RING_HOVER = 26;
-const DOT_R = 3.5; // titik inti, ukurannya tetap
+const TRAIL_MAX = 12; // sampel jejak yang disimpan
+const DECAY = 0.08; // hilangnya "tinta" per frame
+const RING_IDLE = 5;
+const RING_HOVER = 15;
+const DOT_R = 2.5; // titik inti, ukurannya tetap
 const INTERACTIVE = "a, button, input, textarea, select, [data-cursor]";
 
 type Point = { x: number; y: number; w: number; life: number };
 
 /**
+ * Putih MURNI, bukan --color-cream. Canvas-nya ber-mix-blend-mode: difference,
+ * dan difference terhadap #ffffff adalah inversi tepat: hitam pekat di atas
+ * area terang, putih pekat di atas area gelap. Itulah kenapa kursor ini ikut
+ * benar begitu situsnya berpindah dari latar gelap ke cream tanpa satu baris
+ * pun disentuh — di atas kertas ia jadi tinta. Dengan warna token yang bukan
+ * putih murni hasilnya meleset dan tepinya keabu-abuan.
+ */
+const INK_WHITE = "#ffffff";
+
+/**
  * Kursor custom dan brush trail digambar di SATU canvas, jadi cuma ada satu
  * RAF loop, bukan dua sumber animasi yang harus disinkronkan.
  *
- * Canvas-nya ber-mix-blend-mode: difference, jadi goresan otomatis membalik
- * nilai apa pun di belakangnya — putih di atas ink, gelap di atas segmen
- * terang Value Rail. Tidak perlu logika warna sama sekali.
+ * Ukuran cincin, titik, dan tebal kuas sengaja kecil: kursor ini melayang di
+ * atas tipografi yang kini juga lebih kecil, dan cincin 26px yang lama menutupi
+ * elemen yang justru sedang mau diklik.
  */
 export default function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,7 +44,7 @@ export default function CustomCursor() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
     const resize = () => {
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
@@ -54,10 +64,24 @@ export default function CustomCursor() {
     let targetR = RING_IDLE;
     let last = { x: -100, y: -100 };
     let frame = 0;
+    let drawing = false;
+
+    const needsFrame = () =>
+      trail.length > 0 ||
+      Math.abs(pointer.x - dot.x) > 0.4 ||
+      Math.abs(pointer.y - dot.y) > 0.4 ||
+      Math.abs(targetR - dot.r) > 0.08;
+
+    const wake = () => {
+      if (drawing || document.hidden) return;
+      drawing = true;
+      frame = requestAnimationFrame(draw);
+    };
 
     const onMove = (e: PointerEvent) => {
       pointer.x = e.clientX;
       pointer.y = e.clientY;
+      wake();
 
       const dx = pointer.x - last.x;
       const dy = pointer.y - last.y;
@@ -65,7 +89,7 @@ export default function CustomCursor() {
       if (dist < 2.5) return;
 
       // Makin cepat gerakannya, makin tipis goresan — seperti kuas sungguhan.
-      const w = Math.max(1.5, 13 - dist * 0.32);
+      const w = Math.max(1, 9 - dist * 0.28);
       trail.push({ x: pointer.x, y: pointer.y, w, life: 1 });
       if (trail.length > TRAIL_MAX) trail.shift();
       last = { x: pointer.x, y: pointer.y };
@@ -74,6 +98,7 @@ export default function CustomCursor() {
     const onOver = (e: Event) => {
       const el = e.target as Element | null;
       targetR = el?.closest?.(INTERACTIVE) ? RING_HOVER : RING_IDLE;
+      wake();
     };
 
     const draw = () => {
@@ -82,7 +107,7 @@ export default function CustomCursor() {
       // Jejak: garis penghubung sampel, menebal dan makin pekat ke arah terbaru.
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.strokeStyle = "#edeff2";
+      ctx.strokeStyle = INK_WHITE;
       for (let i = 1; i < trail.length; i++) {
         const a = trail[i - 1]!;
         const b = trail[i]!;
@@ -108,31 +133,45 @@ export default function CustomCursor() {
       // Cincin yang membesar, bukan cakram penuh — cakram menutupi elemen yang
       // justru sedang mau diklik. Titik inti tetap kecil supaya posisinya jelas.
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "#edeff2";
+      ctx.fillStyle = INK_WHITE;
       ctx.beginPath();
       ctx.arc(dot.x, dot.y, DOT_R, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = "#edeff2";
-      ctx.lineWidth = 1.25;
+      ctx.strokeStyle = INK_WHITE;
+      ctx.lineWidth = 1;
       ctx.globalAlpha = 0.7;
       ctx.beginPath();
       ctx.arc(dot.x, dot.y, dot.r, 0, Math.PI * 2);
       ctx.stroke();
 
-      frame = requestAnimationFrame(draw);
+      if (needsFrame()) {
+        frame = requestAnimationFrame(draw);
+      } else {
+        drawing = false;
+      }
     };
-    frame = requestAnimationFrame(draw);
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        drawing = false;
+      } else {
+        wake();
+      }
+    };
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("resize", resize);
     document.addEventListener("mouseover", onOver);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("resize", resize);
       document.removeEventListener("mouseover", onOver);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       document.documentElement.classList.remove("has-custom-cursor");
     };
   }, []);

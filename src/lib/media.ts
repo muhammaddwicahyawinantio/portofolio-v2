@@ -9,6 +9,11 @@ export const ALLOWED_TYPES: Record<string, string> = {
   "image/gif": "gif",
   "video/mp4": "mp4",
   "video/webm": "webm",
+  // Trek musik di halaman About. Sama seperti PDF di bawah: isVideoUrl()
+  // diturunkan dari entri video/* saja, jadi ini tidak menggeser deteksi video.
+  "audio/mpeg": "mp3",
+  // Untuk CV/resume di halaman About.
+  "application/pdf": "pdf",
 };
 
 const VIDEO_EXTENSIONS = new Set(
@@ -25,4 +30,13 @@ const VIDEO_URL_PATTERN = new RegExp(`\\.(${[...VIDEO_EXTENSIONS].join("|")})$`,
  */
 export function isVideoUrl(url: string): boolean {
   return VIDEO_URL_PATTERN.test(url);
+}
+
+/**
+ * Kolom `images` di Prisma bertipe Json, jadi bentuknya tidak dijamin. Satu
+ * penyaring dipakai bersama oleh semua pembaca supaya tidak ada versi kedua
+ * yang diam-diam beda.
+ */
+export function toStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
 }

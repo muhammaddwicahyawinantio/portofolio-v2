@@ -1,14 +1,15 @@
 {
   "meta": {
-    "title": "Dwi Studio — One studio, five mediums",
-    "description": "Web, motion, 3D, sound, and film, designed and built by one hand."
+    "title": "DwiStudio — Web Development & Digital Solutions",
+    "description": "DwiStudio builds professional websites, landing pages, company profiles, e-commerce platforms, digital invitations, ERP, e-learning platforms, and custom web systems."
   },
   "nav": {
     "about": "About",
     "projects": "Projects",
     "services": "Services",
+    "products": "Products",
     "contact": "Contact",
-    "getInTouch": "Get in touch"
+    "getInTouch": "Let's talk"
   },
   "menu": {
     "open": "Open menu",
@@ -20,59 +21,105 @@
     "switchLabel": "Change language"
   },
   "hero": {
-    "line1": "One studio.",
-    "line2": "Five",
-    "line3": "mediums.",
-    "lead": "Web, motion, 3D, sound, and film — designed and built by one hand.",
-    "scroll": "Scroll down",
-    "scrollHint": "To begin the story"
-  },
-  "mediums": {
-    "web": "Web",
-    "motion": "Motion",
-    "threeD": "3D",
-    "sound": "Sound",
-    "film": "Film"
-  },
-  "index": {
-    "eyebrow": "Mediums",
-    "web": "Sites that load fast and move well.",
-    "motion": "Type, transitions, and title sequences.",
-    "threeD": "Real-time scenes that run in the browser.",
-    "sound": "Scoring and sound design for picture.",
-    "film": "Short-form direction, shoot through grade."
+    "line1": "Build.",
+    "line2": "Grow,",
+    "line3": "go digital.",
+    "lead": "DwiStudio designs and builds websites, web apps, and digital solutions that combine modern design, performance, and the features your business actually needs.",
+    "scroll": "Explore",
+    "scrollHint": "See our services and work"
   },
   "cta": {
-    "eyebrow": "Contact",
-    "heading": "Have something to make?",
-    "action": "Start a project"
+    "eyebrow": "Start a project",
+    "heading": "Have an idea you want to bring online?",
+    "action": "Start a project",
+    "ready": "Ready to begin?"
   },
   "about": {
     "eyebrow": "About",
-    "title": "A studio of one.",
-    "lead": "Dwi Studio works across web, motion, 3D, sound, and film. Every project is designed and built by the same hand, start to finish."
+    "title": "About DwiStudio",
+    "metaTitle": "About DwiStudio — Web Development & Digital Studio",
+    "metaDescription": "Meet DwiStudio, a digital studio focused on building professional websites, web apps, and digital solutions tailored to your needs.",
+    "lead": "DwiStudio is a digital studio that helps businesses, brands, and individuals build professional, functional websites and digital systems that are easy to grow.",
+    "storyTitle": "The Journey",
+    "workTitle": "Work Experience",
+    "educationTitle": "Education",
+    "periodLabel": "Period",
+    "roleLabel": "Role",
+    "institutionLabel": "Institution",
+    "skillsTitle": "Skills & Tools",
+    "certificationsTitle": "Certifications",
+    "valuesTitle": "How We Work",
+    "cvPreview": "View CV",
+    "cvDownload": "Download CV",
+    "cvLoading": "Loading CV…",
+    "cvError": "The CV failed to load.",
+    "cvClose": "Close preview",
+    "values": {
+      "one": {
+        "title": "Read before writing",
+        "body": "We trace the whole requirement before touching the keyboard. The fastest fix in the wrong place is just a second problem."
+      },
+      "two": {
+        "title": "As small as it goes",
+        "body": "The smallest change that actually holds beats a tidy abstraction nobody needed yet."
+      },
+      "three": {
+        "title": "Hand over something you can run",
+        "body": "Every project ships with its own CMS. You never need to call us to change a sentence."
+      }
+    },
+    "mediaTitle": "Music & Film",
+    "musicTitle": "Music",
+    "filmTitle": "Film"
   },
   "projects": {
-    "eyebrow": "Work",
-    "title": "Selected work.",
-    "lead": "Case studies appear here as they are published.",
+    "eyebrow": "Portfolio",
+    "title": "Selected projects.",
+    "metaTitle": "Website & Web Development Portfolio | DwiStudio",
+    "metaDescription": "See a selection of websites and digital systems built by DwiStudio, focused on design, performance, user experience, and the right technology.",
+    "lead": "A selection of websites and digital systems built with a focus on business needs, user experience, and the right technology choices.",
     "role": "Role",
     "year": "Year",
     "client": "Client",
-    "visitSite": "Visit live site",
-    "back": "Back to projects"
+    "visitSite": "Visit website",
+    "back": "Back to projects",
+    "openHint": "Double click / double tap a panel to open its case study",
+    "readMore": "Read more"
   },
   "contact": {
     "eyebrow": "Contact",
-    "title": "Start a project.",
-    "lead": "Tell me what you are making and when you need it."
+    "title": "Let's talk about your project.",
+    "metaTitle": "Website Development Consultation | DwiStudio",
+    "metaDescription": "Discuss your website, landing page, e-commerce, ERP, e-learning, or custom web application needs with DwiStudio.",
+    "lead": "Tell us about the website or system you want to build. DwiStudio will help scope the requirements and the right development approach.",
+    "breadcrumb": "Contact / Consultation",
+    "point1": "Tell us the project goal and who it is for",
+    "point2": "DwiStudio replies with a clear scope, timeline, and estimate",
+    "point3": "You receive the site plus a CMS you can run yourself",
+    "trustedBy": "What clients say",
+    "privacy": "By submitting this form you agree your details are stored only to answer this message. They are not shared with anyone else, and never used for marketing.",
+    "infoSocialTitle": "Elsewhere",
+    "infoLocationTitle": "Location & status",
+    "infoReplyTitle": "Response time",
+    "infoReplyBody": "Every message is read and answered directly, usually within one to two working days.",
+    "qrFallback": "Buy me a coffee"
   },
   "services": {
     "eyebrow": "Services",
-    "title": "Packages & pricing.",
-    "lead": "Five ways to work together, from a wedding invitation to a fully custom system.",
+    "title": "Web solutions for every need.",
+    "metaTitle": "Website Development Services | DwiStudio",
+    "metaDescription": "DwiStudio's website development services cover landing pages, company profiles, e-commerce, digital invitations, ERP, e-learning, and custom web applications.",
+    "lead": "Choose the service that fits your needs. Every website is built responsive, well-structured, and adaptable to business or personal requirements.",
     "priceFrom": "Starting from",
-    "inquire": "Start a project"
+    "explore": "Explore",
+    "builder": "Web Development",
+    "digitalProduct": "Digital Products"
+  },
+  "products": {
+    "eyebrow": "Digital products",
+    "title": "Premium accounts, ready to use.",
+    "lead": "Subscription accounts sold through Lynk.id. Pick one, check out there, and your access details follow.",
+    "explore": "Explore"
   },
   "contactForm": {
     "name": "Name",
@@ -81,20 +128,126 @@
     "message": "Message",
     "send": "Send message",
     "sending": "Sending…",
-    "success": "Thanks — your message is in. I read every one and reply myself.",
-    "errorRequired": "Please fill in every field.",
-    "errorEmail": "That email address does not look right.",
-    "errorRate": "Too many messages from this connection. Try again in an hour.",
-    "errorGeneric": "Something went wrong. Please try again."
+    "success": "Thanks — your message has been received and will be reviewed shortly.",
+    "errorRequired": "Please fill in every required field.",
+    "errorEmail": "Please enter a valid email address.",
+    "errorRate": "Too many requests from this connection. Please try again shortly.",
+    "errorGeneric": "Something went wrong while sending your message. Please try again."
   },
   "notFound": {
     "eyebrow": "404",
-    "title": "This page does not exist.",
-    "lead": "The link may be out of date. Head back to the homepage.",
+    "title": "Page not found",
+    "lead": "The page you're looking for isn't available or may have moved.",
     "action": "Back to home"
   },
   "footer": {
-    "statement": "Available for select work.",
-    "rights": "All rights reserved."
+    "statement": "Building websites and digital solutions designed for real business needs.",
+    "rights": "All rights reserved.",
+    "builtWith": "Built with",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
+  },
+  "features": {
+    "eyebrow": "Process",
+    "title": "How the work runs.",
+    "back": "Back to home",
+    "explore": "Explore"
+  },
+  "benefits": {
+    "eyebrow": "Why us",
+    "title": "Why work with us.",
+    "scrollHint": "Scroll to open"
+  },
+  "legal": {
+    "eyebrow": "Legal",
+    "updated": "Last updated 23 August 2026",
+    "terms": {
+      "title": "Terms of Service",
+      "lead": "What you agree to when you use this site or commission work from DwiStudio.",
+      "sections": [
+        {
+          "heading": "Who you are dealing with",
+          "body": "DwiStudio is a one-person design and development practice in Banjarmasin, Indonesia, run by M. Dwi Cahya Winantio. Everything on this site is written, designed, and built by one hand."
+        },
+        {
+          "heading": "Using this site",
+          "body": "Read it, share it, link to it. The writing, photographs, code, and design belong to the studio - do not republish them as your own, and ask first before using them to train a model."
+        },
+        {
+          "heading": "Prices are starting points",
+          "body": "The figures on the Services page are where projects start, not fixed quotes. A real quote follows a conversation about what you need, and it names the scope, the timeline, and the price before any work begins."
+        },
+        {
+          "heading": "Payment",
+          "body": "Projects open with a deposit and settle on handover unless we agree otherwise in writing. The exact terms live in your quote, not on this page."
+        },
+        {
+          "heading": "Revisions and timelines",
+          "body": "Every quote states how many revision rounds it includes. Timelines assume your content and feedback arrive when they are due; if they arrive late, the delivery date moves by the same amount."
+        },
+        {
+          "heading": "Who owns the finished work",
+          "body": "Once the final invoice is paid, the work is yours. The studio keeps the right to show it in its portfolio unless you ask otherwise. Third-party fonts, photography, and plugins stay under their own licences, which the quote names."
+        },
+        {
+          "heading": "What you provide",
+          "body": "You are responsible for the text, images, and logos you send, and for holding the rights to use them."
+        },
+        {
+          "heading": "Limits",
+          "body": "Work is built carefully and tested before it ships, but no site can be guaranteed free of faults or downtime. The studio is not liable for indirect or consequential loss. Nothing here removes rights you hold under Indonesian consumer law."
+        },
+        {
+          "heading": "Changes to these terms",
+          "body": "These terms can change. The date at the top tells you when they last did, and a change never applies backwards to work already quoted."
+        },
+        {
+          "heading": "Questions",
+          "body": "Write through the contact page. The reply comes from the studio, not a helpdesk."
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lead": "What this site collects, why it collects it, and how long it is kept.",
+      "sections": [
+        {
+          "heading": "The short version",
+          "body": "No advertising, no tracking pixels, no third-party analytics. The only personal data this site collects is what you type into the contact form."
+        },
+        {
+          "heading": "What the contact form collects",
+          "body": "Your name, email address, subject, and message - with the date it arrived and whether it has been read. Nothing else is stored, and nothing is inferred about you."
+        },
+        {
+          "heading": "Why it is collected",
+          "body": "To read your message and answer it. That is the only purpose. Your details are never sold, never shared with anyone else, and never used for marketing."
+        },
+        {
+          "heading": "How long it is kept",
+          "body": "Messages are kept while the conversation is still useful and deleted when it is not. Ask for yours to be deleted sooner and it will be."
+        },
+        {
+          "heading": "Where it is stored",
+          "body": "In this site's own database, on hosting the studio controls. The hosting provider processes it on the studio's behalf and under contract, and uses it for nothing else."
+        },
+        {
+          "heading": "Cookies",
+          "body": "Browsing the public site sets no cookies. A session cookie exists only inside the admin area, which is for the studio's own sign-in - not for visitors."
+        },
+        {
+          "heading": "Your rights",
+          "body": "You can ask what is held about you, ask for a copy, ask for a correction, or ask for it to be deleted. Write in and it will be acted on."
+        },
+        {
+          "heading": "Changes to this policy",
+          "body": "If this policy changes, the date at the top changes with it."
+        },
+        {
+          "heading": "Contact",
+          "body": "Reach the studio through the contact page."
+        }
+      ]
+    }
   }
 }

@@ -11,7 +11,7 @@ export default function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={clsx("py-24 md:py-36", className)}>
+    <section id={id} className={clsx("py-14 md:py-20", className)}>
       {children}
     </section>
   );

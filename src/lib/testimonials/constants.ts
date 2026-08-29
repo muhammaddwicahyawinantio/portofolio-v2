@@ -1,0 +1,1 @@
+export const MAX_TESTIMONIAL_AVATAR_BYTES = 1024 * 1024;

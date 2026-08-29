@@ -19,6 +19,16 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
+  // Audio uploads (wedding background music) are MP3-only with a tighter cap —
+  // server-side, not trusting the client's accept attribute.
+  if (form.get("kind") === "audio") {
+    if (file.type !== "audio/mpeg") {
+      return NextResponse.json({ error: "Only MP3 files are allowed." }, { status: 400 });
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json({ error: "Audio file too large (max 10MB)." }, { status: 400 });
+    }
+  }
   if (file.size > MAX_UPLOAD_BYTES) {
     return NextResponse.json({ error: "File too large (max 20MB)." }, { status: 400 });
   }
