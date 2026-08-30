@@ -5,7 +5,6 @@ import {
   BarChart3,
   Bell,
   FolderKanban,
-  Globe,
   Layers,
   Mail,
   MessageSquare,
@@ -72,10 +71,9 @@ function smoothPath(pts: { x: number; y: number }[]): string {
 
 /* ── stat cards ──────────────────────────────────────────────────────────── */
 
-const STAT_ICON = { projects: FolderKanban, websites: Globe, services: Layers, messages: Mail };
+const STAT_ICON = { projects: FolderKanban, services: Layers, messages: Mail };
 const STAT_META = {
   projects: { color: ACCENT.blue, bg: ACCENT.skySoft, label: "Project pipeline" },
-  websites: { color: ACCENT.cyan, bg: ACCENT.cyanSoft, label: "Live surfaces" },
   services: { color: ACCENT.violet, bg: ACCENT.violetSoft, label: "Offers" },
   messages: { color: ACCENT.rose, bg: ACCENT.roseSoft, label: "Inbox" },
 } as const;
@@ -411,7 +409,6 @@ function Notifications({ items, now }: { items: Notification[]; now: number }) {
 
 const QUICK_ACTIONS = [
   { href: "/admin/projects", label: "Add New Project", color: ACCENT.blue, bg: ACCENT.skySoft },
-  { href: "/admin/websites", label: "Add New Website", color: ACCENT.cyan, bg: ACCENT.cyanSoft },
 ];
 
 /* ── page ────────────────────────────────────────────────────────────────── */
@@ -428,7 +425,6 @@ export default async function AdminDashboard() {
 
   const [
     projects,
-    websites,
     services,
     messageCount,
     unread,
@@ -442,7 +438,6 @@ export default async function AdminDashboard() {
     recentProjects,
   ] = await Promise.all([
     prisma.project.count(),
-    prisma.website.count(),
     prisma.service.count(),
     prisma.message.count(),
     prisma.message.count({ where: { isRead: false } }),
@@ -463,7 +458,6 @@ export default async function AdminDashboard() {
   const contentMix = [
     { label: "Projects", value: projects, color: ACCENT.blue },
     { label: "Services", value: services, color: ACCENT.violet },
-    { label: "Websites", value: websites, color: ACCENT.cyan },
     { label: "Features", value: features, color: ACCENT.emerald },
     { label: "Testimonials", value: testimonials, color: ACCENT.amber },
     { label: "Media", value: media, color: ACCENT.slate },
@@ -536,7 +530,6 @@ export default async function AdminDashboard() {
           hint={newThisMonth > 0 ? `${newThisMonth} new this month` : `${featured} featured`}
           tone={newThisMonth > 0 ? "up" : "muted"}
         />
-        <StatCard label="Websites" value={websites} icon="websites" hint="In showcase" />
         <StatCard label="Services" value={services} icon="services" hint="Offered" />
         <StatCard
           label="Messages"

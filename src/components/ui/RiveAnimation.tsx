@@ -117,12 +117,20 @@ export default function RiveAnimation({
       const root = rootRef.current;
       if (!root) return false;
       const rect = root.getBoundingClientRect();
-      return (
-        clientX >= rect.left &&
-        clientX <= rect.right &&
-        clientY >= rect.top &&
-        clientY <= rect.bottom
-      );
+      if (
+        clientX < rect.left ||
+        clientX > rect.right ||
+        clientY < rect.top ||
+        clientY > rect.bottom
+      ) {
+        return false;
+      }
+      // The hero section is `position: sticky`, so once later sections scroll
+      // over it, this box's screen coordinates still match — but the cat is no
+      // longer the topmost thing there. Confirm the actual element under the
+      // pointer is still ours before playing the sound.
+      const topElement = document.elementFromPoint(clientX, clientY);
+      return Boolean(topElement && root.contains(topElement));
     };
     const firstChangedTouchInsideRoot = (event: TouchEvent) => {
       for (let index = 0; index < event.changedTouches.length; index += 1) {
@@ -251,12 +259,19 @@ export default function RiveAnimation({
       const root = rootRef.current;
       if (!root) return false;
       const rect = root.getBoundingClientRect();
-      return (
-        clientX >= rect.left &&
-        clientX <= rect.right &&
-        clientY >= rect.top &&
-        clientY <= rect.bottom
-      );
+      if (
+        clientX < rect.left ||
+        clientX > rect.right ||
+        clientY < rect.top ||
+        clientY > rect.bottom
+      ) {
+        return false;
+      }
+      // Same sticky-cover issue as the click-sound listener above: confirm the
+      // topmost element at this point is actually ours, not later content that
+      // has scrolled over the (still sticky-positioned) hero.
+      const topElement = document.elementFromPoint(clientX, clientY);
+      return Boolean(topElement && root.contains(topElement));
     };
     const firstChangedTouchInsideRoot = (event: TouchEvent) => {
       for (let index = 0; index < event.changedTouches.length; index += 1) {

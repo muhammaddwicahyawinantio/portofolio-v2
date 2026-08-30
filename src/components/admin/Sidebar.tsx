@@ -7,9 +7,7 @@ import clsx from "clsx";
 import {
   LayoutDashboard,
   FolderKanban,
-  Globe,
   Package,
-  Box,
   Image as ImageIcon,
   Images,
   Quote,
@@ -91,9 +89,7 @@ const NAV: NavSection[] = [
     icon: FolderKanban,
     items: [
       { label: "Projects", href: "/admin/projects", icon: FolderKanban },
-      { label: "Website", href: "/admin/websites", icon: Globe },
       { label: "Product Digital", href: "/admin/products", icon: Package },
-      { label: "3D Gallery", href: "/admin/gallery-3d", icon: Box },
       { label: "Hero", href: "/admin/hero", icon: ImageIcon },
       { label: "Media", href: "/admin/media-gallery", icon: Images },
       { label: "Testimonials", href: "/admin/testimonials", icon: Quote },
