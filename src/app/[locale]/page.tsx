@@ -8,6 +8,7 @@ import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import Hero from "@/components/sections/Hero";
 import ExploreColumns from "@/components/sections/ExploreColumns";
 import ProjectShowcase from "@/components/sections/ProjectShowcase";
+import ProjectsGallery from "@/components/sections/ProjectsGallery";
 import FeatureShowcase from "@/components/sections/FeatureShowcase";
 import BenefitGrid from "@/components/sections/BenefitGrid";
 import ContactPanel from "@/components/sections/ContactPanel";
@@ -48,6 +49,8 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
           cuma akan mengeruhkan keduanya. Halaman interior yang tidak punya
           pergantian section-lah yang memakai sapuan body. */}
       <div className="homepage-paper relative z-10">
+        <ProjectsGallery locale={locale} />
+
         {/* Dipaku saat digulir: satu layar per langkah, lalu halaman lanjut.
             Duduk tepat setelah hero — proses kerjanya diperkenalkan lebih dulu,
             baru karyanya. */}
