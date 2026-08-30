@@ -70,7 +70,12 @@ export function ArgentLoopInfiniteSlider({
   const progressRef = useRef(0);
   const targetRef = useRef(0);
   const wheelAccumRef = useRef(0);
-  const dragRef = useRef<DragState | null>(null);
+  // Refs SEPARATE per input type, deliberately: a touch gesture also fires
+  // compatibility Pointer Events (pointerdown/pointerup) on real browsers, and
+  // sharing one ref meant onPointerUp nulled it out before the native
+  // touchend listener below ever got to read it — swipes silently did nothing.
+  const touchDragRef = useRef<DragState | null>(null);
+  const mouseDragRef = useRef<DragState | null>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -158,11 +163,11 @@ export function ArgentLoopInfiniteSlider({
     function handleStart(e: TouchEvent) {
       const t = e.touches[0];
       if (!t) return;
-      dragRef.current = { startX: t.clientX, startY: t.clientY, horizontal: false };
+      touchDragRef.current = { startX: t.clientX, startY: t.clientY, horizontal: false };
     }
 
     function handleMove(e: TouchEvent) {
-      const drag = dragRef.current;
+      const drag = touchDragRef.current;
       const t = e.touches[0];
       if (!drag || !t) return;
       const dx = t.clientX - drag.startX;
@@ -174,8 +179,8 @@ export function ArgentLoopInfiniteSlider({
     }
 
     function handleEnd(e: TouchEvent) {
-      const drag = dragRef.current;
-      dragRef.current = null;
+      const drag = touchDragRef.current;
+      touchDragRef.current = null;
       if (!drag?.horizontal) return;
       const t = e.changedTouches[0];
       if (!t) return;
@@ -222,13 +227,16 @@ export function ArgentLoopInfiniteSlider({
   // tidak pernah dianggap gestur scroll halaman oleh browser manapun.
   function onPointerDown(e: PointerEvent<HTMLDivElement>) {
     if (count <= 1 || e.pointerType !== "mouse") return;
-    dragRef.current = { startX: e.clientX, startY: e.clientY, horizontal: true };
+    mouseDragRef.current = { startX: e.clientX, startY: e.clientY, horizontal: true };
   }
 
   function onPointerUp(e: PointerEvent<HTMLDivElement>) {
-    const drag = dragRef.current;
-    dragRef.current = null;
-    if (!drag || e.pointerType !== "mouse") return;
+    // pointerType check FIRST: a touch gesture also fires a compatibility
+    // pointerup, and this must never touch mouseDragRef's touch counterpart.
+    if (e.pointerType !== "mouse") return;
+    const drag = mouseDragRef.current;
+    mouseDragRef.current = null;
+    if (!drag) return;
     const dx = e.clientX - drag.startX;
     if (dx <= -SWIPE_THRESHOLD) goToIndex(Math.round(progressRef.current) + 1);
     else if (dx >= SWIPE_THRESHOLD) goToIndex(Math.round(progressRef.current) - 1);
@@ -259,8 +267,13 @@ export function ArgentLoopInfiniteSlider({
               }}
               className="absolute inset-0 will-change-transform"
             >
+              {/* draggable=false: <img> is natively draggable, and without this a
+                  sustained mouse-drag starts the browser's own HTML5 image drag
+                  instead of firing pointerup — the custom drag-to-navigate gesture
+                  below silently never commits (confirmed via CDP: dragstart/drag/
+                  dragend fired with no pointerup at all). */}
               {/* eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase */}
-              <img src={project.image} alt={project.title} className="h-full w-full object-cover" />
+              <img src={project.image} alt={project.title} draggable={false} className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
