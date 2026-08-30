@@ -7,7 +7,7 @@ import Section from "@/components/ui/Section";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import Hero from "@/components/sections/Hero";
 import ExploreColumns from "@/components/sections/ExploreColumns";
-import ProjectsGallery from "@/components/sections/ProjectsGallery";
+import WorksShowcase from "@/components/sections/WorksShowcase";
 import FeatureShowcase from "@/components/sections/FeatureShowcase";
 import BenefitGrid from "@/components/sections/BenefitGrid";
 import ContactPanel from "@/components/sections/ContactPanel";
@@ -47,7 +47,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
           cuma akan mengeruhkan keduanya. Halaman interior yang tidak punya
           pergantian section-lah yang memakai sapuan body. */}
       <div className="homepage-paper relative z-10">
-        <ProjectsGallery locale={locale} />
+        <WorksShowcase locale={locale} />
 
         {/* Dua panel selebar layar yang digeser mendatar oleh scroll. Panel 1
             wordmark "Dwi Studio" dibesarkan jadi judul; panel 2 accordion
@@ -67,7 +67,12 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                 halaman — bukan lagi menempelkan kata ini ke gutter rule.
                 Spectral huruf besar-kecil biasa, bukan uppercase: ini lembar
                 kalkir, bukan poster. */}
-            <Container className="relative flex min-h-svh flex-col items-center justify-between overflow-hidden pt-[clamp(5.5rem,14vh,9rem)] pb-[clamp(5.5rem,12vh,7.5rem)] text-center max-md:min-h-[92svh]">
+            {/* gap-[19rem]: bukan whitespace kosong — ini ruang yang memang
+                dibutuhkan kucing Rive (h-[clamp(20rem,88vw,24rem)]) di
+                belakang judul & badge supaya tidak menimpa badge. Diukur via
+                CDP: tanpa gap ini, jarak judul-ke-badge cuma 32px sementara
+                kucingnya 320-384px — pasti bertabrakan berapa pun top-nya. */}
+            <Container className="relative flex flex-col items-center justify-center gap-[19rem] overflow-hidden pt-20 pb-12 text-center md:min-h-svh md:justify-between md:gap-0 md:pt-[clamp(5.5rem,14vh,9rem)] md:pb-[clamp(5.5rem,12vh,7.5rem)]">
               {/* Wordmark literal, bukan projects("eyebrow"): ini nama brand,
                   sama di kedua bahasa. Ukurannya BUKAN di sini — `.home-work-heading`
                   di globals.css membawa font-size !important (lihat komentar di
@@ -77,10 +82,20 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
               <h2 className="home-work-heading relative z-[1] w-full font-rampart-one font-display leading-[0.95] font-medium tracking-[-0.03em] md:leading-[0.82]">
                 Dwi Studio
               </h2>
+              {/* Container mobile sekarang tinggi-mengikuti-konten (~350-375px,
+                  bukan min-h-svh), tapi kucing dominan (20-24rem = 320-384px)
+                  tetap lebih tinggi dari seluruh panel — beberapa overlap
+                  dengan judul/badge tidak terhindarkan secara matematis kalau
+                  panelnya pendek DAN kucingnya besar sekaligus. Diselesaikan
+                  seperti desktop: z-0 di BELAKANG judul & badge (keduanya
+                  z-[1]), jadi teks badge tetap terbaca penuh di atasnya —
+                  bukan "tertutup", cuma siluet kucing terlihat di baliknya.
+                  top-1/2 + -translate-y-1/2 menengahkan pada tinggi container
+                  APA PUN tanpa perlu menghitung ulang persentase manual. */}
               <RiveAnimation
                 src="/rive/cat-run.riv"
                 stateMachines="State Machine 1"
-                className="!absolute top-[16%] left-1/2 z-0 h-[clamp(20rem,72vw,27rem)] w-[clamp(20rem,72vw,27rem)] -translate-x-1/2 opacity-90 sm:top-[22%] sm:h-[clamp(25rem,46vw,39rem)] sm:w-[clamp(25rem,46vw,39rem)]"
+                className="!absolute top-1/2 left-1/2 z-0 h-[clamp(20rem,88vw,24rem)] w-[clamp(20rem,88vw,24rem)] -translate-x-1/2 -translate-y-1/2 opacity-90 sm:top-[22%] sm:h-[clamp(25rem,46vw,39rem)] sm:w-[clamp(25rem,46vw,39rem)] sm:translate-y-0"
                 ariaLabel="Running cat animation"
               />
 

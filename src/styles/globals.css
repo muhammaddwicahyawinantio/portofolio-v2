@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* Gutter scrollbar dipesan permanen supaya innerWidth/clientWidth tidak
+ * pernah berubah begitu sebuah section jadi cukup tinggi untuk memunculkan
+ * scrollbar vertikal (mis. pin-spacer ScrollTrigger yang tinggi). Tanpa ini,
+ * GSAP ScrollTrigger pin: true mengukur & mengunci width/height elemen yang
+ * di-pin (inline style, dalam px) SEBELUM scrollbar itu muncul — begitu
+ * scrollbar-nya benar-benar muncul, elemen yang di-pin sudah terlanjur
+ * dikunci selebar viewport PENUH, overflow horizontal persis selebar
+ * scrollbar. Diverifikasi via CDP pada WorksScrollShowcase: tanpa baris ini
+ * overflow terjadi 100% dari percobaan; scrollbar-gutter tidak mengubah
+ * warna/tema apa pun, cuma memesan ruang.
+ */
+html {
+  scrollbar-gutter: stable;
+}
+
 @theme {
   /* Facelift "Kertas Kalkir" (rev. B). Nilai token diambil dari palet yang
      ditetapkan brief — NAMA dibiarkan apa adanya (`gold` tetap `gold`, `line`
