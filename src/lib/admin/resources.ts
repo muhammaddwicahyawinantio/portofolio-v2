@@ -89,20 +89,6 @@ export const RESOURCES: Resource[] = [
     orderBy: { order: "asc" },
   },
   {
-    key: "websites",
-    label: "Websites",
-    group: "content",
-    fields: [
-      { name: "name", label: "Name", type: "text", required: true },
-      { name: "url", label: "URL", type: "url", required: true },
-      { name: "thumbnail", label: "Thumbnail URL", type: "url", required: true },
-      ...bilingual("description", "Description"),
-      orderField,
-    ],
-    columns: ["name", "url", "order"],
-    orderBy: { order: "asc" },
-  },
-  {
     key: "about",
     label: "About",
     group: "content",
@@ -266,19 +252,6 @@ export const RESOURCES: Resource[] = [
       orderField,
     ],
     columns: ["fileUrl", "fileType", "order"],
-    orderBy: { order: "asc" },
-  },
-  {
-    key: "gallery-3d",
-    label: "3D Gallery",
-    group: "content",
-    fields: [
-      { name: "modelUrl", label: "Model URL (.glb)", type: "url", required: true },
-      { name: "thumbnail", label: "Thumbnail URL", type: "url", required: true },
-      ...bilingual("description", "Description"),
-      orderField,
-    ],
-    columns: ["modelUrl", "order"],
     orderBy: { order: "asc" },
   },
   {

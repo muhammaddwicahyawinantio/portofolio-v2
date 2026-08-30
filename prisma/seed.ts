@@ -112,24 +112,6 @@ async function main() {
     ],
   });
 
-  // Showcase internal admin, bukan halaman publik (grep: tidak ada pemakai di
-  // src/app/[locale]) — nama konsep, bukan client nyata, konsisten dengan Project.
-  await prisma.website.deleteMany({});
-  await prisma.website.createMany({
-    data: [
-      { name: "Business Website Concept", url: "https://example.com/business-website" },
-      { name: "Creative Commerce Concept", url: "https://example.com/creative-commerce" },
-      { name: "Digital Wedding Concept", url: "https://example.com/digital-wedding" },
-      { name: "Dashboard System Concept", url: "https://example.com/dashboard-system" },
-    ].map((w, i) => ({
-      ...w,
-      thumbnail: `/images/placeholder-${(i % 3) + 1}.png`,
-      description_en: `Full-stack build — ${w.name.toLowerCase()}.`,
-      description_id: `Pengembangan full-stack — ${w.name.toLowerCase()}.`,
-      order: i,
-    })),
-  });
-
   await prisma.about.deleteMany({});
   await prisma.about.create({
     data: {
@@ -209,8 +191,7 @@ async function main() {
       { title: "Prisma", order: 5 },
       { title: "MySQL", order: 6 },
       { title: "GSAP", order: 7 },
-      { title: "Three.js", order: 8 },
-      { title: "Figma", order: 9 },
+      { title: "Figma", order: 8 },
       { title: "Docker", order: 10 },
     ],
   });
@@ -660,17 +641,6 @@ async function main() {
       fileUrl: `/images/placeholder-${(i % 3) + 1}.png`,
       caption_en: `Frame ${i + 1}`,
       caption_id: `Bingkai ${i + 1}`,
-      order: i,
-    })),
-  });
-
-  await prisma.gallery3DItem.deleteMany({});
-  await prisma.gallery3DItem.createMany({
-    data: Array.from({ length: 3 }, (_, i) => ({
-      modelUrl: `/models/model-${i + 1}.glb`,
-      thumbnail: `/images/placeholder-${(i % 3) + 1}.png`,
-      description_en: `Real-time 3D asset ${i + 1}.`,
-      description_id: `Aset 3D real-time ${i + 1}.`,
       order: i,
     })),
   });

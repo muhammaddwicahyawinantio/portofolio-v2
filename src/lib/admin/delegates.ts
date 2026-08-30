@@ -22,7 +22,6 @@ type Delegate = {
 
 const DELEGATES: Record<string, Delegate> = {
   projects: prisma.project as unknown as Delegate,
-  websites: prisma.website as unknown as Delegate,
   services: prisma.service as unknown as Delegate,
   products: prisma.product as unknown as Delegate,
   features: prisma.feature as unknown as Delegate,
@@ -36,7 +35,6 @@ const DELEGATES: Record<string, Delegate> = {
   certifications: prisma.certification as unknown as Delegate,
   testimonials: prisma.testimonial as unknown as Delegate,
   "media-gallery": prisma.mediaGalleryItem as unknown as Delegate,
-  "gallery-3d": prisma.gallery3DItem as unknown as Delegate,
   music: prisma.musicItem as unknown as Delegate,
   films: prisma.filmItem as unknown as Delegate,
   footer: prisma.footerContent as unknown as Delegate,

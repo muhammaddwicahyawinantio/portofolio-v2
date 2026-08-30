@@ -35,18 +35,6 @@ model Project {
   @@index([order])
 }
 
-model Website {
-  id             String @id @default(cuid())
-  name           String
-  url            String
-  thumbnail      String
-  description_en String @db.Text
-  description_id String @db.Text
-  order          Int    @default(0)
-
-  @@index([order])
-}
-
 model Service {
   id             String  @id @default(cuid())
   name_en        String
@@ -231,17 +219,6 @@ model MediaGalleryItem {
 enum MediaType {
   IMAGE
   VIDEO
-}
-
-model Gallery3DItem {
-  id             String @id @default(cuid())
-  modelUrl       String
-  thumbnail      String
-  description_en String @db.Text
-  description_id String @db.Text
-  order          Int    @default(0)
-
-  @@index([order])
 }
 
 model MusicItem {
