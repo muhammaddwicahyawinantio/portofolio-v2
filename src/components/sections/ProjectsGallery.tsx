@@ -7,7 +7,7 @@ import Section from "@/components/ui/Section";
 import { ArgentLoopInfiniteSlider, type GalleryProject } from "@/components/ui/argent-loop-infinite-slider";
 
 /**
- * Sama seperti ProjectShowcase: featured && !archived, order asc. Sengaja
+ * featured && !archived, order asc. Sengaja
  * TIDAK mengubah data atau menambah baris — kalau tabelnya kosong, section
  * ini tidak pernah dirender (lihat guard di bawah).
  */

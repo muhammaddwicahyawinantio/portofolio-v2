@@ -7,7 +7,6 @@ import Section from "@/components/ui/Section";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import Hero from "@/components/sections/Hero";
 import ExploreColumns from "@/components/sections/ExploreColumns";
-import ProjectShowcase from "@/components/sections/ProjectShowcase";
 import ProjectsGallery from "@/components/sections/ProjectsGallery";
 import FeatureShowcase from "@/components/sections/FeatureShowcase";
 import BenefitGrid from "@/components/sections/BenefitGrid";
@@ -31,7 +30,6 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   setRequestLocale(locale);
 
   const services = useTranslations("services");
-  const features = useTranslations("features");
   const benefits = useTranslations("benefits");
   const cta = useTranslations("cta");
 
@@ -51,23 +49,10 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
       <div className="homepage-paper relative z-10">
         <ProjectsGallery locale={locale} />
 
-        {/* Dipaku saat digulir: satu layar per langkah, lalu halaman lanjut.
-            Duduk tepat setelah hero — proses kerjanya diperkenalkan lebih dulu,
-            baru karyanya. */}
-        <Section id="features" className="border-line feature-run-field border-t !py-6 md:!py-8">
-          <Container>
-            <FeatureShowcase
-              locale={locale}
-              title={features("title")}
-              exploreLabel={features("explore")}
-            />
-          </Container>
-        </Section>
-
         {/* Dua panel selebar layar yang digeser mendatar oleh scroll. Panel 1
-            wordmark "Dwi Studio" dibesarkan jadi judul; panel 2 kartu-kartu
-            karya (ColorChangeCards), masuk dari kanan lalu berhenti di tengah
-            supaya bisa dibaca dan diklik.
+            wordmark "Dwi Studio" dibesarkan jadi judul; panel 2 accordion
+            Features (AccordionFeatureSection) — gambar fitur aktif berganti
+            saat item accordion dibuka.
 
             `!py-0` karena panggung HorizontalScroll sudah setinggi satu layar;
             padding section hanya akan menambah ruang kosong di atas dan di
@@ -130,7 +115,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
               </ul>
             </Container>
 
-            <ProjectShowcase locale={locale} />
+            <FeatureShowcase locale={locale} />
           </HorizontalScroll>
         </Section>
 
