@@ -26,7 +26,7 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <ChevronDown aria-hidden className="text-ink-soft size-4 shrink-0 transition-transform duration-300" />
+        <ChevronDown aria-hidden className="text-ink-soft size-4 shrink-0 transition-transform duration-300 md:size-5" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
