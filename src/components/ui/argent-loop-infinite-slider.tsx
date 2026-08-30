@@ -272,23 +272,28 @@ export function ArgentLoopInfiniteSlider({
               <span aria-hidden>·</span>
               <span>{active.year}</span>
             </p>
-            <h3 className="font-display mt-4 text-2xl leading-tight font-medium tracking-[-0.01em] text-balance md:text-3xl">
+            <h3 className="font-display line-clamp-2 mt-4 text-2xl leading-tight font-medium tracking-[-0.01em] text-balance md:text-3xl">
               {active.title}
             </h3>
-            <p className="text-ink-soft mt-4 line-clamp-4 text-sm leading-[1.7] text-pretty md:text-base">
+            <p className="text-ink-soft mt-4 line-clamp-3 text-sm leading-[1.7] text-pretty md:line-clamp-4 md:text-base">
               {active.description}
             </p>
           </div>
 
           <div className="flex flex-col gap-5">
-            <div className="flex items-center justify-between gap-4">
-              <Button href={`/projects/${active.slug}`} variant="charcoal" size="sm">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <Button
+                href={`/projects/${active.slug}`}
+                variant="charcoal"
+                size="sm"
+                className="w-full justify-center md:w-auto"
+              >
                 {exploreLabel}
               </Button>
 
               {count > 1 ? (
                 <>
-                  <div className="text-ink-soft flex items-center gap-2 font-mono text-[11px] tracking-[0.1em] uppercase md:hidden">
+                  <div className="text-ink-soft flex items-center justify-center gap-2 font-mono text-[11px] tracking-[0.1em] uppercase md:justify-start md:hidden">
                     <span>{String(activeIndex + 1).padStart(2, "0")}</span>
                     <span aria-hidden className="flex gap-1">
                       {projects.map((project, i) => (
