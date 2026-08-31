@@ -479,6 +479,64 @@ main .feature-steps-shell .feature-step-button {
   }
 }
 
+/* Interior typography scale.
+   The generic display-font multipliers above intentionally preserve old pages,
+   but they also override Tailwind's clamp utilities because this file is outside
+   Tailwind's utility layer. Interior pages need explicit, later declarations so
+   section headings such as "Proyek terpilih." keep their intended responsive
+   size on mobile and desktop. */
+main .interior-page [data-headline].font-rampart-one.font-display {
+  font-size: clamp(3rem, 8vw, 5.4rem);
+  line-height: 0.94;
+}
+
+main .interior-page p:not(.eyebrow):not([class*="font-mono"]) {
+  font-size: clamp(0.98rem, 0.24vw + 0.93rem, 1.12rem);
+  line-height: 1.68;
+}
+
+main .interior-page p.page-header-lead.text-ink-soft {
+  font-size: clamp(1.02rem, 0.34vw + 0.96rem, 1.2rem);
+  line-height: 1.72;
+}
+
+main .interior-page span.text-ink-soft:not([class*="font-mono"]) {
+  font-size: clamp(0.94rem, 0.2vw + 0.9rem, 1.05rem);
+  line-height: 1.58;
+}
+
+main .interior-page h2.font-rampart-one.font-display,
+main .interior-page h3.font-rampart-one.font-display {
+  font-size: clamp(1.55rem, 2.2vw, 2.35rem);
+  line-height: 1.02;
+}
+
+main .interior-page .project-card-title.font-display {
+  font-size: clamp(1.18rem, 0.48vw + 1.06rem, 1.45rem);
+  line-height: 1.12;
+}
+
+main .interior-page p.project-card-copy.text-ink-soft {
+  font-size: clamp(0.98rem, 0.18vw + 0.94rem, 1.06rem);
+  line-height: 1.62;
+}
+
+main .interior-page .project-card-meta,
+main .interior-page .project-card-action {
+  font-size: clamp(0.72rem, 0.18vw + 0.67rem, 0.82rem);
+  line-height: 1.34;
+}
+
+@media (max-width: 767px) {
+  main .interior-page [data-headline].font-rampart-one.font-display {
+    font-size: clamp(2.65rem, 12vw, 3.9rem);
+  }
+
+  main .interior-page p.page-header-lead.text-ink-soft {
+    max-width: 34rem;
+  }
+}
+
 /* Tanda registrasi drafting (+), bukan bullet bulat — memutus kesan "dot label"
    generik dan menyambung ke bahasa blueprint di seluruh situs. */
 .eyebrow::before {

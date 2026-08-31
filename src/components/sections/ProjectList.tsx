@@ -71,23 +71,23 @@ export default async function ProjectList({
                   <span className="bg-cream-deep text-gold-ink self-start rounded-full px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] uppercase">
                     {row.category}
                   </span>
-                  <h2 className="font-display text-lg leading-tight font-medium tracking-[-0.01em] text-balance group-hover:underline md:text-xl">
+                  <h2 className="project-card-title font-display text-lg leading-tight font-medium tracking-[-0.01em] text-balance group-hover:underline md:text-xl">
                     {title}
                   </h2>
                 </div>
 
                 <div className="flex flex-col gap-3 p-5 pt-3">
-                  <p className="text-ink-soft line-clamp-3 text-sm leading-[1.6] text-pretty">
+                  <p className="project-card-copy text-ink-soft line-clamp-3 text-sm leading-[1.6] text-pretty">
                     {description}
                   </p>
-                  <p className="text-ink-soft font-mono text-[11px] tracking-[0.1em] uppercase">
+                  <p className="project-card-meta text-ink-soft font-mono text-[11px] tracking-[0.1em] uppercase">
                     {row.year} · {row.role}
                     {row.client ? ` · ${row.client}` : ""}
                   </p>
                 </div>
 
                 {/* <span>, bukan <a> kedua: seluruh kartunya sudah satu tautan. */}
-                <span className="border-line text-ink flex items-center gap-2 border-t p-5 text-[11px] font-semibold tracking-[0.2em] uppercase">
+                <span className="project-card-action border-line text-ink flex items-center gap-2 border-t p-5 text-[11px] font-semibold tracking-[0.2em] uppercase">
                   {readMoreLabel}
                   <ArrowRight
                     aria-hidden

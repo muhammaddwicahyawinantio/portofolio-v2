@@ -5,9 +5,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
-const FLAG: Record<string, string> = {
-  en: "/images/icons8-us-flag-48.png",
-  id: "/images/icons8-indonesia-48.png",
+const LABEL: Record<string, string> = {
+  en: "EN",
+  id: "ID",
 };
 
 /**
@@ -20,7 +20,7 @@ export default function LocaleSwitch() {
   const t = useTranslations("locale");
 
   return (
-    <div aria-label={t("switchLabel")} className="locale-switch flex items-center gap-3">
+    <div aria-label={t("switchLabel")} className="locale-switch flex items-center gap-1.5">
       {routing.locales.map((locale) => (
         <Link
           key={locale}
@@ -29,16 +29,13 @@ export default function LocaleSwitch() {
           aria-label={t(locale)}
           aria-current={locale === active ? "true" : undefined}
           className={clsx(
-            "block transition-opacity duration-300 hover:opacity-100",
-            locale === active ? "opacity-100" : "opacity-55",
+            "border-line bg-card/70 text-ink-soft inline-flex h-8 min-w-8 items-center justify-center rounded-full border px-2 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase transition duration-300 hover:text-ink hover:opacity-100 md:h-9 md:min-w-9 md:text-[11px]",
+            locale === active
+              ? "border-ink/20 text-ink bg-card opacity-100 shadow-sm"
+              : "opacity-65",
           )}
         >
-          <img
-            src={FLAG[locale]}
-            alt=""
-            aria-hidden
-            className="locale-flag h-5 w-5 rounded-sm object-cover md:h-6 md:w-6"
-          />
+          {LABEL[locale]}
         </Link>
       ))}
     </div>

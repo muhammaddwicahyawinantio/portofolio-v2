@@ -45,10 +45,13 @@ export default function Header() {
         <div className="pointer-events-auto">
           <PillNav
             logo={
-              <Lottie
-                src="/lottie/cats-cats-cats/animations/12345.json"
-                className="nav-cat-icon"
-              />
+              <>
+                <Lottie
+                  src="/lottie/cats-cats-cats/animations/12345.json"
+                  className="nav-cat-icon"
+                />
+                <span className="nav-brand-wordmark">Dwi Studio</span>
+              </>
             }
             logoClassName="pill-logo-cat"
             logoAriaLabel="DwiStudio"

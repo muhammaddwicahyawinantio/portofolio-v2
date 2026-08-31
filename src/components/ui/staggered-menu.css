@@ -1,25 +1,13 @@
-/* StaggeredMenu dari ReactBits, diadaptasi.
-   Perbedaan struktural dari CSS sumber:
-   - .staggered-menu-wrapper / .staggered-menu-header / .sm-logo dibuang. Sumber
-     merender header + logo-nya sendiri; di sini toggle-nya duduk di dalam
-     PillNav yang sudah punya emblem dan bar.
-   - Panel dan prelayer duduk dalam .sm-surface yang `position: fixed`, bukan
-     absolute terhadap wrapper setinggi layar milik sumber. Surface itu setinggi
-     isi panel, jadi menu berhenti tepat di bawah item terakhir.
-   - Warna dari token Cream/White/Ink (docs/design.md), bukan ungu bawaan. */
+/* Mobile CardNav adaptation. The trigger still lives inside PillNav, while the
+   dropdown panel opens below the fixed header instead of taking over the page. */
 
 .sm-toggle {
   position: relative;
-  /* Mengapung di atas panel (z-60). Saat terbuka panel menutupi navbar; tanpa
-     ini tombolnya ikut tertutup sehingga di mobile menu tak bisa ditutup tanpa
-     berpindah halaman (tak ada Escape). Sumber ReactBits memang begini. */
   z-index: 65;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   height: var(--nav-h, 36px);
-  /* Chip tinta seperti logo & pil desktop. Tanpa latar, teksnya tak terbaca
-     di atas bagian terang foto hero tempat navbar mengapung. */
   padding: 0 0.9rem;
   background: var(--color-ink, #111110);
   border: none;
@@ -46,8 +34,6 @@
   height: 1em;
   overflow: hidden;
   white-space: nowrap;
-  /* Dipatok supaya lebar tombol tidak melompat saat teks berganti
-     Menu <-> Close di tengah animasi. */
   width: 3.2em;
 }
 
@@ -87,118 +73,109 @@
   will-change: transform;
 }
 
-/* --- Panel + lapisan penyapu --------------------------------------------- */
+.sm-icon-line:last-child {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
 
-/* Kotak bersama panel + lapisan penyapu. Tingginya ditentukan isi panel, bukan
-   setinggi layar, jadi ruang kosong di bawah item menu ikut terpotong. Lapisan
-   penyapu absolute inset-0 di dalamnya otomatis ikut tinggi yang sama —
-   tanpa wadah ini keduanya harus ditinggikan sendiri-sendiri dan lapisannya
-   akan menyembul sebagai pita gelap di bawah panel. */
 .sm-surface {
   position: fixed;
-  top: 0.75rem;
+  top: 3.55rem;
+  left: 0.75rem;
   right: 0.75rem;
-  width: min(calc(100vw - 1.5rem), 22rem);
-  max-height: calc(100dvh - 1.5rem);
-  /* Panel diparkir dengan translateY(-100%) = setinggi dirinya sendiri. Karena
-     surface-nya kini menjorok 0.75rem dari tepi layar, geseran itu menyisakan
-     sepotong bingkai setinggi jorokan tadi masih terlihat saat menu tertutup;
-     overflow di sini yang memotongnya. */
+  z-index: 54;
+  height: 0;
   overflow: hidden;
-  z-index: 55;
-  /* Wadahnya cuma penampung; hanya panel yang menerima klik. */
+  visibility: hidden;
   pointer-events: none;
-}
-
-.sm-prelayers {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.sm-prelayer {
-  position: absolute;
-  inset: 0;
-  transform: translateY(-100%);
+  will-change: height, opacity;
 }
 
 .staggered-menu-panel {
   position: relative;
-  z-index: 1;
-  max-height: calc(100dvh - 1.5rem);
-  background: var(--color-card, #ffffff);
+  width: 100%;
+  max-width: 25rem;
+  margin-left: auto;
+  background: color-mix(in srgb, var(--color-card, #ffffff) 88%, transparent);
   border: 1px solid var(--color-line, #e4dcc8);
-  border-radius: 20px;
+  border-radius: 24px;
   box-shadow:
-    0 1px 2px rgba(17, 17, 16, 0.04),
-    0 20px 48px -24px rgba(17, 17, 16, 0.14);
-  display: flex;
-  flex-direction: column;
-  padding: 5rem 1.5rem 1.75rem;
-  overflow-y: auto;
+    0 1px 2px rgba(17, 17, 16, 0.05),
+    0 22px 54px -28px rgba(17, 17, 16, 0.22);
+  padding: 0.5rem;
   pointer-events: auto;
-  transform: translateY(-100%);
+  backdrop-filter: blur(18px);
 }
 
-.sm-panel-inner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.sm-panel-list {
+.sm-card-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  counter-reset: smItem;
+  gap: 0.45rem;
 }
 
-.sm-panel-itemWrap {
-  position: relative;
+.sm-nav-card {
+  min-height: 4.15rem;
+  border-radius: 18px;
   overflow: hidden;
-  line-height: 1;
+  background: var(--color-ink, #111110);
+  color: var(--color-cream, #f6f1e7);
+  will-change: transform, opacity;
 }
 
-.sm-panel-item {
-  position: relative;
-  color: var(--color-ink, #111110);
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(2rem, 11vw, 2.75rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+.sm-nav-card:nth-child(2n) {
+  background: var(--color-charcoal, #24211d);
+}
+
+.sm-nav-card:nth-child(3n) {
+  background: var(--color-gold-ink, #7b6327);
+}
+
+.sm-card-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: inherit;
+  padding: 0.85rem 1rem;
+  color: inherit;
   text-decoration: none;
-  display: inline-block;
-  padding-right: 1.4em;
-  transition: color 0.25s;
 }
 
-.sm-panel-item:hover,
-.sm-panel-item:focus-visible {
-  color: var(--sm-accent, #7b6327);
+.sm-card-link:focus-visible {
+  outline: 2px solid var(--color-gold, #c7a94d);
+  outline-offset: -4px;
 }
 
-.sm-panel-itemLabel {
-  display: inline-block;
-  will-change: transform;
-  transform-origin: 50% 100%;
+.sm-card-index {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  opacity: 0.72;
 }
 
-.sm-panel-list[data-numbering] .sm-panel-item::after {
-  counter-increment: smItem;
-  content: counter(smItem, decimal-leading-zero);
-  position: absolute;
-  top: 0.15em;
-  right: 0.2em;
-  font-size: 14px;
+.sm-card-label {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 6vw, 1.55rem);
   font-weight: 500;
-  letter-spacing: 0;
-  color: var(--sm-accent, #7b6327);
-  pointer-events: none;
-  user-select: none;
-  opacity: var(--sm-num-opacity, 0);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sm-card-icon {
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.8;
+}
+
+@media (min-width: 480px) {
+  .sm-surface {
+    left: auto;
+    width: min(calc(100vw - 1.5rem), 25rem);
+  }
 }

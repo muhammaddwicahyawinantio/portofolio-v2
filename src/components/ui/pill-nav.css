@@ -46,16 +46,29 @@
 }
 
 .pill-logo-cat {
+  width: auto;
+  min-width: var(--nav-h);
   border: 1px solid var(--color-line);
   background: var(--pill-bg, var(--color-card));
-  padding: 0;
+  gap: 8px;
+  padding: 3px 12px 3px 3px;
   box-shadow: var(--shadow-card);
+  text-decoration: none;
+}
+
+.pill-logo-cat > * {
+  width: auto;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .pill-logo-cat .nav-cat-icon {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: calc(var(--nav-h) - 6px);
+  height: calc(var(--nav-h) - 6px);
+  flex: 0 0 auto;
   overflow: hidden;
   border-radius: inherit;
 }
@@ -63,6 +76,16 @@
 .pill-logo-cat .nav-cat-icon .lottie-display {
   width: 100% !important;
   height: 100% !important;
+}
+
+.nav-brand-wordmark {
+  color: var(--pill-text, var(--color-ink));
+  font-family: var(--font-rampart-one-family), var(--font-display), system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .pill-list {
@@ -167,6 +190,19 @@
     --nav-h: 34px;
     --pill-pad-x: 13px;
     gap: 6px;
+  }
+
+  .pill-logo-cat {
+    gap: 6px;
+    padding-right: 9px;
+  }
+
+  .pill-logo-cat > * {
+    gap: 6px;
+  }
+
+  .nav-brand-wordmark {
+    font-size: 0.86rem;
   }
 
   .pill-desktop-only {
