@@ -5,10 +5,10 @@ import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LocaleSwitch from "@/components/layout/LocaleSwitch";
-import Lottie from "@/components/ui/lottie";
 import PillNav from "@/components/ui/pill-nav";
 import { ShinyContent, shinyButtonAnimation, shinyButtonClassName } from "@/components/ui/shiny-button";
 import { NAV } from "@/lib/nav";
+import { cn } from "@/lib/utils";
 
 // Link next-intl dianimasikan langsung — CTA ini harus tetap tautan (navigasi
 // ke /contact), bukan <button> tanpa aksi seperti ShinyButton generiknya.
@@ -45,12 +45,10 @@ export default function Header() {
         <div className="pointer-events-auto">
           <PillNav
             logo={
-              <Lottie
-                src="/lottie/cats-cats-cats/animations/12345.json"
-                className="nav-cat-icon"
-              />
+              // eslint-disable-next-line @next/next/no-img-element -- logo.svg is a static brand asset already used in this codebase.
+              <img src="/logo.svg" alt="" className="nav-logo-image" />
             }
-            logoClassName="pill-logo-cat"
+            logoClassName="pill-logo-image"
             logoAriaLabel="DwiStudio"
             animateLogoOnHover={false}
             menuLabel={tMenu("open")}
@@ -86,10 +84,22 @@ export default function Header() {
 /**
  * CTA terpisah dari navbar: pill "shiny button" — sama persis efeknya dengan
  * ShinyButton, cuma akarnya <a> (lewat motion.create) supaya tetap tautan.
+ *
+ * Disembunyikan di bawah `md:`: digabung dengan logo+wordmark+tombol menu di
+ * kiri dan LocaleSwitch di kanan, lebar gabungannya melebihi lebar shell di
+ * setiap breakpoint mobile (360–430px, diukur lewat CDP) — pil ini yang paling
+ * lebar (~108px) dan yang terpotong viewport. Tidak hilang fungsinya: item nav
+ * "Contact" sudah ada di panel StaggeredMenu mobile (lihat komentar Header di
+ * atas), jadi CTA ini murni duplikat di mobile, sama seperti pil Contact yang
+ * juga sudah tidak dobel di desktop.
  */
 function CtaLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <MotionLink href={href} {...shinyButtonAnimation} className={shinyButtonClassName}>
+    <MotionLink
+      href={href}
+      {...shinyButtonAnimation}
+      className={cn("hidden md:inline", shinyButtonClassName)}
+    >
       <ShinyContent>{children}</ShinyContent>
     </MotionLink>
   );

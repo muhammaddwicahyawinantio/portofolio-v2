@@ -25,7 +25,7 @@ export default function PageHeader({
         <h1
           data-headline
           className={clsx(
-            "font-rampart-one font-display text-[clamp(2.8rem,8vw,7rem)] leading-[0.95] font-semibold tracking-normal text-balance",
+            "page-header-title font-rampart-one font-display text-[clamp(2.8rem,8vw,7rem)] leading-[0.95] font-semibold tracking-normal text-balance",
             centered ? "max-w-3xl" : "max-w-4xl",
           )}
         >
@@ -33,7 +33,7 @@ export default function PageHeader({
         </h1>
         <p
           className={clsx(
-            "text-ink-soft mt-6 text-base leading-[1.7] text-pretty md:text-lg",
+            "page-header-lead text-ink-soft mt-6 text-base leading-[1.7] text-pretty md:text-lg",
             centered ? "max-w-xl" : "max-w-lg",
           )}
         >

@@ -231,8 +231,8 @@ export default function PillNav({
           </ul>
         </div>
 
-        {/* Menu mobile: panel staggered, menggantikan hamburger + popover.
-            Tombolnya ikut alur navbar; panelnya fixed setinggi layar. */}
+        {/* Menu mobile: tombolnya ikut alur navbar; panel kartunya fixed tepat
+            di bawah header supaya tetap menyatu dengan chrome existing. */}
         <div className="pill-mobile-only">
           <StaggeredMenu items={items} openLabel={menuLabel} closeLabel={closeMenuLabel} />
         </div>

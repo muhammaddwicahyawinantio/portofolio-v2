@@ -14,10 +14,11 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "check": "tsx src/lib/admin/resources.check.ts && tsx src/lib/admin/upload.check.ts && tsx src/lib/wedding/validation.check.ts && tsx src/lib/wedding/animation-presets.check.ts"
+    "check": "tsx src/lib/admin/resources.check.ts && tsx src/lib/admin/upload.check.ts && tsx src/lib/wedding/validation.check.ts && tsx src/lib/wedding/animation-presets.check.ts && tsx src/components/wedding/templates/weddingly-free/utils.check.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@radix-ui/react-accordion": "^1.2.20",
     "@rive-app/react-canvas": "^4.33.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",

@@ -114,7 +114,7 @@ export default function Footer1({
                 // rootMargin 0 memicunya begitu masuk layar.
                 threshold={0}
                 rootMargin="0px"
-                className="font-rampart-one font-display text-ink/[0.07] w-full text-center text-[clamp(1.75rem,9vw,6rem)] leading-[1.05] font-medium tracking-[-0.01em] uppercase"
+                className="font-rampart-one font-display text-ink/[0.07] w-full text-center text-[clamp(2.5rem,13vw,15rem)] leading-[1.05] font-medium tracking-[-0.01em] uppercase"
               />
             ))}
           </ScrollScrub>

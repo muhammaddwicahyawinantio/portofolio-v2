@@ -39,6 +39,9 @@ yarn-error.log*
 # subagent-driven-development scratch (progress ledger, task briefs/reports)
 /.superpowers/
 
+# git worktrees created for isolated feature work
+/.worktrees/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

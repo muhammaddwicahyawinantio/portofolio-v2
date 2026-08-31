@@ -269,43 +269,31 @@ export default function Intro() {
       // overflow-hidden menahan teks yang meluncur supaya tidak pernah
       // menimbulkan scrollbar horizontal di layar sempit.
       //
-      // SENGAJA tanpa bg-*: yang menutup layar HANYA ketiga panel di bawah.
-      // Background di root ini adalah lapisan hitam opaque seukuran viewport
-      // yang duduk di belakang panel, jadi tirai yang menyusut tidak menyingkap
-      // apa pun sampai root-nya di-display:none — tirainya jadi tak terlihat.
-      className="intro-failsafe fixed inset-0 z-[70] flex items-center justify-center overflow-hidden"
+      // Root memakai permukaan sistem yang sama dengan halaman supaya intro
+      // pertama terasa bersih, bukan bidang gelap terpisah.
+      className="intro-failsafe bg-cream fixed inset-0 z-[70] flex items-center justify-center overflow-hidden"
     >
       {/* Tiga panel tirai arsitektural. Bergantian arah, bukan menyusut ke
           tengah: kolom 1 & 3 origin-top (ditarik ke atas), kolom 2 origin-bottom
           (ditarik ke bawah) — origin diatur lewat transform-origin CSS biasa,
           properti yang tidak disentuh xPercent/scale GSAP, jadi aman digabung.
           Tanpa garis jahitan: sekarang yang tersingkap adalah foto hero, bukan
-          halaman hitam, jadi tepi tiap panel sudah terbaca dari kontrasnya
+          halaman gelap, jadi tepi tiap panel sudah terbaca dari kontrasnya
           sendiri. -mx-px pada panel tengah menutup celah sub-pixel yang bisa
           muncul saat lebar viewport ganjil. */}
       <div className="absolute inset-0 flex">
-        <span data-panel className="bg-charcoal h-full flex-1 origin-top will-change-transform" />
+        <span data-panel className="bg-cream h-full flex-1 origin-top will-change-transform" />
         <span
           data-panel
-          className="bg-charcoal -mx-px h-full flex-1 origin-bottom will-change-transform"
+          className="bg-cream -mx-px h-full flex-1 origin-bottom will-change-transform"
         />
-        <span data-panel className="bg-charcoal h-full flex-1 origin-top will-change-transform" />
+        <span data-panel className="bg-cream h-full flex-1 origin-top will-change-transform" />
       </div>
-
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] opacity-30"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(250,247,240,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(250,247,240,0.08) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-        }}
-      />
 
       <div data-stage className="relative z-10 flex items-center will-change-transform">
         <span
           data-pulse
-          className="border-cream/10 absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border md:h-36 md:w-36"
+          className="border-line absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border md:h-36 md:w-36"
         />
         {/* Kotaknya kini LANDSCAPE 3:2, mengikuti proporsi logo.svg (1264x843).
             Kalau dipaksa persegi seperti emblem lama, logonya gepeng atau
@@ -316,9 +304,9 @@ export default function Intro() {
           className="relative flex h-9 w-[3.375rem] shrink-0 items-center justify-center md:h-12 md:w-[4.5rem]"
         >
           {/* logo.svg, bukan Emblem lagi. Berkasnya adalah plat putih penuh
-              dengan mark digunting di dalamnya, jadi di atas tirai charcoal ia
-              terbaca sebagai KARTU putih — kebetulan itu justru menyambung ke
-              bahasa kertas situs ini. rounded-card supaya sudutnya sama dengan
+              dengan mark digunting di dalamnya, jadi di atas permukaan kertas
+              ia terbaca sebagai kartu putih yang tetap menyambung ke bahasa
+              visual situs ini. rounded-card supaya sudutnya sama dengan
               permukaan lain; plat aslinya bersudut siku.
               Catatan: navbar masih memakai Emblem, jadi serah terima intro ke
               header tidak lagi memakai mark yang identik. */}
@@ -333,18 +321,18 @@ export default function Intro() {
         </span>
 
         <span data-word="dwi" className="ml-4 overflow-hidden md:ml-5">
-          <span className="text-cream block text-[17px] font-semibold tracking-[0.35em] whitespace-nowrap uppercase opacity-0 will-change-transform md:text-[26px]">
+          <span className="text-ink block text-[17px] font-semibold tracking-[0.35em] whitespace-nowrap uppercase opacity-0 will-change-transform md:text-[26px]">
             Dwi
           </span>
         </span>
 
         <span
           data-divider
-          className="bg-cream/40 mx-4 h-5 w-px origin-center opacity-0 will-change-transform md:mx-5 md:h-7"
+          className="bg-line mx-4 h-5 w-px origin-center opacity-0 will-change-transform md:mx-5 md:h-7"
         />
 
         <span data-word="studio" className="overflow-hidden">
-          <span className="text-cream/90 block text-[17px] font-medium tracking-[0.35em] whitespace-nowrap uppercase opacity-0 will-change-transform md:text-[26px]">
+          <span className="text-ink/90 block text-[17px] font-medium tracking-[0.35em] whitespace-nowrap uppercase opacity-0 will-change-transform md:text-[26px]">
             Studio
           </span>
         </span>
@@ -356,21 +344,21 @@ export default function Intro() {
             dari layar ponsel dan akan terpotong overflow-hidden root. */}
         <span
           data-tagline
-          className="text-cream/45 absolute top-full left-1/2 mt-4 -translate-x-1/2 text-[10px] font-semibold tracking-[0.3em] whitespace-nowrap uppercase opacity-0 will-change-transform md:mt-6 md:text-[13px]"
+          className="text-ink-soft absolute top-full left-1/2 mt-4 -translate-x-1/2 text-[10px] font-semibold tracking-[0.3em] whitespace-nowrap uppercase opacity-0 will-change-transform md:mt-6 md:text-[13px]"
         >
           {hero("line1")} {hero("line2")} {hero("line3")}
         </span>
 
         <span
           data-micro
-          className="text-cream/35 absolute top-full left-1/2 mt-10 -translate-x-1/2 font-mono text-[9px] tracking-[0.22em] whitespace-nowrap uppercase opacity-0 md:mt-14"
+          className="text-ink-soft/75 absolute top-full left-1/2 mt-10 -translate-x-1/2 font-mono text-[9px] tracking-[0.22em] whitespace-nowrap uppercase opacity-0 md:mt-14"
         >
           Preparing the first frame
         </span>
       </div>
 
-      <div className="absolute inset-x-6 bottom-8 z-10 mx-auto h-px max-w-52 overflow-hidden bg-cream/12 md:bottom-10">
-        <span data-meter className="bg-cream block h-full w-full origin-left scale-x-0" />
+      <div className="bg-line absolute inset-x-6 bottom-8 z-10 mx-auto h-px max-w-52 overflow-hidden md:bottom-10">
+        <span data-meter className="bg-ink block h-full w-full origin-left scale-x-0" />
       </div>
     </div>
   );
