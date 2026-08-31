@@ -35,6 +35,7 @@ export default function OpeningGate({
 
   useEffect(() => {
     if (preview) return;
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
     document.documentElement.style.scrollSnapType = "y proximity";
     return () => {
       document.documentElement.style.scrollSnapType = "";

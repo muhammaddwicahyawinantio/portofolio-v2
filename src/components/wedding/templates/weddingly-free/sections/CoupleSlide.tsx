@@ -53,6 +53,9 @@ export default function CoupleSlide({
     <section className="flex min-h-dvh flex-col justify-center bg-[var(--w-bg)] px-6 py-16">
       <div className="mx-auto w-full max-w-xl">
         <Eyebrow>The Bride &amp; Groom</Eyebrow>
+        {invitation.openingText ? (
+          <p className="mb-10 text-center text-sm leading-relaxed opacity-80">{invitation.openingText}</p>
+        ) : null}
         <div className="grid gap-10 sm:grid-cols-2">
           <Person
             name={invitation.brideName}
