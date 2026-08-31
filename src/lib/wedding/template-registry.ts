@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { WeddingPreviewData } from "@/components/wedding/types";
 import ClassicElegant from "@/components/wedding/templates/classic-elegant";
+import WeddinglyFree from "@/components/wedding/templates/weddingly-free";
 
 export type TemplateProps = {
   invitation: WeddingPreviewData;
@@ -17,6 +18,11 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
     label: "Classic Elegant",
     thumbnail: "/images/placeholder-1.jpg",
     component: ClassicElegant,
+  },
+  "weddingly-free": {
+    label: "Weddingly Free",
+    thumbnail: "/weddingly-free/thumbnail.svg",
+    component: WeddinglyFree,
   },
 };
 
