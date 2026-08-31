@@ -10,6 +10,11 @@ const LABEL: Record<string, string> = {
   id: "ID",
 };
 
+const FLAG: Record<string, string> = {
+  en: "/images/icons8-us-flag-48.png",
+  id: "/images/icons8-indonesia-48.png",
+};
+
 /**
  * Route-aware: usePathname dari next-intl mengembalikan path tanpa prefix locale,
  * jadi /en/about -> "/about" dan tombol ID mengarah ke /about, EN ke /en/about.
@@ -29,13 +34,14 @@ export default function LocaleSwitch() {
           aria-label={t(locale)}
           aria-current={locale === active ? "true" : undefined}
           className={clsx(
-            "border-line bg-card/70 text-ink-soft inline-flex h-8 min-w-8 items-center justify-center rounded-full border px-2 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase transition duration-300 hover:text-ink hover:opacity-100 md:h-9 md:min-w-9 md:text-[11px]",
+            "border-line bg-card/70 text-ink-soft inline-flex h-8 min-w-[3.95rem] items-center justify-center gap-1.5 rounded-full border px-2 font-mono text-[10px] leading-none font-semibold tracking-[0.12em] uppercase transition duration-300 hover:text-ink hover:opacity-100 md:h-9 md:min-w-[4.4rem] md:px-2.5 md:text-[11px]",
             locale === active
               ? "border-ink/20 text-ink bg-card opacity-100 shadow-sm"
               : "opacity-65",
           )}
         >
-          {LABEL[locale]}
+          <img src={FLAG[locale]} alt="" className="locale-flag shrink-0" />
+          <span>{LABEL[locale]}</span>
         </Link>
       ))}
     </div>
