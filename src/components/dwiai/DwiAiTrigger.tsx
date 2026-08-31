@@ -52,9 +52,9 @@ export function DwiAiTrigger() {
         <button
           type="button"
           onClick={openChat}
-          className="border-line bg-card/95 text-ink shadow-card group fixed right-3 bottom-3 z-50 inline-flex items-center gap-1.5 rounded-full border px-3 py-2 font-mono text-[10px] font-medium tracking-[0.12em] uppercase backdrop-blur transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] active:scale-[0.94] sm:right-5 sm:bottom-5 sm:px-4 sm:py-2.5 sm:text-[11px]"
+          className="bg-charcoal text-cream shadow-card group fixed right-3 bottom-3 z-50 inline-flex items-center gap-1.5 rounded-full border border-charcoal px-3 py-2 font-mono text-[10px] font-medium tracking-[0.12em] uppercase transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.04] hover:bg-charcoal-soft active:scale-[0.94] sm:right-5 sm:bottom-5 sm:px-4 sm:py-2.5 sm:text-[11px]"
         >
-          <Sparkles className="text-gold-ink h-3.5 w-3.5" strokeWidth={1.7} aria-hidden />
+          <Sparkles className="text-cream h-3.5 w-3.5" strokeWidth={1.7} aria-hidden />
           <span>Dwi AI</span>
           <Plus className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-90" strokeWidth={1.8} aria-hidden />
         </button>
