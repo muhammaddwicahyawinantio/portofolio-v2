@@ -33,8 +33,19 @@ export default function SectionMotion({
     if (!cls) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const reveal = () => el.classList.add("is-visible");
-    const cleanupClasses = () => el.classList.remove("wm", `wm-${cls}`, "is-visible");
+    // "wm" only carries will-change — needed while the entrance transition
+    // runs, wasted (a standing compositor layer) once it's done. Dropped on
+    // transitionend, not "is-visible" itself, so `.wm-${cls}.is-visible`
+    // still matches and the final visible state is untouched.
+    const dropWillChange = () => el.classList.remove("wm");
+    const reveal = () => {
+      el.classList.add("is-visible");
+      el.addEventListener("transitionend", dropWillChange, { once: true });
+    };
+    const cleanupClasses = () => {
+      el.removeEventListener("transitionend", dropWillChange);
+      el.classList.remove("wm", `wm-${cls}`, "is-visible");
+    };
     el.classList.add("wm", `wm-${cls}`);
 
     if (preview) {
