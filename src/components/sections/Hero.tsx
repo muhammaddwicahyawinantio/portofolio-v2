@@ -61,7 +61,7 @@ export default async function Hero({ locale }: { locale: string }) {
 
       <RiveAnimation
         src="/rive/angrycat.riv"
-        className="!absolute bottom-0 left-1/2 z-[1] h-[clamp(13rem,55vw,20rem)] w-[clamp(13rem,55vw,20rem)] -translate-x-1/2 opacity-95 sm:top-auto sm:right-[3rem] sm:bottom-0 sm:left-auto sm:translate-x-0 sm:h-[clamp(12rem,26vw,20rem)] sm:w-[clamp(12rem,26vw,20rem)]"
+        className="!absolute bottom-0 left-1/2 z-[1] h-[clamp(13rem,55vw,20rem)] w-[clamp(13rem,55vw,20rem)] -translate-x-1/2 translate-y-[18%] opacity-95 sm:top-auto sm:right-[3rem] sm:bottom-0 sm:left-auto sm:translate-x-0 sm:translate-y-0 sm:h-[clamp(12rem,26vw,20rem)] sm:w-[clamp(12rem,26vw,20rem)]"
         ariaLabel="Angry cat animation"
         clickSoundSrc="/soundeffect/blackcat-sound.mp3"
       />

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRive, type UseRiveParameters } from "@rive-app/react-canvas";
 import { cn } from "@/lib/utils";
+import { useInView } from "@/lib/use-in-view";
 
 // These numeric values are the runtime's stable StateMachineInputType values.
 // Keeping them here lets the adapter work with Rive files that expose their
@@ -183,6 +184,7 @@ export default function RiveAnimation({
     // from the DOM on mobile, leaving no readable context or hit target.
     useOffscreenRenderer: false,
   });
+  const inView = useInView(rootRef);
   const activeStateMachineName =
     stateMachine ?? (Array.isArray(stateMachines) ? stateMachines[0] : stateMachines) ?? rive?.stateMachineNames[0];
 
@@ -499,7 +501,7 @@ export default function RiveAnimation({
   }, [activeStateMachineName, playClickSound, rive, riveCanvas]);
 
   useEffect(() => {
-    if (!removeBackground || !riveCanvas) {
+    if (!removeBackground || !riveCanvas || !inView) {
       setIsProcessing(false);
       return;
     }
@@ -551,7 +553,7 @@ export default function RiveAnimation({
 
     frame = window.requestAnimationFrame(processFrame);
     return () => window.cancelAnimationFrame(frame);
-  }, [removeBackground, riveCanvas]);
+  }, [removeBackground, riveCanvas, inView]);
 
   return (
     <div
