@@ -68,19 +68,23 @@ const optional = parseFields(
 assert.equal(optional.position, null, "position publik opsional harus konsisten");
 assert.equal(optional.avatar, null, "opsional yang kosong harus null");
 
-// 5. Select hanya menerima opsi yang terdaftar.
-const media = getResource("media-gallery");
-assert.ok(media);
-const mediaForm = {
-  fileUrl: "/a.jpg",
-  fileType: "IMAGE",
-  caption_en: "a",
-  caption_id: "a",
-  order: "0",
+// 5. Select hanya menerima opsi yang terdaftar. Tidak ada resource nyata yang
+// masih memakai field select (media-gallery, satu-satunya pemakainya, sudah
+// dihapus) — resource sintetis di sini menjaga cabang itu di parseFields
+// tetap teruji untuk resource select berikutnya.
+const selectResource = {
+  key: "__select_check",
+  label: "Select check",
+  group: "content" as const,
+  fields: [
+    { name: "kind", label: "Kind", type: "select" as const, required: true, options: ["IMAGE", "VIDEO"] },
+  ],
+  columns: [],
+  orderBy: {},
 };
-assert.equal(parseFields(media, form(mediaForm)).fileType, "IMAGE");
+assert.equal(parseFields(selectResource, form({ kind: "IMAGE" })).kind, "IMAGE");
 assert.throws(
-  () => parseFields(media, form({ ...mediaForm, fileType: "AUDIO" })),
+  () => parseFields(selectResource, form({ kind: "AUDIO" })),
   /must be one of/,
   "nilai select di luar daftar harus ditolak",
 );
@@ -169,10 +173,8 @@ const heroForm = {
   subheadline_id: "",
   ctaText_en: "",
   ctaText_id: "",
-  ctaUrl: "",
 };
 const parsedHero = parseFields(hero, form(heroForm));
-assert.equal(parsedHero.ctaUrl, null, "CTA URL kosong harus null, bukan string kosong");
 assert.equal(parsedHero.subheadline_en, null, "subheadline kosong harus null");
 assert.equal(
   parsedHero.headline_en,

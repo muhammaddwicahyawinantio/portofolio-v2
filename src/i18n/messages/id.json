@@ -135,13 +135,15 @@
   "contactForm": {
     "name": "Nama",
     "email": "Email",
+    "whatsapp": "WhatsApp",
     "subject": "Subjek",
     "message": "Pesan",
     "send": "Kirim pesan",
     "sending": "Mengirim…",
-    "success": "Terima kasih. Pesan Anda sudah diterima dan akan ditinjau secepatnya.",
+    "success": "Terima kasih. Pesan Anda sudah masuk dan akan ditinjau secepatnya.",
     "errorRequired": "Mohon lengkapi semua kolom yang wajib diisi.",
     "errorEmail": "Mohon masukkan alamat email yang valid.",
+    "errorWhatsapp": "Mohon masukkan nomor WhatsApp yang valid.",
     "errorRate": "Terlalu banyak permintaan dari koneksi ini. Silakan coba kembali beberapa saat lagi.",
     "errorGeneric": "Terjadi kesalahan saat mengirim pesan. Silakan coba kembali."
   },

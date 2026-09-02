@@ -103,6 +103,7 @@
     0 22px 54px -28px rgba(17, 17, 16, 0.22);
   padding: 0.5rem;
   pointer-events: auto;
+  -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
 }
 

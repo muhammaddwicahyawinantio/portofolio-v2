@@ -19,6 +19,8 @@ export type Field = {
   options?: string[];
   /** Hanya untuk type "file": nilai atribut accept pada <input type="file">. */
   accept?: string;
+  /** Hanya untuk type "image": tolak video (mis. QR code — harus gambar). */
+  imageOnly?: boolean;
 };
 
 export type Resource = {
@@ -240,25 +242,6 @@ export const RESOURCES: Resource[] = [
     orderBy: { createdAt: "desc" },
   },
   {
-    key: "media-gallery",
-    label: "Media Gallery",
-    group: "content",
-    fields: [
-      { name: "fileUrl", label: "File URL", type: "url", required: true },
-      {
-        name: "fileType",
-        label: "File type",
-        type: "select",
-        required: true,
-        options: ["IMAGE", "VIDEO"],
-      },
-      ...bilingual("caption", "Caption", "text"),
-      orderField,
-    ],
-    columns: ["fileUrl", "fileType", "order"],
-    orderBy: { order: "asc" },
-  },
-  {
     key: "music",
     label: "Music",
     group: "content",
@@ -309,7 +292,7 @@ export const RESOURCES: Resource[] = [
     group: "settings",
     singleton: true,
     fields: [
-      { name: "qrImage", label: "QR Code Image", type: "image" },
+      { name: "qrImage", label: "QR Code Image", type: "image", imageOnly: true },
       { name: "qrLabel_en", label: "QR Label (EN)", type: "text" },
       { name: "qrLabel_id", label: "QR Label (ID)", type: "text" },
     ],

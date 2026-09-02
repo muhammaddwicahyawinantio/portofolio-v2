@@ -34,8 +34,8 @@ async function main() {
         year: "2026",
         client: "Muhammad Ilham",
         link: "https://moshmadness-production.up.railway.app/",
-        coverImage: "/images/placeholder-1.png",
-        images: ["/images/placeholder-1.png", "/images/placeholder-2.png"],
+        coverImage: "/images/placeholder.svg",
+        images: ["/images/placeholder.svg", "/images/placeholder.svg"],
         featured: true,
         archived: false,
         order: 0,
@@ -131,7 +131,7 @@ async function main() {
         "I did not start in software. My first job was on a logistics floor, counting stock and reconciling manifests, where a misplaced digit meant a truck went to the wrong city. That work taught me something no course did: systems fail at the seams, and the seams are where nobody is looking. I began writing small scripts to catch my own mistakes, then scripts to catch everyone else's, and somewhere in there the scripts became the job. I moved into IT support, then into development, and I have been building ever since. My approach has not changed much since the warehouse. I read the problem before I touch the keyboard, I trace the whole path rather than patch the loudest symptom, and I prefer the smallest change that actually holds. Good software, like good logistics, is mostly about removing the places where things can quietly go wrong.",
       fullStory_id:
         "Saya tidak memulai dari dunia perangkat lunak. Pekerjaan pertama saya di lantai logistik, menghitung stok dan mencocokkan manifes, tempat satu digit yang keliru berarti satu truk berangkat ke kota yang salah. Pekerjaan itu mengajarkan hal yang tidak diajarkan kursus mana pun: sistem runtuh di sambungannya, dan sambungan itu justru yang tidak pernah diperhatikan siapa pun. Saya mulai menulis skrip kecil untuk menangkap kesalahan saya sendiri, lalu skrip untuk menangkap kesalahan orang lain, dan entah sejak kapan skrip itu berubah jadi pekerjaannya. Saya pindah ke IT support, lalu ke pengembangan, dan sejak itu terus membangun. Cara kerja saya tidak banyak berubah sejak masa gudang. Saya membaca masalahnya sebelum menyentuh papan ketik, menelusuri seluruh jalurnya alih-alih menambal gejala yang paling berisik, dan memilih perubahan terkecil yang benar-benar bertahan. Perangkat lunak yang baik, seperti logistik yang baik, sebagian besar soal menghapus tempat-tempat di mana sesuatu bisa diam-diam melenceng.",
-      images: Array.from({ length: 5 }, () => "/images/hero.png"),
+      images: Array.from({ length: 5 }, () => "/images/placeholder.svg"),
     },
   });
 
@@ -199,9 +199,9 @@ async function main() {
   await prisma.certification.deleteMany({});
   await prisma.certification.createMany({
     data: [
-      { name: "Meta Front-End Developer", image: "/images/hero.png", order: 1 },
-      { name: "Google UX Design", image: "/images/hero.png", order: 2 },
-      { name: "AWS Cloud Practitioner", image: "/images/hero.png", order: 3 },
+      { name: "Meta Front-End Developer", image: "/images/placeholder.svg", order: 1 },
+      { name: "Google UX Design", image: "/images/placeholder.svg", order: 2 },
+      { name: "AWS Cloud Practitioner", image: "/images/placeholder.svg", order: 3 },
     ],
   });
 
@@ -214,7 +214,7 @@ async function main() {
     update: {},
     create: {
       id: "hero",
-      backgroundImage: "/images/hero.png",
+      backgroundImage: "/images/placeholder.svg",
       headline_en: "Build.\nGrow,\ngo digital.",
       headline_id: "Bangun.\nTumbuh,\nsecara digital.",
       subheadline_en: "Explore · See our services and work",
@@ -243,7 +243,7 @@ async function main() {
           "Every project opens with reading, not designing: who the audience is, what the competitors already own, and which single idea is worth defending.",
         description_id:
           "Tiap proyek dibuka dengan membaca, bukan mendesain: siapa audiensnya, apa yang sudah dikuasai pesaing, dan satu gagasan mana yang layak dipertahankan.",
-        image: "/images/hero.png",
+        image: "/images/placeholder.svg",
         order: 1,
       },
       {
@@ -254,7 +254,7 @@ async function main() {
           "Type, colour, and grid settle into one system — tested at a favicon and at a billboard before anything is called finished.",
         description_id:
           "Tipografi, warna, dan grid mengendap jadi satu sistem — diuji pada ukuran favicon dan papan iklan sebelum apa pun disebut selesai.",
-        image: "/images/hero.png",
+        image: "/images/placeholder.svg",
         order: 2,
       },
       {
@@ -265,7 +265,7 @@ async function main() {
           "Layouts are drawn in the browser, not only in a canvas, so what gets approved is what actually ships.",
         description_id:
           "Tata letak digambar langsung di browser, bukan cuma di kanvas, jadi yang disetujui memang yang benar-benar dikirim.",
-        image: "/images/hero.png",
+        image: "/images/placeholder.svg",
         order: 3,
       },
       {
@@ -276,7 +276,7 @@ async function main() {
           "You leave with a CMS you can run yourself — content, images, and copy editable without touching a line of code.",
         description_id:
           "Kamu pulang membawa CMS yang bisa kamu jalankan sendiri — konten, gambar, dan teks bisa diubah tanpa menyentuh satu baris kode.",
-        image: "/images/hero.png",
+        image: "/images/placeholder.svg",
         order: 4,
       },
     ],
@@ -636,16 +636,6 @@ async function main() {
     })),
   });
 
-  await prisma.mediaGalleryItem.deleteMany({});
-  await prisma.mediaGalleryItem.createMany({
-    data: Array.from({ length: 6 }, (_, i) => ({
-      fileUrl: `/images/placeholder-${(i % 3) + 1}.png`,
-      caption_en: `Frame ${i + 1}`,
-      caption_id: `Bingkai ${i + 1}`,
-      order: i,
-    })),
-  });
-
   await prisma.musicItem.deleteMany({});
   await prisma.musicItem.createMany({
     data: Array.from({ length: 3 }, (_, i) => ({
@@ -713,6 +703,8 @@ async function main() {
     data: [
       ["About", "Tentang", "/about"],
       ["Projects", "Proyek", "/projects"],
+      ["Services", "Layanan", "/services"],
+      ["Products", "Produk", "/products"],
       ["Contact", "Kontak", "/contact"],
     ].map(([en, id, url], i) => ({ label_en: en!, label_id: id!, url: url!, order: i })),
   });
@@ -765,8 +757,8 @@ async function main() {
       groomFullName: "Rizky Pratama",
       brideParents: "Putri dari Bapak Sutrisno & Ibu Wahyuni",
       groomParents: "Putra dari Bapak Hendra & Ibu Kartika",
-      bridePhoto: "/images/hero.png",
-      groomPhoto: "/images/hero.png",
+      bridePhoto: "/images/placeholder.svg",
+      groomPhoto: "/images/placeholder.svg",
       openingText:
         "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami.",
       quoteText:
@@ -774,7 +766,7 @@ async function main() {
       storyTitle: "Cerita Kami",
       storyText:
         "Berawal dari satu kelas kuliah di tahun 2019, pertemanan kami tumbuh perlahan menjadi sesuatu yang lebih dalam. Setelah lima tahun melewati suka dan duka bersama, kami memutuskan untuk melangkah ke jenjang yang lebih serius.",
-      coverImage: "/images/hero.png",
+      coverImage: "/images/placeholder.svg",
       publishedAt: new Date(),
       // Set animasi "perfect" — showcase cinematic cover, portrait parallax,
       // dan galeri horizontal-scroll.

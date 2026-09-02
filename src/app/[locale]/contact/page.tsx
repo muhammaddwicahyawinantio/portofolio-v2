@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Check } from "lucide-react";
 import { alternates } from "@/lib/seo";
+import { getContactSettings } from "@/lib/contact-settings";
 import Container from "@/components/ui/Container";
 import Section from "@/components/ui/Section";
 import ContactForm from "@/components/ui/ContactForm";
@@ -26,14 +27,20 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("contact");
+  const [t, contactSettings] = await Promise.all([getTranslations("contact"), getContactSettings()]);
   const points = [t("point1"), t("point2"), t("point3")];
+  const qrLabel =
+    (locale === "id" ? contactSettings?.qrLabel_id : contactSettings?.qrLabel_en) || t("qrFallback");
 
   return (
     <div className="interior-page">
       <Section className="pt-20 pb-10 md:pt-20 md:pb-12">
         <Container>
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+          {/* items-stretch (default grid behavior, dieksplisitkan): kartu form
+              kanan ikut tinggi kartu foto kiri lewat kolomnya sendiri, form
+              di dalamnya (h-full) yang benar-benar mengisi tinggi itu — lihat
+              komentar h-full di ContactForm.tsx. */}
+          <div className="grid items-stretch gap-8 lg:grid-cols-2 lg:gap-10">
             <div>
               <p className="eyebrow">{t("breadcrumb")}</p>
 
@@ -87,7 +94,11 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               </div>
             </div>
 
-            <ContactForm privacy={t("privacy")} compact />
+            <ContactForm
+              privacy={t("privacy")}
+              qrImage={contactSettings?.qrImage ?? null}
+              qrLabel={qrLabel}
+            />
           </div>
         </Container>
       </Section>

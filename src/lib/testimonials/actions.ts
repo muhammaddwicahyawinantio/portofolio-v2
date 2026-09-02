@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { clientIp, rateLimited } from "@/lib/rate-limit";
 import {
   isAvatarFile,
   storeTestimonialAvatar,
@@ -54,10 +55,19 @@ function firstZodError(error: unknown) {
   return null;
 }
 
+/** Sama seperti form kontak: server action publik tanpa autentikasi yang
+ *  menulis baris + menyimpan berkas unggahan, jadi ia butuh penjaga yang sama. */
+const PUBLIC_LIMIT = 5;
+const PUBLIC_WINDOW_MS = 60 * 60 * 1000;
+
 export async function submitPublicTestimonial(
   _prev: PublicTestimonialState,
   form: FormData,
 ): Promise<PublicTestimonialState> {
+  if (rateLimited(`testimonial:${await clientIp()}`, PUBLIC_LIMIT, PUBLIC_WINDOW_MS)) {
+    return { error: "Terlalu banyak kiriman. Coba lagi nanti." };
+  }
+
   let parsed;
 
   try {

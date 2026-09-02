@@ -16,6 +16,7 @@ import SmoothScroll from "@/components/animations/SmoothScroll";
 import CustomCursor from "@/components/animations/CustomCursor";
 import Intro from "@/components/animations/Intro";
 import { DwiAiTrigger } from "@/components/dwiai/DwiAiTrigger";
+import VisitorTracker from "@/components/analytics/VisitorTracker";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, alternates, localePath } from "@/lib/seo";
 import { getSocialLinks } from "@/lib/social-links";
@@ -176,6 +177,7 @@ export default async function LocaleLayout({
           </SmoothScroll>
           <DwiAiTrigger />
           <SocialFab socials={socials} />
+          <VisitorTracker />
         </NextIntlClientProvider>
       </body>
     </html>

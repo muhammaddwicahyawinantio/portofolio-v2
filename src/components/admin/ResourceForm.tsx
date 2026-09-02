@@ -98,6 +98,10 @@ export function ImageControl({
 
     const body = new FormData();
     body.set("file", file);
+    // Server tidak tahu field mana yang mengunggah — kirim "kind" supaya route
+    // upload bisa menolak video untuk field yang wajib gambar (mis. QR code),
+    // pola yang sama dengan "kind=audio" untuk musik.
+    if (field.imageOnly) body.set("kind", "image");
     const res = await fetch("/api/admin/upload", { method: "POST", body });
     const data = (await res.json()) as { url?: string; error?: string };
 
@@ -122,7 +126,7 @@ export function ImageControl({
     <div className="flex flex-col gap-3">
       <input ref={hiddenRef} type="hidden" name={field.name} value={url} readOnly />
       {url ? (
-        isVideoUrl(url) ? (
+        !field.imageOnly && isVideoUrl(url) ? (
           <video src={url} className="border-line h-32 w-32 border object-cover" muted />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase (local public/ URLs only)
@@ -135,7 +139,7 @@ export function ImageControl({
       )}
       <input
         type="file"
-        accept="image/*,video/mp4,video/webm"
+        accept={field.imageOnly ? "image/*" : "image/*,video/mp4,video/webm"}
         onChange={onFileChange}
         className={INPUT}
       />

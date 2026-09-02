@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState, type DragEvent } from "rea
 import { AnimatePresence, motion } from "motion/react";
 import { Plus, Send, Sparkles, Upload } from "lucide-react";
 import { submitPublicTestimonial, type PublicTestimonialState } from "@/lib/testimonials/actions";
-import { MAX_TESTIMONIAL_AVATAR_BYTES } from "@/lib/testimonials/constants";
+import { MAX_TESTIMONIAL_AVATAR_BYTES, MAX_TESTIMONIAL_AVATAR_MB } from "@/lib/testimonials/constants";
 
 const INPUT =
   "border-line focus-visible:border-ink focus-visible:ring-2 focus-visible:ring-gold-ink/35 bg-card text-ink w-full rounded-lg border px-4 py-3 text-sm outline-none transition-colors";
@@ -35,7 +35,9 @@ export default function ShareYourStoryForm({ locale }: { locale: string }) {
     if (!file.type.startsWith("image/"))
       return id ? "File harus berupa gambar." : "File must be an image.";
     if (file.size > MAX_TESTIMONIAL_AVATAR_BYTES) {
-      return id ? "Ukuran gambar maksimal 1MB." : "Image size must be 1MB or less.";
+      return id
+        ? `Ukuran gambar maksimal ${MAX_TESTIMONIAL_AVATAR_MB}MB.`
+        : `Image size must be ${MAX_TESTIMONIAL_AVATAR_MB}MB or less.`;
     }
     return "";
   }
@@ -169,7 +171,9 @@ export default function ShareYourStoryForm({ locale }: { locale: string }) {
                   <span className="font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
                     {fileName || (id ? "Unggah avatar opsional" : "Optional avatar upload")}
                   </span>
-                  <span className="text-ink-soft mt-1 text-xs">Image only, max 1MB</span>
+                  <span className="text-ink-soft mt-1 text-xs">
+                    Image only, max {MAX_TESTIMONIAL_AVATAR_MB}MB
+                  </span>
                   <input
                     ref={fileRef}
                     name="avatar"

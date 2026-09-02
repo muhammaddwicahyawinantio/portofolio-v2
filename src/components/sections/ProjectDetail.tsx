@@ -23,7 +23,7 @@ export default async function ProjectDetail({ locale, slug }: { locale: string; 
   const description = locale === "id" ? row.description_id : row.description_en;
   const caseStudy = locale === "id" ? row.caseStudy_id : row.caseStudy_en;
   const images = toStringArray(row.images);
-  const cover = row.coverImage ?? images[0] ?? "/images/placeholder-1.jpg";
+  const cover = row.coverImage ?? images[0] ?? "/images/placeholder.svg";
   const gallery = images.filter((u) => u !== cover);
 
   // Baris tabel detail: role/year selalu ada, client/link cuma kalau diisi
@@ -46,7 +46,7 @@ export default async function ProjectDetail({ locale, slug }: { locale: string; 
         <Container>
           <Link
             href="/projects"
-            className="text-ink-soft hover:text-ink mb-10 inline-block text-xs tracking-[0.2em] uppercase"
+            className="text-ink-soft hover:text-ink mb-10 inline-block py-1 text-xs tracking-[0.2em] uppercase"
           >
             ← {t("back")}
           </Link>

@@ -3,7 +3,7 @@
 import { useActionState, useRef, useState, type DragEvent } from "react";
 import { Upload } from "lucide-react";
 import { saveAdminTestimonial, type AdminTestimonialState } from "@/lib/testimonials/actions";
-import { MAX_TESTIMONIAL_AVATAR_BYTES } from "@/lib/testimonials/constants";
+import { MAX_TESTIMONIAL_AVATAR_BYTES, MAX_TESTIMONIAL_AVATAR_MB } from "@/lib/testimonials/constants";
 
 type TestimonialRecord = {
   id: string;
@@ -32,7 +32,8 @@ export default function TestimonialAdminForm({ record }: { record?: TestimonialR
 
   function validateFile(file: File) {
     if (!file.type.startsWith("image/")) return "Avatar must be an image file.";
-    if (file.size > MAX_TESTIMONIAL_AVATAR_BYTES) return "Avatar must be 1MB or less.";
+    if (file.size > MAX_TESTIMONIAL_AVATAR_BYTES)
+      return `Avatar must be ${MAX_TESTIMONIAL_AVATAR_MB}MB or less.`;
     return "";
   }
 
@@ -132,7 +133,7 @@ export default function TestimonialAdminForm({ record }: { record?: TestimonialR
           <span className="font-mono text-[11px] font-medium tracking-[0.12em] uppercase">
             {fileName || record?.avatar || "Upload avatar"}
           </span>
-          <span className="text-ink-soft mt-1 text-xs">Image only, max 1MB</span>
+          <span className="text-ink-soft mt-1 text-xs">Image only, max {MAX_TESTIMONIAL_AVATAR_MB}MB</span>
           <input
             ref={fileRef}
             name="avatar"

@@ -59,6 +59,7 @@ export default function Footer1({
   navLinks,
   socials,
   statement,
+  copyrightText,
   rights,
   builtWithLabel,
   termsLabel,
@@ -67,6 +68,7 @@ export default function Footer1({
   navLinks: FooterNavLink[];
   socials: SocialLinkItem[];
   statement: string;
+  copyrightText: string;
   rights: string;
   builtWithLabel: string;
   termsLabel: string;
@@ -144,8 +146,8 @@ export default function Footer1({
               {statement}
             </motion.p>
 
-            {/* Navigasi — sumbernya sama dengan header (lib/nav.ts), supaya
-                keduanya tidak pernah berbeda isi. */}
+            {/* Navigasi — sumbernya sama dengan header (NavigationItem lewat
+                CMS), supaya keduanya tidak pernah berbeda isi. */}
             <motion.nav
               data-footer-reveal
               variants={itemVariants}
@@ -196,7 +198,7 @@ export default function Footer1({
                 ))}
               </p>
               <p className="mt-1.5">
-                &copy; {new Date().getFullYear()} DwiStudio. {rights}
+                {copyrightText} {new Date().getFullYear()}. {rights}
               </p>
             </div>
 
@@ -205,13 +207,13 @@ export default function Footer1({
             <nav className={`flex flex-wrap items-center gap-x-7 gap-y-2 ${UTILITY}`}>
               <Link
                 href="/terms"
-                className="text-ink-soft hover:text-ink underline-offset-4 transition-colors hover:underline"
+                className="text-ink-soft hover:text-ink py-1 underline-offset-4 transition-colors hover:underline"
               >
                 {termsLabel}
               </Link>
               <Link
                 href="/privacy"
-                className="text-ink-soft hover:text-ink underline-offset-4 transition-colors hover:underline"
+                className="text-ink-soft hover:text-ink py-1 underline-offset-4 transition-colors hover:underline"
               >
                 {privacyLabel}
               </Link>

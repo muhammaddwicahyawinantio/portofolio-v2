@@ -4,6 +4,7 @@ import { getResource } from "@/lib/admin/resources";
 import { getDelegate } from "@/lib/admin/delegates";
 import { deleteRecord, toggleMessageRead } from "@/lib/admin/actions";
 import ResourceForm from "@/components/admin/ResourceForm";
+import DetailDialog from "@/components/admin/DetailDialog";
 
 /** Nilai apa pun dari Prisma dijadikan sesuatu yang aman untuk ditaruh di sel tabel. */
 function renderCell(value: unknown): string {
@@ -15,6 +16,37 @@ function renderCell(value: unknown): string {
   if (typeof value === "boolean") return value ? "Yes" : "No";
   const text = String(value);
   return text.length > 60 ? `${text.slice(0, 57)}…` : text;
+}
+
+/** Sama seperti renderCell, tanpa pemotongan — dipakai di dalam DetailDialog,
+    yang justru ada supaya isi lengkap (mis. body pesan) bisa dibaca. */
+function renderDetailValue(value: unknown): string {
+  if (value === null || value === undefined) return "—";
+  if (Array.isArray(value)) return `${value.length} item${value.length === 1 ? "" : "s"}`;
+  if (value instanceof Date) {
+    return value.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" });
+  }
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  return String(value);
+}
+
+/** Baris lengkap tanpa `id` internal — dipakai isi DetailDialog untuk resource
+    read-only (mis. Messages), yang kolom tabelnya sengaja tidak menampilkan
+    semua field (subjek muncul, isi pesan tidak). */
+function DetailFields({ row, columns }: { row: Record<string, unknown>; columns: string[] }) {
+  const ordered = [...columns, ...Object.keys(row).filter((k) => k !== "id" && !columns.includes(k))];
+  return (
+    <dl className="flex flex-col gap-3">
+      {ordered.map((key) => (
+        <div key={key}>
+          <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+            {key.replace(/_/g, " ")}
+          </dt>
+          <dd className="mt-1 text-sm break-words whitespace-pre-wrap">{renderDetailValue(row[key])}</dd>
+        </div>
+      ))}
+    </dl>
+  );
 }
 
 export default async function ResourcePage({
@@ -105,6 +137,11 @@ export default async function ResourcePage({
                     ))}
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-4">
+                        {resource.readOnly ? (
+                          <DetailDialog title={`${resource.label} detail`}>
+                            <DetailFields row={row} columns={resource.columns} />
+                          </DetailDialog>
+                        ) : null}
                         {resource.readOnly ? (
                           <form action={toggleMessageRead}>
                             <input type="hidden" name="__id" value={String(row.id)} />

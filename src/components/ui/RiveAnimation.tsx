@@ -11,6 +11,8 @@ import { useInView } from "@/lib/use-in-view";
 const STATE_MACHINE_INPUT_TRIGGER = 58;
 const STATE_MACHINE_INPUT_BOOLEAN = 59;
 const TOUCH_HOVER_HOLD_MS = 900;
+/** ~30fps. Lihat processFrame di bawah untuk alasan penjatahannya. */
+const COMPOSITE_INTERVAL_MS = 1000 / 30;
 
 export type RiveAnimationProps = {
   /** Public URL or path to a `.riv` file, for example `/rive/cat.riv`. */
@@ -520,8 +522,24 @@ export default function RiveAnimation({
 
     setIsProcessing(true);
     let frame = 0;
+    let lastCompositeAt = 0;
 
-    const processFrame = () => {
+    const processFrame = (now: number) => {
+      // Satu lintasan compositor = getImageData/readPixels SELURUH kanvas
+      // (tarikan GPU->CPU yang menyinkronkan pipeline), flood fill BFS atas
+      // setiap piksel, lalu putImageData balik. Pada kanvas ber-DPR 3 di ponsel
+      // itu ratusan ribu piksel; menjalankannya tiap rAF memakan main thread
+      // persis saat pengguna sedang menggulir.
+      //
+      // Dibatasi ~30fps: penghapus latar hanya perlu MENGIKUTI gambar, bukan
+      // menyamai laju rendernya. rAF-nya sendiri tetap tiap frame (murah) —
+      // yang dijatah adalah kerja pikselnya.
+      if (now - lastCompositeAt < COMPOSITE_INTERVAL_MS) {
+        frame = window.requestAnimationFrame(processFrame);
+        return;
+      }
+      lastCompositeAt = now;
+
       const width = riveCanvas.width;
       const height = riveCanvas.height;
       if (width > 0 && height > 0) {

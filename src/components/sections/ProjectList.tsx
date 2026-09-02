@@ -47,7 +47,7 @@ export default async function ProjectList({
           const cover =
             (row.coverImage && !isVideoUrl(row.coverImage) ? row.coverImage : null) ??
             gallery[0] ??
-            "/images/placeholder-1.jpg";
+            "/images/placeholder.svg";
           const title = id ? row.title_id : row.title_en;
           const description = id ? row.description_id : row.description_en;
 

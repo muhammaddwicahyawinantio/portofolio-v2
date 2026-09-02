@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\"",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
@@ -14,7 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "check": "tsx src/lib/admin/resources.check.ts && tsx src/lib/admin/upload.check.ts && tsx src/lib/wedding/validation.check.ts && tsx src/lib/wedding/animation-presets.check.ts && tsx src/components/wedding/templates/weddingly-free/utils.check.ts"
+    "check": "tsx src/lib/admin/resources.check.ts && tsx src/lib/admin/upload.check.ts && tsx src/lib/rate-limit.check.ts && tsx src/lib/wedding/validation.check.ts && tsx src/lib/wedding/animation-presets.check.ts && tsx src/components/wedding/templates/weddingly-free/utils.check.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
