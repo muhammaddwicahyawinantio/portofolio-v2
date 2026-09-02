@@ -19,6 +19,11 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided." }, { status: 400 });
   }
+  // Image-only fields (mis. Contact QR code) — server-side, not trusting the
+  // client's accept attribute.
+  if (form.get("kind") === "image" && !file.type.startsWith("image/")) {
+    return NextResponse.json({ error: "Only image files are allowed." }, { status: 400 });
+  }
   // Audio uploads (wedding background music) are MP3-only with a tighter cap —
   // server-side, not trusting the client's accept attribute.
   if (form.get("kind") === "audio") {

@@ -4,14 +4,21 @@ import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
-import { MAX_TESTIMONIAL_AVATAR_BYTES } from "@/lib/testimonials/constants";
+import { MAX_TESTIMONIAL_AVATAR_BYTES, MAX_TESTIMONIAL_AVATAR_MB } from "@/lib/testimonials/constants";
 
+/**
+ * SVG sengaja TIDAK ada di sini. submitPublicTestimonial() adalah server action
+ * tanpa autentikasi — siapa pun bisa mengunggah avatar. SVG adalah dokumen XML
+ * yang boleh memuat <script>, dan berkasnya disajikan apa adanya dari
+ * /uploads/testimonials/*.svg, satu origin dengan situsnya: membukanya
+ * langsung mengeksekusi script itu dengan cookie sesi admin ikut terkirim.
+ * Format lain di bawah aman karena sharp me-rasterkannya jadi webp.
+ */
 const IMAGE_TYPES: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
   "image/gif": "gif",
-  "image/svg+xml": "svg",
 };
 
 export function isAvatarFile(file: unknown): file is File {
@@ -24,7 +31,7 @@ export function validateAvatarFile(file: File) {
   }
 
   if (file.size > MAX_TESTIMONIAL_AVATAR_BYTES) {
-    throw new Error("Avatar is too large. Maximum size is 1MB.");
+    throw new Error(`Avatar is too large. Maximum size is ${MAX_TESTIMONIAL_AVATAR_MB}MB.`);
   }
 }
 
@@ -39,12 +46,6 @@ export async function storeTestimonialAvatar(file: File): Promise<string> {
 
   const dir = await ensureUploadDir();
   const buffer = Buffer.from(await file.arrayBuffer());
-
-  if (file.type === "image/svg+xml") {
-    const filename = `${randomUUID()}.svg`;
-    await writeFile(path.join(dir, filename), buffer);
-    return `/uploads/testimonials/${filename}`;
-  }
 
   try {
     const image = sharp(buffer).rotate();

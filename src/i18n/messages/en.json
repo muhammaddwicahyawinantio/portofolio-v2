@@ -135,6 +135,7 @@
   "contactForm": {
     "name": "Name",
     "email": "Email",
+    "whatsapp": "WhatsApp",
     "subject": "Subject",
     "message": "Message",
     "send": "Send message",
@@ -142,6 +143,7 @@
     "success": "Thanks — your message has been received and will be reviewed shortly.",
     "errorRequired": "Please fill in every required field.",
     "errorEmail": "Please enter a valid email address.",
+    "errorWhatsapp": "Please enter a valid WhatsApp number.",
     "errorRate": "Too many requests from this connection. Please try again shortly.",
     "errorGeneric": "Something went wrong while sending your message. Please try again."
   },

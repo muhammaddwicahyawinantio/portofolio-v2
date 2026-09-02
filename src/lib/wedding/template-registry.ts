@@ -16,7 +16,7 @@ type TemplateEntry = { label: string; thumbnail: string; component: ComponentTyp
 export const TEMPLATES: Record<string, TemplateEntry> = {
   "classic-elegant": {
     label: "Classic Elegant",
-    thumbnail: "/images/placeholder-1.jpg",
+    thumbnail: "/images/placeholder.svg",
     component: ClassicElegant,
   },
   "weddingly-free": {

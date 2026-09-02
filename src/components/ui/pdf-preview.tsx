@@ -71,7 +71,7 @@ const PdfPreview = forwardRef<
     errorLabel,
     closeLabel,
     triggerIcon = DEFAULT_TRIGGER_ICON,
-    triggerClassName = "text-ink hover:text-gold-ink inline-flex items-center gap-2 text-sm transition-colors",
+    triggerClassName = "text-ink hover:text-gold-ink inline-flex items-center gap-2 py-1 text-sm transition-colors",
     hideTrigger = false,
   },
   forwardedRef,

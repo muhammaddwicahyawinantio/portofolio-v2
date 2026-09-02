@@ -17,6 +17,11 @@ import {
 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import AdminClock from "@/components/admin/AdminClock";
+
+// Data admin (pesan, testimonial baru, dll) harus selalu terbaru — jangan
+// pernah disajikan dari cache statis/ISR.
+export const dynamic = "force-dynamic";
 
 const ACCENT = {
   blue: "#2563eb",
@@ -432,8 +437,7 @@ export default async function AdminDashboard() {
     newThisMonth,
     features,
     testimonials,
-    media,
-    visitors,
+    recentVisitors,
     recentMessages,
     recentProjects,
   ] = await Promise.all([
@@ -445,8 +449,9 @@ export default async function AdminDashboard() {
     prisma.project.count({ where: { createdAt: { gte: startOfMonth } } }),
     prisma.feature.count(),
     prisma.testimonial.count(),
-    prisma.mediaGalleryItem.count(),
-    prisma.visitorStat.findMany({ orderBy: { date: "asc" }, take: 14 }),
+    // desc+take lalu dibalik: "asc take 14" polos mengambil 14 baris TERTUA,
+    // bukan 14 hari terakhir, begitu tabelnya sudah lebih dari 2 minggu.
+    prisma.visitorStat.findMany({ orderBy: { date: "desc" }, take: 14 }),
     prisma.message.findMany({ orderBy: { createdAt: "desc" }, take: 6 }),
     prisma.project.findMany({
       orderBy: { updatedAt: "desc" },
@@ -454,13 +459,13 @@ export default async function AdminDashboard() {
       select: { id: true, title_en: true, updatedAt: true, featured: true },
     }),
   ]);
+  const visitors = [...recentVisitors].reverse();
 
   const contentMix = [
     { label: "Projects", value: projects, color: ACCENT.blue },
     { label: "Services", value: services, color: ACCENT.violet },
     { label: "Features", value: features, color: ACCENT.emerald },
     { label: "Testimonials", value: testimonials, color: ACCENT.amber },
-    { label: "Media", value: media, color: ACCENT.slate },
   ].filter((d) => d.value > 0);
 
   // Feed notifikasi = pesan belum dibaca + proyek yang baru diperbarui, digabung
@@ -504,6 +509,7 @@ export default async function AdminDashboard() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          <AdminClock />
           <Link href="/admin/projects" className="admin-search-chip">
             <span className="admin-search-icon" aria-hidden>
               <Search className="h-4 w-4" strokeWidth={1.7} />
@@ -522,7 +528,9 @@ export default async function AdminDashboard() {
         </div>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* grid-cols-3, bukan 4: kartunya memang tiga (Projects/Services/Messages),
+          dan kolom keempat cuma menyisakan lubang kosong di kanan pada xl. */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           label="Total Projects"
           value={projects}

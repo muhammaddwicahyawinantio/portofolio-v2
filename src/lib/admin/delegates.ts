@@ -34,7 +34,6 @@ const DELEGATES: Record<string, Delegate> = {
   skills: prisma.skill as unknown as Delegate,
   certifications: prisma.certification as unknown as Delegate,
   testimonials: prisma.testimonial as unknown as Delegate,
-  "media-gallery": prisma.mediaGalleryItem as unknown as Delegate,
   music: prisma.musicItem as unknown as Delegate,
   films: prisma.filmItem as unknown as Delegate,
   footer: prisma.footerContent as unknown as Delegate,

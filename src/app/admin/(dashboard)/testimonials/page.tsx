@@ -3,6 +3,7 @@ import { toggleTestimonialStatus } from "@/lib/testimonials/actions";
 import { prisma } from "@/lib/prisma";
 import TestimonialAdminForm from "@/components/admin/TestimonialAdminForm";
 import TestimonialDeleteForm from "@/components/admin/TestimonialDeleteForm";
+import DetailDialog from "@/components/admin/DetailDialog";
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
@@ -109,6 +110,58 @@ export default async function AdminTestimonialsPage({
                   <td className="text-ink-soft px-6 py-4">{formatDate(row.createdAt)}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-4">
+                      <DetailDialog title="Testimonial detail">
+                        <div className="flex flex-col gap-4">
+                          {row.avatar ? (
+                            // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase
+                            <img
+                              src={row.avatar}
+                              alt=""
+                              className="border-line size-20 rounded-full border object-cover"
+                            />
+                          ) : null}
+                          <dl className="flex flex-col gap-3">
+                            <div>
+                              <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+                                Name
+                              </dt>
+                              <dd className="mt-1 text-sm">{row.name}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+                                Position
+                              </dt>
+                              <dd className="mt-1 text-sm">{row.position ?? "—"}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+                                Rating
+                              </dt>
+                              <dd className="mt-1 text-sm">{row.rating}/5</dd>
+                            </div>
+                            <div>
+                              <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+                                Status
+                              </dt>
+                              <dd className="mt-1 text-sm">{row.isActive ? "Active" : "Pending"}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+                                Content
+                              </dt>
+                              <dd className="mt-1 text-sm break-words whitespace-pre-wrap">
+                                {row.content}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="text-ink-soft font-mono text-[10px] font-medium tracking-[0.12em] uppercase">
+                                Created
+                              </dt>
+                              <dd className="mt-1 text-sm">{formatDate(row.createdAt)}</dd>
+                            </div>
+                          </dl>
+                        </div>
+                      </DetailDialog>
                       <Link
                         href={`/admin/testimonials?id=${row.id}`}
                         className="text-ink-soft hover:text-ink text-xs"

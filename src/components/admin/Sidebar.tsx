@@ -9,7 +9,6 @@ import {
   FolderKanban,
   Package,
   Image as ImageIcon,
-  Images,
   Quote,
   User,
   GraduationCap,
@@ -62,9 +61,9 @@ function sectionStyle(key: string): CSSProperties {
 
 /* Struktur navigasi CMS. Dua level: ikon rail (section) → panel detail (item).
    Setiap item menunjuk ke rute /admin/[resource] yang SUDAH ada — hanya label &
-   pengelompokannya yang baru (mis. "Pricing" = resource `services`). Lima
-   resource yang tak disebut plan (hero, about, skills, testimonials, media)
-   dilipat ke grup terdekat supaya tak ada akses/data yang hilang. */
+   pengelompokannya yang baru (mis. "Pricing" = resource `services`). Resource
+   yang tak disebut plan (hero, about, skills, testimonials) dilipat ke grup
+   terdekat supaya tak ada akses/data yang hilang. */
 type NavItem = { label: string; href: string; icon: LucideIcon };
 type NavSection = {
   key: string;
@@ -91,7 +90,6 @@ const NAV: NavSection[] = [
       { label: "Projects", href: "/admin/projects", icon: FolderKanban },
       { label: "Product Digital", href: "/admin/products", icon: Package },
       { label: "Hero", href: "/admin/hero", icon: ImageIcon },
-      { label: "Media", href: "/admin/media-gallery", icon: Images },
       { label: "Testimonials", href: "/admin/testimonials", icon: Quote },
     ],
   },
