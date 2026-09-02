@@ -31,34 +31,60 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <div className="interior-page">
-      <Section className="pt-24 pb-12 md:pt-28 md:pb-16">
+      <Section className="pt-20 pb-10 md:pt-20 md:pb-12">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
             <div>
               <p className="eyebrow">{t("breadcrumb")}</p>
 
+              {/* contact-heading: [data-headline].font-rampart-one.font-display
+                  di .interior-page punya font-size !important global
+                  (globals.css, clamp(3rem,8vw,5.4rem) — dipakai semua
+                  halaman interior lain juga), jadi utility text-[clamp...]
+                  di sini tidak berpengaruh sama sekali. Class penanda ini
+                  dipakai supaya override-nya scoped ke /contact saja, tidak
+                  ikut mengecilkan headline halaman interior lain. */}
               <h1
                 data-headline
-                className="font-rampart-one font-display mt-5 text-[clamp(2.1rem,5.2vw,3.75rem)] leading-[1.04] font-medium tracking-[-0.01em] text-balance"
+                className="contact-heading font-rampart-one font-display mt-4 font-medium tracking-[-0.01em] text-balance"
               >
                 {t("title")}
               </h1>
 
-              <p className="text-ink-soft mt-4 max-w-md text-base leading-[1.65] text-pretty md:text-lg">
+              <p className="text-ink-soft mt-3 max-w-md text-sm leading-[1.6] text-pretty md:text-base">
                 {t("lead")}
               </p>
 
-              <ul className="mt-7 flex flex-col gap-2.5">
+              <ul className="mt-5 flex flex-col gap-2">
                 {points.map((point) => (
-                  <li key={point} className="flex items-center gap-3">
+                  <li key={point} className="flex items-center gap-2.5">
                     <Check
                       aria-hidden
-                      className="bg-card text-ink size-5 shrink-0 rounded-full p-1.5"
+                      className="bg-card text-ink size-4 shrink-0 rounded-full p-1"
                     />
-                    <span className="text-ink-soft text-sm">{point}</span>
+                    <span className="text-ink-soft text-xs">{point}</span>
                   </li>
                 ))}
               </ul>
+
+              {/* h-auto (bukan aspect-ratio + object-cover): foto ini kolase
+                  produk, memotongnya sama saja menghilangkan sebagian
+                  konten. Tanpa aspect paksaan, <img> selalu tampil utuh
+                  sesuai rasio aslinya (1200×800) di lebar kartu berapa pun —
+                  pas di desktop (kartu sempit di kolom kiri) maupun mobile
+                  (kartu selebar layar). */}
+              <div className="border-line bg-card rounded-card mt-6 overflow-hidden border p-2">
+                {/* eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase */}
+                <img
+                  src="/images/dwi.png"
+                  alt={
+                    locale === "id"
+                      ? "Contoh produk yang pernah kami kembangkan"
+                      : "Examples of products we've built"
+                  }
+                  className="rounded-card h-auto w-full"
+                />
+              </div>
             </div>
 
             <ContactForm privacy={t("privacy")} compact />

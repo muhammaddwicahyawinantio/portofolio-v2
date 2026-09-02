@@ -58,9 +58,13 @@ export const RESOURCES: Resource[] = [
       { name: "paragraph_id", label: "Paragraph (ID)", type: "textarea" },
       { name: "metrics_en", label: "Social Proof / Mini Metrics (EN, one per line)", type: "list" },
       { name: "metrics_id", label: "Social Proof / Mini Metrics (ID, one per line)", type: "list" },
-      { name: "ctaText_en", label: "CTA Text (EN)", type: "text" },
-      { name: "ctaText_id", label: "CTA Text (ID)", type: "text" },
-      { name: "ctaUrl", label: "CTA URL", type: "url" },
+      { name: "ctaText_en", label: "Proposal Button Text (EN)", type: "text" },
+      { name: "ctaText_id", label: "Proposal Button Text (ID)", type: "text" },
+      // Dua berkas terpisah, bukan satu: tombol CTA hero menampilkan pemilih
+      // bahasa dulu, lalu membuka pratinjau proposal PDF sesuai pilihan —
+      // lihat Hero.tsx (ProposalButton) dan route upload (cap 10MB PDF).
+      { name: "proposalPdf_id", label: "Proposal PDF — Indonesia (maks 10MB)", type: "file", accept: "application/pdf" },
+      { name: "proposalPdf_en", label: "Proposal PDF — English (maks 10MB)", type: "file", accept: "application/pdf" },
     ],
     columns: ["headline_en"],
     orderBy: { id: "asc" },

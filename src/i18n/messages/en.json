@@ -26,7 +26,15 @@
     "line3": "go digital.",
     "lead": "DwiStudio designs and builds websites, web apps, and digital solutions that combine modern design, performance, and the features your business actually needs.",
     "scroll": "Explore",
-    "scrollHint": "See our services and work"
+    "scrollHint": "See our services and work",
+    "proposalDownload": "Download Proposal",
+    "proposalLoading": "Loading proposal…",
+    "proposalError": "The proposal failed to load.",
+    "proposalClose": "Close preview",
+    "proposalChooseLanguage": "Choose proposal language",
+    "proposalChooseClose": "Close language picker",
+    "proposalLanguageId": "Indonesian",
+    "proposalLanguageEn": "English"
   },
   "cta": {
     "eyebrow": "Start a project",
@@ -84,7 +92,10 @@
     "visitSite": "Visit website",
     "back": "Back to projects",
     "openHint": "Double click / double tap a panel to open its case study",
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "detailsLabel": "Project details",
+    "overviewLabel": "Overview",
+    "galleryLabel": "Gallery"
   },
   "contact": {
     "eyebrow": "Contact",

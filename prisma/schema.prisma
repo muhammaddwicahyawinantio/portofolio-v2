@@ -109,7 +109,11 @@ model HeroSection {
   metrics_id      Json?
   ctaText_en      String?
   ctaText_id      String?
-  ctaUrl          String?
+  // Dua file terpisah, bukan satu ctaUrl: tombol proposal hero menampilkan
+  // pemilih bahasa lebih dulu, lalu membuka pratinjau modal file yang sesuai
+  // (lihat resources.ts field type "file" dan ProposalButton di Hero.tsx).
+  proposalPdf_en  String?
+  proposalPdf_id  String?
 }
 
 // Alasan klien memilih studio ini. `icon` emoji, bukan unggahan: pola yang

@@ -3,26 +3,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
-/**
- * Teks yang tersingkap kata demi kata mengikuti scroll — adaptasi ScrollReveal
- * milik ReactBits (reactbits.dev/r/ScrollReveal-TS-TW).
- *
- * Tiga penyimpangan dari sumbernya, semuanya wajib di repo ini:
- *
- * 1. Cleanup aslinya `ScrollTrigger.getAll().forEach(t => t.kill())` — itu
- *    membunuh SETIAP ScrollTrigger di halaman, bukan miliknya sendiri. Di sini
- *    ia akan mencabut paku FeatureSteps, parallax ScrollScrub, dan seluruh
- *    Reveal begitu komponen ini di-unmount. Diganti gsap.matchMedia(), yang
- *    hanya merevert apa yang dibuat di dalamnya.
- * 2. Import dari "@/lib/gsap", bukan "gsap" langsung: ScrollTrigger didaftarkan
- *    sekali di sana, dan hanya di sisi browser.
- * 3. Membungkus dengan <div>, bukan <h2> yang berisi <p>. Ini paragraf cerita,
- *    bukan judul — dan <p> di dalam <h2> keliru secara semantik.
- *
- * matchMedia sekaligus menangani prefers-reduced-motion: tanpa gerak, tidak ada
- * tween sama sekali dan teks tampil penuh apa adanya. Ia juga yang mematikan
- * blur di layar sempit — lihat komentar di dalam efeknya.
- */
 export default function ScrollReveal({
   children,
   enableBlur = true,

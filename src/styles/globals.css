@@ -490,6 +490,22 @@ main .interior-page [data-headline].font-rampart-one.font-display {
   line-height: 0.94;
 }
 
+/* /contact: halaman ini isi utamanya formulir, bukan judul, jadi headline-nya
+   sengaja lebih kecil dari standar interior-page di atas. Class tambahan
+   `.contact-heading` menaikkan spesifisitas selektor supaya cuma menimpa
+   halaman ini, tanpa mengubah headline halaman interior lain yang memakai
+   aturan generik di atas. */
+main .interior-page [data-headline].font-rampart-one.font-display.contact-heading {
+  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  line-height: 1.08;
+}
+
+@media (max-width: 767px) {
+  main .interior-page [data-headline].font-rampart-one.font-display.contact-heading {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+  }
+}
+
 main .interior-page p:not(.eyebrow):not([class*="font-mono"]) {
   font-size: clamp(0.98rem, 0.24vw + 0.93rem, 1.12rem);
   line-height: 1.68;
@@ -648,6 +664,16 @@ main .hero-heading {
   font-size: clamp(3rem, 8.4vw, 7.25rem) !important;
   line-height: 0.88;
   letter-spacing: 0;
+}
+
+/* Kucing pindah ke tengah hero (lihat Hero.tsx) sehingga headline perlu
+   sedikit lebih kecil di desktop supaya tidak menabrak siluetnya — pola yang
+   sama dengan judul "Dwi Studio" di panel Work yang juga duduk di depan
+   kucing Rive. Mobile tidak disentuh, posisi kucingnya juga tidak berubah. */
+@media (min-width: 768px) {
+  main .hero-heading {
+    font-size: clamp(2.5rem, 6vw, 5.5rem) !important;
+  }
 }
 
 .hero-visual {
@@ -1538,10 +1564,11 @@ main .hero-heading {
 /* Turun dari clamp(5rem, 22vw, 18rem): itu dikalibrasi untuk "Portofolio"
    (eyebrow lama). Wordmark "Dwi Studio" yang menggantikannya butuh langit-langit
    jauh lebih rendah — di layar lebar 18rem meluber keluar Container (lihat
-   riwayat commit). 8rem sejajar dengan .home-contact-heading (8.2rem), heading
-   besar lain di beranda ini. */
+   riwayat commit). Diperkecil sedikit lagi dari clamp(2.75rem, 10vw, 8rem):
+   kartu dwi.png di bawahnya sekarang diperbesar, jadi judul turun satu
+   tingkat supaya kartu jadi fokus yang lebih besar dibanding sebelumnya. */
 main .home-work-heading {
-  font-size: clamp(2.75rem, 10vw, 8rem) !important;
+  font-size: clamp(2.5rem, 9vw, 7rem) !important;
 }
 
 main .home-benefits-heading {
