@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
 import { useLenis } from "lenis/react";
 import { gsap } from "@/lib/gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -14,38 +13,13 @@ const FLUID = CustomEase.create("dwiFluid", "0.16, 1, 0.3, 1");
 // Untuk tirai: masuk dan keluar sama beratnya.
 const SHUTTER = CustomEase.create("dwiShutter", "0.77, 0, 0.175, 1");
 
-/**
- * Scope modul, bukan sessionStorage: bertahan selama navigasi client-side dan
- * hilang saat hard reload. Tanpa ini intro terputar ulang tiap ganti bahasa,
- * karena layout [locale] remount saat segmen locale berubah. Di server selalu
- * false (efek tidak pernah jalan di sana), jadi SSR dan hidrasi tetap cocok.
- */
+
 let hasPlayed = false;
 
-/**
- * Intro cinematic "DWI STUDIO".
- *
- *   0.0  pulse ring dan progress meter mulai berjalan
- *   0.1  kartu logo (public/logo.svg) masuk
- *   0.5  "DWI" meluncur keluar dari balik logo, di balik mask
- *   0.9  garis pemisah memanjang (scaleY)
- *   1.1  "STUDIO" meluncur keluar di kanan garis
- *   1.3  tagline (hero.line1-3) fade-up di bawah lockup
- *   2.5  tirai 3 panel membuka setelah asset awal siap
- *        halaman menyusul: zoom-out 1.1 -> 1.0, header, lalu Value Rail
- *
- * Semua gerak memakai transform/opacity saja supaya tetap di GPU. Lockup sudah
- * berada pada lebar akhirnya sejak awal; yang bergeser adalah panggungnya,
- * jadi logo tetap terlihat di tengah tanpa satu pun animasi properti layout.
- *
- * Timeline-nya TIDAK diubah sama sekali di rev. ini — hanya isi dan ukuran
- * elemennya. Gerakannya persis yang sudah ada.
- */
 export default function Intro() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [runId, setRunId] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const hero = useTranslations("hero");
   const lenis = useLenis();
 
   // Dibekukan sebagai state, BUKAN `const skip = hasPlayed` yang dibaca ulang
@@ -157,10 +131,10 @@ export default function Intro() {
     const divider = q("[data-divider]");
     const dwi = q("[data-word='dwi'] > span");
     const studio = q("[data-word='studio'] > span");
-    const tagline = q("[data-tagline]");
     const pulse = q("[data-pulse]");
     const meter = q("[data-meter]");
     const micro = q("[data-micro]");
+    const percent = q("[data-percent]");
     // Array, bukan NodeList: tiap panel butuh delay sendiri (0 / 0.1 / 0.2s),
     // jadi diindeks satu-satu alih-alih di-stagger seragam.
     const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
@@ -182,8 +156,7 @@ export default function Intro() {
     gsap.set(emblem, { autoAlpha: 0, scale: 0.72 });
     gsap.set([dwi, studio], { xPercent: -105, autoAlpha: 0 });
     gsap.set(divider, { scaleY: 0, autoAlpha: 0 });
-    gsap.set(tagline, { autoAlpha: 0, y: 8 });
-    gsap.set(micro, { autoAlpha: 0, y: 5 });
+    gsap.set([micro, percent], { autoAlpha: 0, y: 5 });
     gsap.set(pulse, { autoAlpha: 0.35, scale: 0.82 });
     gsap.set(meter, { scaleX: 0, transformOrigin: "left center" });
     gsap.set(stage, { autoAlpha: 1, scale: 1 });
@@ -215,14 +188,32 @@ export default function Intro() {
     // Timeline dipadatkan: intro terasa niat, tapi tidak menahan pengunjung
     // terlalu lama. Gate asset di bawah yang menentukan kapan shutter boleh
     // membuka; animasi lockup berjalan sambil aset awal halaman dipanaskan.
-    tl.to(meter, { scaleX: 1, duration: 2.35, ease: "none" }, 0)
+    tl.to(
+        meter,
+        {
+          scaleX: 1,
+          duration: 2.35,
+          ease: "none",
+          // Angka persen dibaca dari progress tween INI sendiri (`this`,
+          // makanya function biasa bukan arrow) — bukan penghitung waktu
+          // terpisah — supaya angkanya selalu persis sinkron dengan lebar
+          // bar, bukan cuma kebetulan terlihat mirip. Bar ini sendiri yang
+          // dipakai sebagai satu-satunya sumber progres (lihat komentar di
+          // atas: tidak ada sinyal loading aset yang sungguhan granular),
+          // jadi tween-nya sudah pasti mencapai progress 1 = 100% sebelum
+          // addPause di bawah menahan reveal.
+          onUpdate: function (this: gsap.core.Tween) {
+            if (percent) percent.textContent = `${Math.round(this.progress() * 100)}%`;
+          },
+        },
+        0,
+      )
       .to(pulse, { autoAlpha: 1, scale: 1.12, duration: 1.15, ease: FLUID }, 0)
       .to(emblem, { autoAlpha: 1, scale: 1, duration: 0.45, ease: FLUID }, 0.12)
       .to(dwi, { xPercent: 0, autoAlpha: 1, duration: 0.58, ease: FLUID }, 0.48)
       .to(divider, { scaleY: 1, autoAlpha: 1, duration: 0.38, ease: FLUID }, 0.9)
       .to(studio, { xPercent: 0, autoAlpha: 1, duration: 0.58, ease: FLUID }, 1.08)
-      .to(tagline, { autoAlpha: 1, y: 0, duration: 0.42, ease: FLUID }, 1.35)
-      .to(micro, { autoAlpha: 1, y: 0, duration: 0.36, ease: FLUID }, 1.52)
+      .to([micro, percent], { autoAlpha: 1, y: 0, duration: 0.36, ease: FLUID }, 1.52)
       .to(stage, { x: 0, duration: 1.12, ease: FLUID }, 0.48)
       .to(stage, { autoAlpha: 0, scale: 0.97, duration: 0.38, ease: FLUID }, 2.05)
       .addPause(2.36)
@@ -336,29 +327,41 @@ export default function Intro() {
             Studio
           </span>
         </span>
-
-        {/* absolute + top-full: tidak ikut lebar stage, jadi centerOffset()
-            yang mengukur lockup logo+teks tidak terpengaruh baris ini.
-            Tracking diturunkan 0.5em -> 0.3em saat ukurannya dinaikkan: pada
-            13px, "ONE STUDIO. FIVE MEDIUMS." dengan tracking 0.5em lebih lebar
-            dari layar ponsel dan akan terpotong overflow-hidden root. */}
-        <span
-          data-tagline
-          className="text-ink-soft absolute top-full left-1/2 mt-4 -translate-x-1/2 text-[10px] font-semibold tracking-[0.3em] whitespace-nowrap uppercase opacity-0 will-change-transform md:mt-6 md:text-[13px]"
-        >
-          {hero("line1")} {hero("line2")} {hero("line3")}
-        </span>
-
-        <span
-          data-micro
-          className="text-ink-soft/75 absolute top-full left-1/2 mt-10 -translate-x-1/2 font-mono text-[9px] tracking-[0.22em] whitespace-nowrap uppercase opacity-0 md:mt-14"
-        >
-          Preparing the first frame
-        </span>
       </div>
 
-      <div className="bg-line absolute inset-x-6 bottom-8 z-10 mx-auto h-px max-w-52 overflow-hidden md:bottom-10">
-        <span data-meter className="bg-ink block h-full w-full origin-left scale-x-0" />
+      {/* Label + persen langsung di atas bar, bar di bawahnya — satu blok
+          bottom-anchored, bukan lagi digantung di bawah lockup logo (dulu
+          `data-micro` ada di dalam data-stage lewat absolute+top-full).
+          Dipindah keluar sekalian membebaskannya dari alasan absolute yang
+          lama: tidak ada lagi risiko ikut terukur centerOffset().
+
+          w-fit, bukan max-w-52: lebar blok (dan makanya lebar bar, w-full
+          di dalamnya) sekarang murni mengikuti lebar baris label+persen di
+          atasnya, bukan angka tebakan tetap yang bisa lebih lebar atau lebih
+          sempit dari teksnya sendiri — sama di desktop maupun mobile karena
+          ini lebar intrinsik teks, bukan breakpoint. justify-between sengaja
+          dilepas (diganti gap-3 biasa) supaya persennya menempel rapat di
+          ujung label, bukan direntangkan sampai tepi kontainer. */}
+      <div className="absolute inset-x-6 bottom-8 z-10 mx-auto flex w-fit flex-col gap-2 md:bottom-10">
+        <div className="flex items-center gap-3">
+          <span
+            data-micro
+            className="text-ink-soft/75 font-mono text-[9px] tracking-[0.22em] whitespace-nowrap uppercase opacity-0"
+          >
+            Preparing the first frame
+          </span>
+          {/* tabular-nums: lebar digit seragam, jadi angka yang naik dari
+              0% ke 100% tidak menggeser posisi teks di sebelahnya tiap frame. */}
+          <span
+            data-percent
+            className="text-ink-soft/75 font-mono text-[9px] tracking-[0.1em] tabular-nums opacity-0"
+          >
+            0%
+          </span>
+        </div>
+        <div className="bg-line h-px w-full overflow-hidden">
+          <span data-meter className="bg-ink block h-full w-full origin-left scale-x-0" />
+        </div>
       </div>
     </div>
   );

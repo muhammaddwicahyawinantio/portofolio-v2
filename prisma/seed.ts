@@ -227,7 +227,8 @@ async function main() {
       metrics_id: ["99% Kepuasan Klien", "Fast & Responsive Desain Optimized", "Modern Tech Stack Terkini"],
       ctaText_en: null,
       ctaText_id: null,
-      ctaUrl: null,
+      proposalPdf_en: null,
+      proposalPdf_id: null,
     },
   });
 

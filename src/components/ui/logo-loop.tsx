@@ -343,11 +343,6 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             </li>
           );
         }
-
-        // Sumbernya memakai `(item as any)` di ~16 tempat karena LogoItem itu
-        // union dan tidak pernah dipersempit. eslint repo ini melarang `any`,
-        // jadi union-nya dipecah sekali di sini dan sisanya memakai hasilnya.
-        // `href` dan `title` ada di kedua varian, jadi dibaca langsung dari item.
         const nodeItem = "node" in item ? item : null;
         const imageItem = "node" in item ? null : item;
         const isNodeItem = nodeItem !== null;
@@ -365,7 +360,6 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             {nodeItem.node}
           </span>
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase
           <img
             className={cx(
               "block h-[var(--logoloop-logoHeight)] w-auto object-contain",

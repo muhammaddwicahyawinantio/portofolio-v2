@@ -26,7 +26,15 @@
     "line3": "secara digital.",
     "lead": "DwiStudio merancang dan mengembangkan website, aplikasi web, serta solusi digital yang menggabungkan desain modern, performa, dan fungsi yang benar-benar dibutuhkan bisnis.",
     "scroll": "Jelajahi",
-    "scrollHint": "Lihat layanan dan karya kami"
+    "scrollHint": "Lihat layanan dan karya kami",
+    "proposalDownload": "Unduh Proposal",
+    "proposalLoading": "Memuat proposal…",
+    "proposalError": "Proposal gagal dimuat.",
+    "proposalClose": "Tutup pratinjau",
+    "proposalChooseLanguage": "Pilih bahasa proposal",
+    "proposalChooseClose": "Tutup pemilih bahasa",
+    "proposalLanguageId": "Bahasa Indonesia",
+    "proposalLanguageEn": "Bahasa Inggris"
   },
   "cta": {
     "eyebrow": "Mulai proyek",
@@ -84,7 +92,10 @@
     "visitSite": "Kunjungi website",
     "back": "Kembali ke proyek",
     "openHint": "Double click / double tap panel untuk membuka studi kasusnya",
-    "readMore": "Lihat proyek"
+    "readMore": "Lihat proyek",
+    "detailsLabel": "Detail proyek",
+    "overviewLabel": "Ringkasan",
+    "galleryLabel": "Galeri"
   },
   "contact": {
     "eyebrow": "Kontak",

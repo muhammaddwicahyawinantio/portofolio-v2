@@ -43,7 +43,7 @@ export function AccordionFeatureSection({ features }: { features: AccordionFeatu
     // datang dari min-h ini, bukan dari padding.
     <div className="p-3 py-8 sm:p-4 md:flex md:min-h-[clamp(620px,78vh,820px)] md:items-center md:px-8 md:py-6 lg:px-12">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 md:grid md:max-w-[1500px] md:grid-cols-[0.85fr_1.15fr] md:items-stretch md:gap-10 lg:gap-14">
-        <div className="border-line rounded-card relative order-1 aspect-[4/3] w-full shrink-0 overflow-hidden border md:order-2 md:aspect-auto md:h-[clamp(480px,58vh,640px)]">
+        <div className="border-line rounded-card relative order-1 mx-auto aspect-[4/3] w-[88%] shrink-0 overflow-hidden border md:order-2 md:mx-0 md:aspect-auto md:h-[clamp(480px,58vh,640px)] md:w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={active?.id ?? "empty"}

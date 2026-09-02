@@ -62,6 +62,25 @@ const VARIANTS = {
   ghost: "border-line text-ink hover:border-charcoal hover:bg-charcoal hover:text-cream",
 };
 
+/**
+ * Kelas Button tanpa elemennya — untuk komponen lain (mis. PdfPreview di
+ * hero) yang perlu tombolnya terlihat SAMA PERSIS seperti Button tapi
+ * onClick-nya bukan navigasi (buka modal), jadi tidak bisa lewat prop `href`
+ * milik Button. Diekspor dari sini, bukan diduplikasi, supaya BASE/SIZES/
+ * VARIANTS tetap satu sumber.
+ */
+export function buttonClassName({
+  className,
+  size = "md",
+  variant = "charcoal",
+}: {
+  className?: string;
+  size?: keyof typeof SIZES;
+  variant?: keyof typeof VARIANTS;
+} = {}) {
+  return clsx(BASE, SIZES[size], VARIANTS[variant], className);
+}
+
 export default function Button({
   children,
   href,
@@ -80,7 +99,7 @@ export default function Button({
   /** Wajib untuk `size="icon"` — tombol tanpa teks tidak punya nama. */
   "aria-label"?: string;
 }) {
-  const cls = clsx(BASE, SIZES[size], VARIANTS[variant], className);
+  const cls = buttonClassName({ className, size, variant });
 
   if (href) {
     // Link next-intl menambahkan awalan locale ke apa pun yang diberikan, jadi

@@ -34,6 +34,12 @@ type LayoutSpec = {
  * - tidak semuanya rapi di dalam grid
  *
  * Data project tetap berasal dari CMS.
+ *
+ * `width` untuk kartu potret (aspect "3/4") harus dijaga kecil: tinggi
+ * render = width / aspect, jadi potret lebar 50vw beraspek 3/4 jadi setinggi
+ * ~67vw — di layar 16:9 itu >100vh, meluber jauh keluar viewport dan
+ * bertabrakan dengan kartu lain (#05 dan #07 pernah begini, sudah diperkecil).
+ * Aman: width portrait ≈ setengah width kartu lanskap beraspek serupa.
  */
 const DESKTOP_LAYOUT: LayoutSpec[] = [
   // 01 — opening hero
@@ -81,7 +87,7 @@ const DESKTOP_LAYOUT: LayoutSpec[] = [
 
   // 05 — portrait kiri
   {
-    width: "50vw",
+    width: "24vw",
     x: "5vw",
     y: "18vh",
     startX: "-12vw",
@@ -105,7 +111,7 @@ const DESKTOP_LAYOUT: LayoutSpec[] = [
 
   // 07 — upper center, sengaja sedikit terpotong
   {
-    width: "38vw",
+    width: "27vw",
     x: "38vw",
     y: "-8vh",
     startX: "5vw",

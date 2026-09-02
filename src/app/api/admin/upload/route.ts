@@ -29,6 +29,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Audio file too large (max 10MB)." }, { status: 400 });
     }
   }
+  // PDF uploads (hero proposal, CV/resume) are meant to stay lightweight
+  // documents, not scans — tighter cap than the generic ceiling below. Keyed
+  // on the validated MIME type, not a client-supplied "kind", so every PDF
+  // field gets this for free without each control having to opt in.
+  if (file.type === "application/pdf" && file.size > 10 * 1024 * 1024) {
+    return NextResponse.json({ error: "PDF too large (max 10MB)." }, { status: 400 });
+  }
   if (file.size > MAX_UPLOAD_BYTES) {
     return NextResponse.json({ error: "File too large (max 20MB)." }, { status: 400 });
   }

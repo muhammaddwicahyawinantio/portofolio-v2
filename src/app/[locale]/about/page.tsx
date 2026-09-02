@@ -9,7 +9,7 @@ import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/animations/Reveal";
 import ScrollReveal from "@/components/ui/scroll-reveal";
-import CvPreview from "@/components/ui/cv-preview";
+import PdfPreview from "@/components/ui/pdf-preview";
 import SkillMarquee from "@/components/sections/SkillMarquee";
 import MediaShowcase from "@/components/sections/MediaShowcase";
 import DriftWall from "@/components/ui/drift-wall";
@@ -110,7 +110,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                         tidak dirender sama sekali. Tombol unduhnya ada di
                         dalam modal pratinjau. */}
                     {about.cvFile ? (
-                      <CvPreview
+                      <PdfPreview
                         url={about.cvFile}
                         previewLabel={t("cvPreview")}
                         downloadLabel={t("cvDownload")}

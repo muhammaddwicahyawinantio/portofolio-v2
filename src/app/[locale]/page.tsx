@@ -12,7 +12,6 @@ import FeatureShowcase from "@/components/sections/FeatureShowcase";
 import BenefitGrid from "@/components/sections/BenefitGrid";
 import ContactPanel from "@/components/sections/ContactPanel";
 import ReadyPanel from "@/components/sections/ReadyPanel";
-import RiveAnimation from "@/components/ui/RiveAnimation";
 
 /** Badge kapabilitas statis di panel "Work" — bukan konten CMS, jadi cukup
     array tetap di sini, dilokalkan lewat `locale` yang sudah dioper halaman. */
@@ -67,37 +66,43 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                 halaman — bukan lagi menempelkan kata ini ke gutter rule.
                 Spectral huruf besar-kecil biasa, bukan uppercase: ini lembar
                 kalkir, bukan poster. */}
-            {/* gap-[19rem]: bukan whitespace kosong — ini ruang yang memang
-                dibutuhkan kucing Rive (h-[clamp(20rem,88vw,24rem)]) di
-                belakang judul & badge supaya tidak menimpa badge. Diukur via
-                CDP: tanpa gap ini, jarak judul-ke-badge cuma 32px sementara
-                kucingnya 320-384px — pasti bertabrakan berapa pun top-nya. */}
-            <Container className="relative flex flex-col items-center justify-center gap-[19rem] overflow-hidden pt-20 pb-12 text-center md:min-h-svh md:justify-between md:gap-0 md:pt-[clamp(5.5rem,14vh,9rem)] md:pb-[clamp(5.5rem,12vh,7.5rem)]">
+            {/* md:gap-6 (bukan gap-0): flex gap adalah jarak MINIMUM yang
+                tetap dihormati bahkan saat justify-between menyebarkan
+                sisa ruang kosong — jadi di viewport pendek sekalipun (di
+                mana sisa ruang nyaris habis) judul, kartu, dan badge tetap
+                punya jarak minimal, tidak pernah benar-benar bersentuhan. */}
+            <Container className="relative flex flex-col items-center justify-center gap-8 overflow-hidden pt-20 pb-12 text-center md:min-h-svh md:justify-between md:gap-6 md:pt-[clamp(5.5rem,14vh,9rem)] md:pb-[clamp(5.5rem,12vh,7.5rem)]">
               {/* Wordmark literal, bukan projects("eyebrow"): ini nama brand,
                   sama di kedua bahasa. Ukurannya BUKAN di sini — `.home-work-heading`
                   di globals.css membawa font-size !important (lihat komentar di
                   sana), jadi utility text-[...] di className manapun tidak akan
                   pernah berpengaruh. leading tetap diatur lewat utility karena
                   aturan global itu cuma menyetel font-size. */}
-              <h2 className="home-work-heading relative z-[1] w-full font-rampart-one font-display leading-[0.95] font-medium tracking-[-0.03em] md:leading-[0.82]">
+              <h2 className="home-work-heading relative w-full font-rampart-one font-display leading-[0.95] font-medium tracking-[-0.03em] md:leading-[0.82]">
                 Dwi Studio
               </h2>
-              {/* Container mobile sekarang tinggi-mengikuti-konten (~350-375px,
-                  bukan min-h-svh), tapi kucing dominan (20-24rem = 320-384px)
-                  tetap lebih tinggi dari seluruh panel — beberapa overlap
-                  dengan judul/badge tidak terhindarkan secara matematis kalau
-                  panelnya pendek DAN kucingnya besar sekaligus. Diselesaikan
-                  seperti desktop: z-0 di BELAKANG judul & badge (keduanya
-                  z-[1]), jadi teks badge tetap terbaca penuh di atasnya —
-                  bukan "tertutup", cuma siluet kucing terlihat di baliknya.
-                  top-1/2 + -translate-y-1/2 menengahkan pada tinggi container
-                  APA PUN tanpa perlu menghitung ulang persentase manual. */}
-              <RiveAnimation
-                src="/rive/cat-run.riv"
-                stateMachines="State Machine 1"
-                className="!absolute top-1/2 left-1/2 z-0 h-[clamp(20rem,88vw,24rem)] w-[clamp(20rem,88vw,24rem)] -translate-x-1/2 -translate-y-1/2 opacity-90 sm:top-[22%] sm:h-[clamp(25rem,46vw,39rem)] sm:w-[clamp(25rem,46vw,39rem)] sm:translate-y-0"
-                ariaLabel="Running cat animation"
-              />
+              {/* Pengganti animasi kucing Rive: kartu foto statis.
+                  BUKAN lagi `!absolute top-1/2 -translate-y-1/2` — itu
+                  menengahkan kartu pada 50% TINGGI VIEWPORT, yang cuma aman
+                  kalau viewport-nya kebetulan cukup tinggi. Di layar pendek
+                  (atau browser di-zoom), 50% itu jatuh tepat di area judul
+                  atau badge, dan keduanya bertumpuk — persis bug yang
+                  dilaporkan. Sekarang kartu jadi flex-item BIASA di antara
+                  judul & badge: flex column (justify-center di mobile,
+                  justify-between di desktop) yang mengatur jaraknya, bukan
+                  persentase tinggi layar. Ini TIDAK BISA bertumpuk dengan
+                  tetangganya — kalau ruang kurang, section-nya yang jadi
+                  lebih tinggi dari satu layar, bukan elemennya yang
+                  bertabrakan. h-auto pada <img>: lebar kartu tetap, tinggi
+                  mengikuti rasio asli 1200x800 supaya foto tidak pernah
+                  terpotong. */}
+              <div
+                aria-hidden
+                className="border-line bg-card rounded-card w-[clamp(14rem,70vw,19rem)] overflow-hidden border p-2 opacity-90 shadow-sm sm:w-[clamp(18rem,32vw,26rem)] md:w-[clamp(28rem,44vw,42rem)]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase */}
+                <img src="/images/dwi.png" alt="" className="rounded-card h-auto w-full" />
+              </div>
 
               {/* Social proof: badge kapabilitas, bukan CMS — dasar panel "Work".
                   Chip bordered ber-font Rampart One, seirama dengan display
