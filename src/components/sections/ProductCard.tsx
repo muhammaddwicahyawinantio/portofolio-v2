@@ -62,7 +62,7 @@ export default function ProductCard({ product }: { product: ProductView }) {
           <ArrowUpRight aria-hidden className="size-3.5" />
         </Button>
         {/* Pembeli berhak tahu ke mana tombolnya membawa sebelum diklik. */}
-        <p className="text-ink-soft font-mono text-[10px] tracking-[0.08em] uppercase">lynk.id</p>
+        <p className="text-ink-soft font-mono text-[10px] tracking-[0.08em] uppercase"></p>
       </div>
     </article>
   );

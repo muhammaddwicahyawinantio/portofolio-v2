@@ -1,19 +1,19 @@
 {
   "meta": {
-    "title": "DwiStudio — Jasa Pembuatan Website & Solusi Digital",
-    "description": "DwiStudio menyediakan jasa pembuatan website profesional, landing page, company profile, e-commerce, undangan digital, ERP, e-learning, dan sistem web custom untuk bisnis, brand, dan kebutuhan personal."
+    "title": "DwiStudio — Jasa Pembuatan Website & Solusi Digital Profesional",
+    "description": "DwiStudio membantu bisnis, brand, dan individu membangun website profesional, landing page, company profile, e-commerce, undangan digital, ERP, e-learning, serta sistem web custom yang modern dan tepat guna."
   },
   "nav": {
     "about": "Tentang",
-    "projects": "Proyek",
+    "projects": "Project",
     "services": "Layanan",
     "products": "Produk",
     "contact": "Kontak",
-    "getInTouch": "Mari bicara"
+    "getInTouch": "Let's talk"
   },
   "menu": {
-    "open": "Buka menu",
-    "close": "Tutup menu"
+    "open": "Buka",
+    "close": "Tutup"
   },
   "locale": {
     "en": "EN",
@@ -22,41 +22,41 @@
   },
   "hero": {
     "line1": "Bangun.",
-    "line2": "Tumbuh,",
-    "line3": "secara digital.",
-    "lead": "DwiStudio merancang dan mengembangkan website, aplikasi web, serta solusi digital yang menggabungkan desain modern, performa, dan fungsi yang benar-benar dibutuhkan bisnis.",
+    "line2": "Berkembang.",
+    "line3": "Melangkah lebih jauh.",
+    "lead": "Kami mengubah ide menjadi pengalaman digital yang dirancang dengan detail—menggabungkan visual yang kuat, teknologi modern, performa optimal, dan fungsi yang benar-benar mendukung kebutuhan Anda.",
     "scroll": "Jelajahi",
-    "scrollHint": "Lihat layanan dan karya kami",
+    "scrollHint": "Jelajahi layanan dan karya kami",
     "proposalDownload": "Unduh Proposal",
     "proposalLoading": "Memuat proposal…",
     "proposalError": "Proposal gagal dimuat.",
     "proposalClose": "Tutup pratinjau",
-    "proposalChooseLanguage": "Pilih bahasa proposal",
+    "proposalChooseLanguage": "Pilih bahasa",
     "proposalChooseClose": "Tutup pemilih bahasa",
     "proposalLanguageId": "Bahasa Indonesia",
     "proposalLanguageEn": "Bahasa Inggris"
   },
   "cta": {
-    "eyebrow": "Mulai proyek",
-    "heading": "Punya ide yang ingin diwujudkan secara digital?",
-    "action": "Mulai proyek",
-    "ready": "Siap mulai?"
+    "eyebrow": "Call to action",
+    "heading": "Punya ide hebat? Mari wujudkan menjadi sesuatu yang nyat!",
+    "action": "Diskusikan proyek",
+    "ready": "Siap memulai?"
   },
   "about": {
     "eyebrow": "Tentang",
     "title": "Tentang DwiStudio",
     "metaTitle": "Tentang DwiStudio — Web Development & Digital Studio",
-    "metaDescription": "Kenali DwiStudio, studio pengembangan digital yang berfokus pada pembuatan website profesional, aplikasi web, dan solusi digital sesuai kebutuhan.",
-    "lead": "DwiStudio adalah studio pengembangan digital yang membantu bisnis, brand, dan individu membangun website serta sistem digital yang profesional, fungsional, dan mudah dikembangkan.",
+    "metaDescription": "Kenali DwiStudio, studio digital yang berfokus pada pengembangan website, aplikasi web, dan solusi digital yang dirancang sesuai kebutuhan bisnis maupun personal.",
+    "lead": "DwiStudio adalah studio digital yang membantu bisnis, brand, dan individu membangun pengalaman digital yang profesional, fungsional, mudah digunakan, dan siap berkembang bersama kebutuhan Anda.",
     "storyTitle": "Perjalanan",
     "workTitle": "Pengalaman Kerja",
     "educationTitle": "Pendidikan",
     "periodLabel": "Periode",
     "roleLabel": "Peran",
     "institutionLabel": "Institusi",
-    "skillsTitle": "Keahlian & Perkakas",
+    "skillsTitle": "Keahlian",
     "certificationsTitle": "Sertifikasi",
-    "valuesTitle": "Cara Kami Bekerja",
+    "valuesTitle": "Prinsip Kerja",
     "cvPreview": "Lihat CV",
     "cvDownload": "Unduh CV",
     "cvLoading": "Memuat CV…",
@@ -64,72 +64,72 @@
     "cvClose": "Tutup pratinjau",
     "values": {
       "one": {
-        "title": "Baca dulu, baru tulis",
-        "body": "Kami menelusuri seluruh kebutuhannya sebelum menyentuh papan ketik. Perbaikan tercepat yang salah tempat cuma menambah masalah kedua."
+        "title": "Pahami sebelum membangun",
+        "body": "Setiap proyek dimulai dengan memahami kebutuhan secara menyeluruh. Kami memastikan solusi yang dibangun menjawab masalah yang tepat, bukan sekadar menambah fitur."
       },
       "two": {
-        "title": "Sekecil mungkin",
-        "body": "Perubahan terkecil yang benar-benar bertahan menang atas abstraksi yang rapi tapi belum dibutuhkan siapa pun."
+        "title": "Sederhana, tepat, dan berkelanjutan",
+        "body": "Kami mengutamakan solusi yang efektif dan mudah dipelihara—tanpa kompleksitas yang tidak diperlukan."
       },
       "three": {
-        "title": "Serahkan yang bisa kamu jalankan",
-        "body": "Setiap proyek pulang dengan CMS-nya sendiri. Anda tidak perlu menghubungi kami untuk mengganti satu kalimat."
+        "title": "Kendali tetap di tangan Anda",
+        "body": "Setiap proyek dirancang agar mudah dikelola. Dengan CMS yang tersedia, Anda dapat memperbarui konten secara mandiri tanpa selalu bergantung pada developer."
       }
     },
-    "mediaTitle": "Musik & Film",
+    "mediaTitle": "Kurasi",
     "musicTitle": "Musik",
     "filmTitle": "Film"
   },
   "projects": {
-    "eyebrow": "Portofolio",
-    "title": "Proyek terpilih.",
+    "eyebrow": "Semua Proyek",
+    "title": "Karya Digital",
     "metaTitle": "Portofolio Website & Web Development | DwiStudio",
-    "metaDescription": "Lihat pilihan proyek website dan sistem digital yang dikembangkan DwiStudio dengan fokus pada desain, performa, pengalaman pengguna, dan teknologi.",
-    "lead": "Beberapa website dan sistem digital yang dikembangkan dengan fokus pada kebutuhan bisnis, pengalaman pengguna, dan implementasi teknologi yang tepat.",
+    "metaDescription": "Jelajahi pilihan website dan sistem digital karya DwiStudio yang dirancang dengan perhatian pada desain, performa, pengalaman pengguna, dan kebutuhan nyata setiap proyek.",
+    "lead": "Pilihan website dan sistem digital yang kami bangun dengan pendekatan yang terarah—menggabungkan kebutuhan bisnis, pengalaman pengguna, desain, dan teknologi yang tepat.",
     "role": "Peran",
     "year": "Tahun",
     "client": "Klien",
     "visitSite": "Kunjungi website",
     "back": "Kembali ke proyek",
-    "openHint": "Double click / double tap panel untuk membuka studi kasusnya",
-    "readMore": "Lihat proyek",
+    "openHint": "Klik dua kali / ketuk dua kali panel untuk membuka studi kasus",
+    "readMore": "Lihat selengkapnya",
     "detailsLabel": "Detail proyek",
     "overviewLabel": "Ringkasan",
     "galleryLabel": "Galeri"
   },
-  "contact": {
-    "eyebrow": "Kontak",
-    "title": "Mari bicarakan proyek Anda.",
-    "metaTitle": "Konsultasi Pembuatan Website | DwiStudio",
-    "metaDescription": "Diskusikan kebutuhan website, landing page, e-commerce, ERP, e-learning, atau aplikasi web custom bersama DwiStudio.",
-    "lead": "Ceritakan website atau sistem yang ingin Anda bangun. DwiStudio akan membantu mengarahkan kebutuhan, ruang lingkup, dan pendekatan pengembangan yang sesuai.",
-    "breadcrumb": "Kontak / Konsultasi",
-    "point1": "Ceritakan tujuan proyek dan siapa yang Anda tuju",
-    "point2": "DwiStudio membalas dengan cakupan, jadwal, dan estimasi yang jelas",
-    "point3": "Anda menerima situs beserta CMS yang bisa dikelola sendiri",
-    "trustedBy": "Kata klien",
-    "privacy": "Dengan mengirim formulir ini, Anda menyetujui data disimpan hanya untuk membalas pesan ini. Tidak dibagikan ke pihak lain, dan tidak digunakan untuk mengirim promosi.",
-    "infoSocialTitle": "Kanal lain",
-    "infoLocationTitle": "Lokasi & status",
-    "infoReplyTitle": "Waktu balas",
-    "infoReplyBody": "Setiap pesan dibaca dan dibalas langsung, biasanya dalam satu sampai dua hari kerja.",
-    "qrFallback": "Buat ngopi"
-  },
+      "contact": {
+    "eyebrow": "Penawaran & Kerja Sama",
+    "title": "Mari Wujudkan Kolaborasi yang Bernilai",
+    "metaTitle": "Penawaran Proyek & Kerja Sama | DwiStudio",
+    "metaDescription": "Diskusikan kebutuhan proyek, penawaran layanan, maupun peluang kerja sama bersama DwiStudio. Kami siap membantu menghadirkan solusi digital yang tepat untuk kebutuhan bisnis dan pengembangan Anda.",
+    "lead": "Sampaikan kebutuhan, rencana proyek, atau peluang kerja sama Anda. Kami akan mempelajarinya secara menyeluruh dan memberikan pendekatan, ruang lingkup, serta penawaran yang relevan dengan tujuan yang ingin dicapai.",
+    "breadcrumb": "Kontak / Kerja Sama",
+    "point1": "Siap menghadirkan solusi digital yang tepat sesuai kebutuhan dan tujuan Anda",
+    "point2": "Terbuka untuk peluang kerja sama dan kolaborasi profesional yang saling memberikan nilai",
+    "point3": "Konsultasi 100% gratis tanpa biaya untuk memahami kebutuhan dan menentukan langkah terbaik",
+    "trustedBy": "Kepercayaan Klien",
+    "privacy": "Informasi yang Anda kirimkan hanya digunakan untuk keperluan komunikasi, konsultasi, dan tindak lanjut penawaran. Data Anda dijaga kerahasiaannya dan tidak digunakan untuk kepentingan promosi tanpa persetujuan.",
+    "infoSocialTitle": "Terhubung dengan Kami",
+    "infoLocationTitle": "Lokasi & Ketersediaan",
+    "infoReplyTitle": "Waktu Respons",
+    "infoReplyBody": "Kami mengutamakan komunikasi yang cepat dan responsif. Setiap pesan akan ditinjau dan ditanggapi sesegera mungkin",
+    "qrFallback": "Dukung DwiStudio"
+    },
   "services": {
     "eyebrow": "Layanan",
-    "title": "Solusi web untuk berbagai kebutuhan.",
+    "title": "Solusi digital yang dibangun untuk kebutuhan Anda",
     "metaTitle": "Jasa Pembuatan Website & Web Development | DwiStudio",
-    "metaDescription": "Layanan pembuatan website DwiStudio mencakup landing page, company profile, e-commerce, undangan digital, ERP, e-learning, dan aplikasi web custom.",
-    "lead": "Pilih layanan yang sesuai dengan kebutuhan Anda. Setiap website dikembangkan secara responsif, terstruktur, dan dapat disesuaikan dengan kebutuhan bisnis maupun personal.",
+    "metaDescription": "Layanan DwiStudio mencakup pembuatan landing page, company profile, e-commerce, undangan digital, ERP, e-learning, serta aplikasi web custom yang responsif dan siap dikembangkan.",
+    "lead": "Pilih layanan yang paling sesuai dengan tujuan Anda. Setiap solusi dirancang responsif, terstruktur, mudah digunakan, dan fleksibel untuk berkembang bersama kebutuhan bisnis maupun personal.",
     "priceFrom": "Mulai dari",
     "explore": "Jelajahi",
-    "builder": "Jasa Website",
-    "digitalProduct": "Produk Digital"
+    "builder": "Web Development",
+    "digitalProduct": "Aplikasi Premium"
   },
   "products": {
     "eyebrow": "Produk digital",
-    "title": "Akun premium, siap pakai.",
-    "lead": "Akun langganan yang dijual lewat Lynk.id. Pilih satu, bayar di sana, lalu detail aksesnya menyusul.",
+    "title": "Aplikasi Premium Murah & Bergaransi",
+    "lead": "Produk digital dan akses aplikasi premium dengan harga terbaik, proses cepat, serta garansi layanan untuk transaksi yang aman dan terpercaya",
     "explore": "Jelajahi"
   },
   "contactForm": {
@@ -140,21 +140,21 @@
     "message": "Pesan",
     "send": "Kirim pesan",
     "sending": "Mengirim…",
-    "success": "Terima kasih. Pesan Anda sudah masuk dan akan ditinjau secepatnya.",
+    "success": "Terima kasih. Pesan Anda telah kami terima dan akan ditinjau sesegera mungkin.",
     "errorRequired": "Mohon lengkapi semua kolom yang wajib diisi.",
     "errorEmail": "Mohon masukkan alamat email yang valid.",
     "errorWhatsapp": "Mohon masukkan nomor WhatsApp yang valid.",
-    "errorRate": "Terlalu banyak permintaan dari koneksi ini. Silakan coba kembali beberapa saat lagi.",
+    "errorRate": "Terlalu banyak permintaan dari koneksi ini. Silakan coba kembali dalam beberapa saat.",
     "errorGeneric": "Terjadi kesalahan saat mengirim pesan. Silakan coba kembali."
   },
   "notFound": {
     "eyebrow": "404",
     "title": "Halaman tidak ditemukan",
-    "lead": "Halaman yang Anda cari tidak tersedia atau mungkin telah dipindahkan.",
+    "lead": "Halaman yang Anda cari tidak tersedia, telah dipindahkan, atau mungkin sudah tidak digunakan.",
     "action": "Kembali ke beranda"
   },
   "footer": {
-    "statement": "Membangun website dan solusi digital yang dirancang untuk kebutuhan nyata.",
+    "statement": "Menciptakan website dan solusi digital yang dirancang dengan tujuan, dibangun dengan detail, dan siap mendukung pertumbuhan.",
     "rights": "Hak cipta dilindungi.",
     "builtWith": "Dibangun dengan",
     "terms": "Syarat Layanan",
@@ -162,103 +162,103 @@
   },
   "features": {
     "eyebrow": "Proses",
-    "title": "Cara kerjanya.",
+    "title": "Bagaimana proyek dijalankan.",
     "back": "Kembali ke beranda",
     "explore": "Jelajahi"
   },
   "benefits": {
-    "eyebrow": "Kenapa kami",
-    "title": "Kenapa percayakan ke kami.",
-    "scrollHint": "Gulir untuk membuka"
+    "eyebrow": "Benefits",
+    "title": "Mengapa DwiStudio?",
+    "scrollHint": "Scroll untuk membuka"
   },
   "legal": {
     "eyebrow": "Legal",
     "updated": "Terakhir diperbarui 23 Agustus 2026",
     "terms": {
       "title": "Syarat Layanan",
-      "lead": "Yang kamu setujui saat memakai situs ini atau memesan pekerjaan dari DwiStudio.",
+      "lead": "Ketentuan yang berlaku saat Anda menggunakan situs ini atau bekerja sama dengan DwiStudio.",
       "sections": [
         {
-          "heading": "Dengan siapa kamu berurusan",
-          "body": "DwiStudio adalah praktik desain dan pengembangan satu orang di Banjarmasin, Indonesia, dijalankan oleh M. Dwi Cahya Winantio. Semua yang ada di situs ini ditulis, dirancang, dan dibangun satu tangan."
+          "heading": "Tentang DwiStudio",
+          "body": "DwiStudio adalah praktik desain dan pengembangan independen yang berbasis di Banjarmasin, Indonesia, dan dijalankan oleh M. Dwi Cahya Winantio. Seluruh konten, desain, dan pengembangan pada situs ini dikerjakan secara langsung oleh studio."
         },
         {
-          "heading": "Memakai situs ini",
-          "body": "Silakan dibaca, dibagikan, dan ditautkan. Tulisan, foto, kode, dan desainnya milik studio - jangan diterbitkan ulang sebagai milik sendiri, dan tanyakan dulu sebelum dipakai untuk melatih model."
+          "heading": "Penggunaan situs",
+          "body": "Anda dipersilakan membaca, membagikan, dan menautkan situs ini. Tulisan, foto, kode, dan desain tetap menjadi milik studio; jangan menerbitkannya kembali sebagai karya sendiri, dan mintalah izin terlebih dahulu sebelum menggunakannya untuk melatih model."
         },
         {
-          "heading": "Harga adalah titik mulai",
-          "body": "Angka di halaman Layanan adalah tempat proyek dimulai, bukan penawaran final. Penawaran sungguhan datang setelah pembicaraan tentang kebutuhanmu, dan ia menyebut ruang lingkup, tenggat, serta harganya sebelum pekerjaan dimulai."
+          "heading": "Harga bersifat sebagai titik awal",
+          "body": "Harga pada halaman Layanan merupakan harga awal, bukan penawaran final. Penawaran resmi diberikan setelah kebutuhan proyek dibahas, dan akan memuat ruang lingkup, estimasi waktu, serta biaya sebelum pekerjaan dimulai."
         },
         {
           "heading": "Pembayaran",
-          "body": "Proyek dibuka dengan uang muka dan dilunasi saat serah terima, kecuali disepakati lain secara tertulis. Ketentuan persisnya ada di penawaranmu, bukan di halaman ini."
+          "body": "Proyek dimulai setelah pembayaran uang muka dan diselesaikan dengan pelunasan pada saat serah terima, kecuali disepakati lain secara tertulis. Ketentuan pembayaran yang berlaku akan tercantum pada penawaran proyek."
         },
         {
-          "heading": "Revisi dan tenggat",
-          "body": "Setiap penawaran menyebut berapa putaran revisi yang termasuk. Tenggat mengandaikan materi dan masukanmu datang tepat waktu; kalau terlambat, tanggal serah terima bergeser sebanyak keterlambatan itu."
+          "heading": "Revisi dan jadwal",
+          "body": "Setiap penawaran mencantumkan jumlah putaran revisi yang termasuk dalam ruang lingkup. Jadwal pengerjaan bergantung pada ketepatan waktu pengiriman materi dan umpan balik dari klien; keterlambatan pada keduanya dapat menggeser jadwal serah terima."
         },
         {
-          "heading": "Siapa pemilik hasil akhirnya",
-          "body": "Begitu tagihan terakhir lunas, pekerjaannya jadi milikmu. Studio menyimpan hak menampilkannya di portofolio kecuali kamu meminta sebaliknya. Font, foto, dan plugin pihak ketiga tetap tunduk pada lisensinya masing-masing, dan penawaran akan menyebutkannya."
+          "heading": "Kepemilikan hasil akhir",
+          "body": "Setelah tagihan akhir dilunasi, hasil pekerjaan menjadi milik Anda. Studio tetap berhak menampilkan proyek dalam portofolio kecuali Anda meminta sebaliknya. Font, fotografi, plugin, dan aset pihak ketiga tetap tunduk pada lisensi masing-masing sebagaimana dicantumkan dalam penawaran."
         },
         {
-          "heading": "Yang kamu sediakan",
-          "body": "Kamu bertanggung jawab atas teks, gambar, dan logo yang kamu kirim, serta atas hak untuk memakainya."
+          "heading": "Materi yang Anda berikan",
+          "body": "Anda bertanggung jawab atas teks, gambar, logo, serta materi lain yang diberikan kepada studio, termasuk memastikan bahwa Anda memiliki hak untuk menggunakannya."
         },
         {
-          "heading": "Batasan",
-          "body": "Pekerjaan dibangun hati-hati dan diuji sebelum dikirim, tapi tak ada situs yang bisa dijamin bebas cacat atau bebas gangguan. Studio tidak bertanggung jawab atas kerugian tidak langsung atau turunan. Tidak ada di sini yang menghapus hakmu menurut hukum perlindungan konsumen Indonesia."
+          "heading": "Batas tanggung jawab",
+          "body": "Setiap pekerjaan dibangun dan diuji dengan cermat sebelum diserahkan, namun tidak ada situs yang dapat dijamin sepenuhnya bebas dari kesalahan atau gangguan. Studio tidak bertanggung jawab atas kerugian tidak langsung atau konsekuensial. Ketentuan ini tidak menghilangkan hak yang Anda miliki berdasarkan hukum perlindungan konsumen Indonesia."
         },
         {
-          "heading": "Perubahan syarat ini",
-          "body": "Syarat ini bisa berubah. Tanggal di atas memberi tahu kapan terakhir berubah, dan perubahan tidak pernah berlaku surut untuk pekerjaan yang sudah ditawarkan."
+          "heading": "Perubahan ketentuan",
+          "body": "Ketentuan ini dapat diperbarui dari waktu ke waktu. Tanggal di bagian atas menunjukkan pembaruan terakhir, dan perubahan tidak berlaku surut terhadap pekerjaan yang telah disepakati sebelumnya."
         },
         {
           "heading": "Pertanyaan",
-          "body": "Tulis lewat halaman kontak. Balasannya datang dari studio, bukan dari helpdesk."
+          "body": "Untuk pertanyaan terkait ketentuan ini, hubungi DwiStudio melalui halaman kontak."
         }
       ]
     },
     "privacy": {
       "title": "Kebijakan Privasi",
-      "lead": "Apa yang situs ini kumpulkan, kenapa, dan berapa lama disimpan.",
+      "lead": "Penjelasan mengenai data yang dikumpulkan situs ini, tujuan penggunaannya, dan berapa lama data tersebut disimpan.",
       "sections": [
         {
-          "heading": "Versi singkatnya",
-          "body": "Tidak ada iklan, tidak ada piksel pelacak, tidak ada analitik pihak ketiga. Satu-satunya data pribadi yang situs ini kumpulkan adalah yang kamu ketik di formulir kontak."
+          "heading": "Ringkasnya",
+          "body": "Situs ini tidak menggunakan iklan, piksel pelacak, atau analitik pihak ketiga. Data pribadi yang dikumpulkan hanya berasal dari informasi yang Anda masukkan melalui formulir kontak."
         },
         {
           "heading": "Yang dikumpulkan formulir kontak",
-          "body": "Nama, alamat email, subjek, dan pesanmu - beserta tanggal masuknya dan status sudah dibaca atau belum. Tidak ada yang lain disimpan, dan tidak ada yang disimpulkan tentang dirimu."
+          "body": "Formulir kontak menyimpan nama, alamat email, subjek, pesan, tanggal diterima, serta status sudah atau belum dibaca. Tidak ada data lain yang disimpan atau disimpulkan mengenai Anda."
         },
         {
-          "heading": "Kenapa dikumpulkan",
-          "body": "Untuk membaca pesanmu dan membalasnya. Itu satu-satunya tujuannya. Datamu tidak pernah dijual, tidak pernah dibagikan ke siapa pun, dan tidak pernah dipakai untuk pemasaran."
+          "heading": "Tujuan pengumpulan data",
+          "body": "Data digunakan hanya untuk membaca dan menanggapi pesan Anda. Data tidak dijual, tidak dibagikan kepada pihak lain, dan tidak digunakan untuk kegiatan pemasaran."
         },
         {
-          "heading": "Berapa lama disimpan",
-          "body": "Pesan disimpan selama percakapannya masih berguna dan dihapus saat tidak lagi. Minta pesanmu dihapus lebih cepat, dan akan dihapus."
+          "heading": "Masa penyimpanan",
+          "body": "Pesan disimpan selama masih relevan untuk keperluan komunikasi dan akan dihapus ketika tidak lagi diperlukan. Anda juga dapat meminta penghapusan lebih awal."
         },
         {
-          "heading": "Di mana disimpan",
-          "body": "Di basis data situs ini sendiri, pada hosting yang dikendalikan studio. Penyedia hosting memprosesnya atas nama studio dan berdasarkan kontrak, dan tidak memakainya untuk hal lain."
+          "heading": "Lokasi penyimpanan",
+          "body": "Data disimpan pada basis data situs di lingkungan hosting yang dikelola studio. Penyedia hosting memproses data atas nama studio sesuai layanan yang digunakan dan tidak ditujukan untuk penggunaan lain."
         },
         {
           "heading": "Cookie",
-          "body": "Menjelajahi situs publik ini tidak menaruh cookie apa pun. Cookie sesi hanya ada di area admin, yang dipakai studio untuk masuk - bukan untuk pengunjung."
+          "body": "Situs publik tidak menggunakan cookie. Cookie sesi hanya digunakan di area admin untuk keperluan autentikasi internal studio dan bukan untuk pengunjung."
         },
         {
-          "heading": "Hakmu",
-          "body": "Kamu boleh menanyakan data apa yang disimpan tentangmu, meminta salinannya, meminta koreksi, atau meminta penghapusan. Tulis saja, dan akan ditindaklanjuti."
+          "heading": "Hak Anda",
+          "body": "Anda dapat meminta informasi mengenai data yang tersimpan, memperoleh salinannya, meminta koreksi, atau meminta penghapusan. Permintaan dapat disampaikan melalui halaman kontak."
         },
         {
           "heading": "Perubahan kebijakan ini",
-          "body": "Kalau kebijakan ini berubah, tanggal di atas ikut berubah."
+          "body": "Jika kebijakan ini diperbarui, tanggal pembaruan di bagian atas halaman akan disesuaikan."
         },
         {
           "heading": "Kontak",
-          "body": "Hubungi studio lewat halaman kontak."
+          "body": "Untuk pertanyaan mengenai privasi, hubungi DwiStudio melalui halaman kontak."
         }
       ]
     }

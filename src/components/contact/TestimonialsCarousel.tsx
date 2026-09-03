@@ -24,11 +24,11 @@ export default function TestimonialsCarousel({
   return (
     <div className="border-line mt-14 border-t pt-10 md:mt-20 md:pt-14">
       <div className="mb-7">
-        <p className="eyebrow mb-4">{id ? "Cerita yang sudah tayang" : "Approved stories"}</p>
+        <p className="eyebrow mb-4">{id ? "Stories" : "Stories"}</p>
         <h3 className="home-stories-heading font-rampart-one font-display max-w-3xl text-[clamp(1.9rem,4.6vw,3.5rem)] leading-[1.02] font-medium tracking-[-0.015em]">
           {id
-            ? "Yang mereka rasakan saat bekerja bersama."
-            : "What people felt while working together."}
+          ? "Pengalaman Client"
+          : "Client Experiences"}
         </h3>
       </div>
 

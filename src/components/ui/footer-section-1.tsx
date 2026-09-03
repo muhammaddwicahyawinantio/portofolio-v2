@@ -82,8 +82,10 @@ export default function Footer1({
           hairline ini sambungannya tak terlihat sama sekali.
           Yang dipangkas untuk memendekkan footer HANYA ruang — padding, gap,
           dan jarak ke pembatas. Ukuran teks dan ikon sengaja dibiarkan besar:
-          itu permintaannya, dan memang di situ perbaikannya. */}
-      <footer className="monochrome-dark paper-deep text-ink border-line relative w-full overflow-hidden border-t pt-10 pb-6 md:pt-12 md:pb-7">
+          itu permintaannya, dan memang di situ perbaikannya. Mobile dipotong
+          lebih agresif lagi dari desktop (nilai tanpa prefix vs md:) karena
+          layar pendek merasakan tinggi footer jauh lebih berat. */}
+      <footer className="monochrome-dark paper-deep text-ink border-line relative w-full overflow-hidden border-t pt-7 pb-4 md:pt-12 md:pb-7">
         <noscript>
           <style>{NO_JS_FALLBACK}</style>
         </noscript>
@@ -116,7 +118,14 @@ export default function Footer1({
                 // rootMargin 0 memicunya begitu masuk layar.
                 threshold={0}
                 rootMargin="0px"
-                className="font-rampart-one font-display text-ink/[0.07] w-full text-center text-[clamp(2.5rem,13vw,15rem)] leading-[1.05] font-medium tracking-[-0.01em] uppercase"
+                // 0.07 sebelumnya: elemen ini SUDAH ready/visible/posisinya
+                // benar (diverifikasi lewat CDP, bukan bug trigger) — cuma
+                // alpha-nya nyaris tak kebaca sebagai watermark di layar
+                // sungguhan, beda dari screenshot headless yang lebih
+                // kentara. Dinaikkan ke 0.14 (dua kali lipat): tetap latar
+                // yang jelas BUKAN teks utama, tapi sekarang benar-benar
+                // kelihatan sebagai wordmark, bukan bidang gelap polos.
+                className="font-rampart-one font-display text-ink/[0.14] w-full text-center text-[clamp(2.5rem,13vw,15rem)] leading-[1.05] font-medium tracking-[-0.01em] uppercase"
               />
             ))}
           </ScrollScrub>
@@ -129,7 +138,7 @@ export default function Footer1({
             whileInView="visible"
             viewport={{ once: true, margin: "0px 0px -100px 0px" }}
             variants={containerVariants}
-            className="relative z-10 flex flex-col items-center gap-5"
+            className="relative z-10 flex flex-col items-center gap-3 md:gap-5"
           >
             <motion.div data-footer-reveal variants={itemVariants}>
               <SocialCloud links={socials} className="text-ink" />
@@ -151,7 +160,7 @@ export default function Footer1({
             <motion.nav
               data-footer-reveal
               variants={itemVariants}
-              className="relative z-10 flex flex-wrap justify-center gap-x-7 gap-y-3 text-base font-medium md:text-lg"
+              className="relative z-10 flex flex-wrap justify-center gap-x-5 gap-y-1.5 text-base font-medium md:gap-x-7 md:gap-y-3 md:text-lg"
             >
               {navLinks.map((item) => (
                 <motion.div key={item.href} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -175,12 +184,12 @@ export default function Footer1({
         {/* Pita silang beropacity 10% yang dulu di sini dibuang: ia tekstur, dan
             tekstur di situs ini tinggal satu (serat kertas di globals.css).
             Pembatas biasa selalu hairline — aturan 5. */}
-        <div aria-hidden className="border-line relative z-10 mt-7 border-t md:mt-8" />
+        <div aria-hidden className="border-line relative z-10 mt-4 border-t md:mt-8" />
 
         <Container>
           <motion.div
             data-footer-reveal
-            className="relative z-10 mt-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between"
+            className="relative z-10 mt-3 flex flex-col gap-2 md:mt-5 md:flex-row md:items-start md:justify-between md:gap-4"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}

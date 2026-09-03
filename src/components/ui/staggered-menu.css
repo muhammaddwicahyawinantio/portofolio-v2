@@ -8,7 +8,7 @@
   align-items: center;
   gap: 0.4rem;
   height: var(--nav-h, 36px);
-  padding: 0 0.9rem;
+  padding: 0 0.8rem;
   background: var(--color-ink, #111110);
   border: none;
   border-radius: 9999px;

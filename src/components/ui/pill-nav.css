@@ -169,7 +169,11 @@
 
 @media (max-width: 768px) {
   .pill-nav {
-    --nav-h: 34px;
+    /* 34px sebelumnya — diperkecil sedikit atas permintaan langsung, navbar
+       mobile terasa agak besar. .sm-toggle (tombol menu "Buka") mewarisi
+       --nav-h yang sama lewat CSS custom property, jadi logo DAN tombol
+       menu ikut menyusut bareng dari satu nilai ini. */
+    --nav-h: 32px;
     --pill-pad-x: 13px;
     gap: 6px;
   }

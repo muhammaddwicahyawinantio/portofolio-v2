@@ -75,14 +75,14 @@ const DESKTOP_LAYOUT: LayoutSpec[] = [
 
   // 04 — visual besar kanan
   {
-    width: "55vw",
-    x: "53vw",
-    y: "43vh",
+    width: "60vw",
+    x: "48vw",
+    y: "38vh",
     startX: "17vw",
     startY: "34vh",
     parallax: 1.08,
     scaleFrom: 0.88,
-    aspect: "16/10",
+    aspect: "16/7",
   },
 
   // 05 — portrait kiri
@@ -425,7 +425,7 @@ export function WorksScrollShowcase({
           </p>
 
           <h2 className="font-rampart-one font-display text-ink mt-2 text-[clamp(2.8rem,6vw,5.5rem)] leading-none font-medium tracking-[-0.025em]">
-            WORKS
+            Projects
           </h2>
         </div>
 

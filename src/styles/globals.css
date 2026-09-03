@@ -650,6 +650,19 @@ main .interior-page .project-card-action {
   .site-header-shell[data-scrolled="true"] {
     width: calc(100% - 2.25rem);
     max-width: 24rem;
+    /* Sama persis dengan versi desktop di atas (transform:scale), sekarang
+       aman dipakai di mobile juga: .sm-surface (panel dropdown milik
+       StaggeredMenu) DIPINDAH ke document.body lewat createPortal (lihat
+       staggered-menu.tsx) justru supaya scale di sini bisa dipasang tanpa
+       risiko — position:fixed-nya tidak lagi keturunan elemen yang di-scale,
+       jadi containing block-nya tetap viewport, bukan shell yang menyusut
+       ini. Digabung dengan width/max-width di atas (yang sudah menyempit
+       dan otomatis rapat ke tengah lewat mx-auto milik shell): scale
+       menyusutkan SELURUH isinya (logo, tombol "Buka", flag bahasa)
+       sekaligus secara proporsional dari transform-origin: top center,
+       jadi menyusut betulan ke tengah, bukan cuma kontainernya yang
+       menyempit sementara isinya tetap ukuran penuh. */
+    transform: scale(0.84);
   }
 }
 
@@ -1575,6 +1588,19 @@ main .hero-heading {
    tingkat supaya kartu jadi fokus yang lebih besar dibanding sebelumnya. */
 main .home-work-heading {
   font-size: clamp(2.5rem, 9vw, 7rem) !important;
+}
+
+/* Foto panel "Work" (lihat page.tsx): dulu dibingkai kartu (border + shadow +
+   rounded), sekarang background-like — bingkainya dibuang, dan tepi persegi
+   panjangnya sendiri dilarutkan lewat mask radial supaya foto terasa menyatu
+   ke kertas, bukan tertempel sebagai kotak UI di atasnya. Pola mask yang sama
+   dengan fade grid .interior-page::before, cuma bentuknya radial (foto ini
+   dikelilingi kertas di keempat sisi) bukan linear (grid itu cuma pudar ke
+   bawah). 60% opaque penuh, sisanya melarut ke transparan di 100% — bukan
+   0%/100% tegas, supaya transisinya lembut, bukan garis potong. */
+.home-work-photo {
+  -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 60%, transparent 100%);
+  mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 60%, transparent 100%);
 }
 
 main .home-benefits-heading {

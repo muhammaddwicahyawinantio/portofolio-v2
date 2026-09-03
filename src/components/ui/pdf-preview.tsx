@@ -136,17 +136,27 @@ const PdfPreview = forwardRef<
         </button>
       )}
 
-      {/* flex flex-col + max-h-[90vh]: sebelumnya dialog tidak punya batas
-          tinggi sama sekali, sementara area konten dipatok h-[75vh] tetap —
-          header + 75vh gampang melebihi tinggi viewport pendek (atau di
-          <dialog>, yang defaultnya TIDAK auto-scroll), dan sisanya cuma
-          terpotong tanpa cara menggulirnya. Sekarang dialog dibatasi 90vh,
-          header tetap alami tingginya, dan AREA KONTEN yang jadi flex-1 +
-          overflow-y-auto — kalau PDF-nya (atau pesan error/loading) lebih
-          tinggi dari sisa ruang, area itu sendiri yang scroll, bukan
-          terpotong di tepi dialog. min-h-0 wajib: tanpa itu flex item tidak
-          mau menyusut di bawah ukuran kontennya, jadi overflow-auto di
-          atasnya tidak pernah aktif. */}
+      {/* h-[90svh], BUKAN max-h-[90svh]: max-height cuma PLAFON, bukan target —
+          kalau dialog tingginya "auto" (cuma dibatasi max-height), Safari
+          mobile (beda dari Chrome desktop) tidak menjalankan flex-grow untuk
+          mengisi plafon itu; area konten (flex-1) cuma dapat tinggi
+          SEKONTENNYA (baris "Memuat..." setinggi ~20px), lalu overflow-y-auto
+          di atasnya jadi 0px tanpa isi terlihat — persis bug yang terlihat:
+          modal cuma nongol header (download + close), sisanya seperti tidak
+          ada. h-[90svh] itu tinggi DEFINITIF, bukan plafon, jadi flex-grow di
+          SETIAP browser (termasuk Safari) punya target pasti untuk diisi:
+          header ambil tinggi alaminya, sisa 90svh jatuh ke area konten. Kalau
+          PDF/pesan errornya lebih pendek dari sisa itu, area itu cuma
+          tampil kosong di tengah (items-center/justify-center) — kalau lebih
+          tinggi (PDF panjang), overflow-y-auto yang scroll. min-h-0 wajib:
+          tanpa itu flex item tidak mau menyusut di bawah ukuran kontennya,
+          jadi overflow-auto di atasnya tidak pernah aktif.
+
+          svh, bukan vh (lihat horizontal-scroll.tsx): vh di ponsel dihitung
+          dari tinggi viewport SAAT BILAH URL TERSEMBUNYI, jadi 90vh bisa
+          lebih tinggi dari layar yang benar-benar terlihat saat bilahnya
+          tampil. svh dihitung dari viewport TERKECIL yang mungkin, jadi
+          dialog selalu pas di layar yang benar-benar terlihat. */}
       {/* pointer-events-auto: dialog ini bisa dirender di dalam pembungkus
           pointer-events-none (mis. Hero, lihat proposal-button.tsx) —
           showModal() memang mempromosikannya ke top layer untuk pengecatan,
@@ -168,7 +178,7 @@ const PdfPreview = forwardRef<
           menyalakan flex saat atribut open benar-benar ada. */}
       <dialog
         ref={dialogRef}
-        className="bg-card text-ink border-line backdrop:bg-charcoal/50 pointer-events-auto m-auto hidden max-h-[90vh] w-[min(92vw,900px)] flex-col overflow-hidden border p-0 open:flex"
+        className="bg-card text-ink border-line backdrop:bg-charcoal/50 pointer-events-auto m-auto hidden h-[90svh] w-[min(92vw,900px)] flex-col overflow-hidden border p-0 open:flex"
       >
         <div className="border-line flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b px-5 py-4">
           <p className="eyebrow">{previewLabel}</p>
@@ -202,7 +212,7 @@ const PdfPreview = forwardRef<
             // berhasil dimuat, cuma tidak ada apa pun yang merendernya). iframe
             // memakai jalur navigasi biasa, yang tempat browser mobile
             // benar-benar menyalakan penampil PDF bawaannya.
-            <iframe src={blobUrl} className="h-full min-h-[75vh] w-full border-0" title={previewLabel} />
+            <iframe src={blobUrl} className="h-full w-full border-0" title={previewLabel} />
           ) : state === "error" ? (
             <p role="alert" className="text-danger text-sm">
               {errorLabel}

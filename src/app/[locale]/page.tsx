@@ -70,8 +70,19 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                 tetap dihormati bahkan saat justify-between menyebarkan
                 sisa ruang kosong — jadi di viewport pendek sekalipun (di
                 mana sisa ruang nyaris habis) judul, kartu, dan badge tetap
-                punya jarak minimal, tidak pernah benar-benar bersentuhan. */}
-            <Container className="relative flex flex-col items-center justify-center gap-8 overflow-hidden pt-20 pb-12 text-center md:min-h-svh md:justify-between md:gap-6 md:pt-[clamp(5.5rem,14vh,9rem)] md:pb-[clamp(5.5rem,12vh,7.5rem)]">
+                punya jarak minimal, tidak pernah benar-benar bersentuhan.
+
+                gap-6/pt-14/pb-8 di mobile (bukan gap-8/pt-20/pb-12): panel ini
+                duduk di dalam <ul class="h-svh"> milik HorizontalScroll saat
+                mode gerak aktif (viewport tinggi >= 640px + motion diizinkan)
+                — tingginya TERPATOK persis setinggi viewport, bukan cuma
+                dibatasi. Diukur lewat CDP di 390x700 (viewport terlihat yang
+                realistis dengan address bar terbuka): dengan padding lama,
+                baris badge terakhir jatuh persis di tepi bawah viewport,
+                sebagian ketutup tombol mengambang "Dwi AI". Dipangkas di sini
+                supaya ada jarak aman — pola yang sama dengan pemangkasan
+                footer (ruang yang dikurangi, bukan ukuran teks/ikon). */}
+            <Container className="relative flex flex-col items-center justify-center gap-6 overflow-hidden pt-14 pb-8 text-center md:min-h-svh md:justify-between md:gap-6 md:pt-[clamp(5.5rem,14vh,9rem)] md:pb-[clamp(5.5rem,12vh,7.5rem)]">
               {/* Wordmark literal, bukan projects("eyebrow"): ini nama brand,
                   sama di kedua bahasa. Ukurannya BUKAN di sini — `.home-work-heading`
                   di globals.css membawa font-size !important (lihat komentar di
@@ -81,28 +92,49 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
               <h2 className="home-work-heading relative w-full font-rampart-one font-display leading-[0.95] font-medium tracking-[-0.03em] md:leading-[0.82]">
                 Dwi Studio
               </h2>
-              {/* Pengganti animasi kucing Rive: kartu foto statis.
-                  BUKAN lagi `!absolute top-1/2 -translate-y-1/2` — itu
-                  menengahkan kartu pada 50% TINGGI VIEWPORT, yang cuma aman
-                  kalau viewport-nya kebetulan cukup tinggi. Di layar pendek
-                  (atau browser di-zoom), 50% itu jatuh tepat di area judul
-                  atau badge, dan keduanya bertumpuk — persis bug yang
-                  dilaporkan. Sekarang kartu jadi flex-item BIASA di antara
-                  judul & badge: flex column (justify-center di mobile,
-                  justify-between di desktop) yang mengatur jaraknya, bukan
-                  persentase tinggi layar. Ini TIDAK BISA bertumpuk dengan
-                  tetangganya — kalau ruang kurang, section-nya yang jadi
-                  lebih tinggi dari satu layar, bukan elemennya yang
-                  bertabrakan. h-auto pada <img>: lebar kartu tetap, tinggi
-                  mengikuti rasio asli 1200x800 supaya foto tidak pernah
-                  terpotong. */}
-              <div
+              {/* Pengganti animasi kucing Rive: dulu foto dibingkai kartu
+                  (border + bg-card + shadow + rounded + padding), sekarang
+                  background-like — bingkainya dibuang total, dan tepi
+                  persegi panjang fotonya dilarutkan lewat mask radial
+                  (.home-work-photo di globals.css, pola yang sama dengan
+                  fade grid .interior-page::before) supaya foto terasa
+                  menyatu ke kertas, bukan tertempel sebagai kotak UI. Lebar
+                  mobile/sm dikembalikan ke ukuran kartu yang LAMA (bukan
+                  dibesarkan) — bingkai yang hilang saja sudah cukup membuatnya
+                  terasa lebih besar/lepas, dan mobile tidak punya ruang lebih
+                  (lihat catatan di Container di atas). md: tetap dibesarkan,
+                  desktop punya ruang untuk itu.
+
+                  TETAP flex-item BIASA di antara judul & badge, BUKAN
+                  `!absolute top-1/2 -translate-y-1/2` — itu menengahkan pada
+                  50% TINGGI VIEWPORT, yang cuma aman kalau viewport-nya
+                  kebetulan cukup tinggi; di layar pendek (atau browser
+                  di-zoom) 50% itu jatuh tepat di area judul atau badge, dan
+                  keduanya bertumpuk — persis bug yang pernah dilaporkan.
+                  Sebagai flex-item, urutan dokumen (bukan posisi absolut)
+                  yang menjamin foto tidak PERNAH bertumpuk dengan judul atau
+                  badge tetangganya.
+
+                  Itu bukan jaminan semuanya muat, dua mode HorizontalScroll
+                  beda perilaku saat kepanjangan: mode statis (viewport
+                  pendek/reduced-motion) membiarkan section-nya jadi lebih
+                  tinggi dari satu layar dan halaman biasa yang scroll — aman.
+                  Mode gerak (viewport >= 640px tinggi) MEMATOK panel ini di
+                  dalam `<ul class="h-svh">` milik HorizontalScroll; kalau
+                  total tinggi kontennya melebihi itu, kelebihannya bukan
+                  mendorong section jadi lebih tinggi, tapi kepotong di tepi
+                  viewport — persis yang ditemukan lewat CDP di 390x700
+                  sebelum lebar foto ini dikembalikan (lihat komentar
+                  Container). h-auto: lebar tetap, tinggi mengikuti rasio asli
+                  1200x800 supaya foto tidak pernah terpotong RASIONYA
+                  sendiri — beda soal dari panel yang kepotong viewport. */}
+              {/* eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase */}
+              <img
                 aria-hidden
-                className="border-line bg-card rounded-card w-[clamp(14rem,70vw,19rem)] overflow-hidden border p-2 opacity-90 shadow-sm sm:w-[clamp(18rem,32vw,26rem)] md:w-[clamp(28rem,44vw,42rem)]"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- no next/image usage anywhere in this codebase */}
-                <img src="/images/dwi.png" alt="" className="rounded-card h-auto w-full" />
-              </div>
+                src="/images/dwi.png"
+                alt=""
+                className="home-work-photo h-auto w-[clamp(14rem,70vw,19rem)] opacity-90 sm:w-[clamp(18rem,32vw,26rem)] md:w-[clamp(34rem,52vw,50rem)]"
+              />
 
               {/* Social proof: badge kapabilitas, bukan CMS — dasar panel "Work".
                   Chip bordered ber-font Rampart One, seirama dengan display
@@ -120,19 +152,24 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                   w-full, teks yang tak muat memilih baris kedua DI DALAM
                   pilnya sendiri — bukan meluber ke luar. Di md ke atas kolom
                   sudah longgar, jadi dikembalikan ke w-auto + center biasa. */}
-<ul className="relative z-[1] grid grid-cols-2 items-center justify-items-stretch gap-1.5 sm:grid-cols-3 sm:gap-2 md:justify-items-center md:gap-3">
+<ul className="relative z-[1] grid grid-cols-2 items-center justify-items-stretch gap-2 sm:grid-cols-3 sm:gap-2.5 md:justify-items-center md:gap-3.5">
   {WORK_BADGES.map(({ Icon, en, id }) => (
     <li
       key={en}
-      className="border-line bg-card/70 text-ink/80 flex min-h-8 w-full items-center justify-center gap-1 rounded-full border px-2 py-1.5 sm:min-h-9 sm:px-2.5 md:w-auto md:gap-2 md:px-5 md:py-2.5"
+      className="border-line bg-card/70 text-ink/80 flex min-h-9 w-full items-center justify-center gap-1.5 rounded-full border px-3 py-2 sm:min-h-10 sm:px-3.5 md:w-auto md:gap-2.5 md:px-6 md:py-3"
     >
-      <Icon aria-hidden className="h-3 w-3 shrink-0 md:h-[18px] md:w-[18px]" strokeWidth={1.6} />
-      <span className="font-mono text-center text-[9px] leading-tight font-medium tracking-[0.03em] md:font-rampart-one md:font-display md:text-sm md:leading-none md:font-normal md:tracking-normal">
+      <Icon
+        aria-hidden
+        className="h-3.5 w-3.5 shrink-0 md:h-5 md:w-5"
+        strokeWidth={1.6}
+      />
+
+      <span className="font-mono text-center text-[10px] leading-tight font-medium tracking-[0.03em] md:font-rampart-one md:font-display md:text-base md:leading-none md:font-normal md:tracking-normal">
         {locale === "id" ? id : en}
       </span>
     </li>
   ))}
-</ul>
+</ul>     
             </Container>
 
             <FeatureShowcase locale={locale} />

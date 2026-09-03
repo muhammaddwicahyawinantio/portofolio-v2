@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ArrowUpRight } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { gsap } from "@/lib/gsap";
@@ -31,6 +32,21 @@ export default function StaggeredMenu({
 }) {
   const [open, setOpen] = useState(false);
   const [textLines, setTextLines] = useState<string[]>([openLabel, closeLabel]);
+  // Portal target: .sm-surface is position:fixed, meant to sit relative to
+  // the VIEWPORT. It used to just render inline inside .pill-nav, which was
+  // harmless only because no ancestor ever had a `transform`. Header scroll-
+  // shrink now wants transform:scale() on an ancestor (.site-header-shell) —
+  // any transformed ancestor becomes the containing block for ALL of its
+  // fixed/absolute descendants, so without this portal the dropdown panel
+  // would shrink and mis-position itself the moment it's opened while
+  // scrolled. Gated on mount (document doesn't exist during SSR): server and
+  // the first client render both render nothing here, so this introduces no
+  // hydration mismatch — the portal's content simply appears one tick later,
+  // same as any other client-only effect. setOpenState's existing
+  // `menuTlRef.current ?? createTimeline()` fallback already covers the case
+  // where the mount-triggered effect below fires before this flips true.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const openRef = useRef(false);
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -223,38 +239,42 @@ export default function StaggeredMenu({
         </span>
       </button>
 
-      <div ref={surfaceRef} className="sm-surface">
-        <aside
-          id="staggered-menu-panel"
-          ref={panelRef}
-          className="staggered-menu-panel"
-          aria-hidden={!open}
-          inert={!open}
-        >
-          <ul className="sm-card-list">
-            {items.map((item, index) => (
-              <li
-                className="sm-nav-card"
-                key={item.href}
-                ref={(el) => {
-                  cardRefs.current[index] = el;
-                }}
-              >
-                <Link
-                  className="sm-card-link"
-                  href={item.href}
-                  aria-label={item.ariaLabel ?? item.label}
-                  onClick={() => setOpenState(false)}
-                >
-                  <span className="sm-card-index">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="sm-card-label">{item.label}</span>
-                  <ArrowUpRight className="sm-card-icon" aria-hidden="true" strokeWidth={1.8} />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </aside>
-      </div>
+      {mounted &&
+        createPortal(
+          <div ref={surfaceRef} className="sm-surface">
+            <aside
+              id="staggered-menu-panel"
+              ref={panelRef}
+              className="staggered-menu-panel"
+              aria-hidden={!open}
+              inert={!open}
+            >
+              <ul className="sm-card-list">
+                {items.map((item, index) => (
+                  <li
+                    className="sm-nav-card"
+                    key={item.href}
+                    ref={(el) => {
+                      cardRefs.current[index] = el;
+                    }}
+                  >
+                    <Link
+                      className="sm-card-link"
+                      href={item.href}
+                      aria-label={item.ariaLabel ?? item.label}
+                      onClick={() => setOpenState(false)}
+                    >
+                      <span className="sm-card-index">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="sm-card-label">{item.label}</span>
+                      <ArrowUpRight className="sm-card-icon" aria-hidden="true" strokeWidth={1.8} />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

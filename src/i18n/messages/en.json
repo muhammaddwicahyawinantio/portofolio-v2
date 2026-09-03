@@ -1,266 +1,266 @@
-{
-  "meta": {
-    "title": "DwiStudio — Web Development & Digital Solutions",
-    "description": "DwiStudio builds professional websites, landing pages, company profiles, e-commerce platforms, digital invitations, ERP, e-learning platforms, and custom web systems."
-  },
-  "nav": {
-    "about": "About",
-    "projects": "Projects",
-    "services": "Services",
-    "products": "Products",
-    "contact": "Contact",
-    "getInTouch": "Let's talk"
-  },
-  "menu": {
-    "open": "Open menu",
-    "close": "Close menu"
-  },
-  "locale": {
-    "en": "EN",
-    "id": "ID",
-    "switchLabel": "Change language"
-  },
-  "hero": {
-    "line1": "Build.",
-    "line2": "Grow,",
-    "line3": "go digital.",
-    "lead": "DwiStudio designs and builds websites, web apps, and digital solutions that combine modern design, performance, and the features your business actually needs.",
-    "scroll": "Explore",
-    "scrollHint": "See our services and work",
-    "proposalDownload": "Download Proposal",
-    "proposalLoading": "Loading proposal…",
-    "proposalError": "The proposal failed to load.",
-    "proposalClose": "Close preview",
-    "proposalChooseLanguage": "Choose proposal language",
-    "proposalChooseClose": "Close language picker",
-    "proposalLanguageId": "Indonesian",
-    "proposalLanguageEn": "English"
-  },
-  "cta": {
-    "eyebrow": "Start a project",
-    "heading": "Have an idea you want to bring online?",
-    "action": "Start a project",
-    "ready": "Ready to begin?"
-  },
-  "about": {
-    "eyebrow": "About",
-    "title": "About DwiStudio",
-    "metaTitle": "About DwiStudio — Web Development & Digital Studio",
-    "metaDescription": "Meet DwiStudio, a digital studio focused on building professional websites, web apps, and digital solutions tailored to your needs.",
-    "lead": "DwiStudio is a digital studio that helps businesses, brands, and individuals build professional, functional websites and digital systems that are easy to grow.",
-    "storyTitle": "The Journey",
-    "workTitle": "Work Experience",
-    "educationTitle": "Education",
-    "periodLabel": "Period",
-    "roleLabel": "Role",
-    "institutionLabel": "Institution",
-    "skillsTitle": "Skills & Tools",
-    "certificationsTitle": "Certifications",
-    "valuesTitle": "How We Work",
-    "cvPreview": "View CV",
-    "cvDownload": "Download CV",
-    "cvLoading": "Loading CV…",
-    "cvError": "The CV failed to load.",
-    "cvClose": "Close preview",
-    "values": {
+      {
+      "meta": {
+      "title": "DwiStudio — Professional Website Development & Digital Solutions",
+      "description": "DwiStudio helps businesses, brands, and individuals build professional websites, landing pages, company profiles, e-commerce platforms, digital invitations, ERP systems, e-learning platforms, and modern custom web solutions."
+      },
+      "nav": {
+      "about": "About",
+      "projects": "Projects",
+      "services": "Services",
+      "products": "Products",
+      "contact": "Contact",
+      "getInTouch": "Let's talk"
+      },
+      "menu": {
+      "open": "Open",
+      "close": "Close"
+      },
+      "locale": {
+      "en": "EN",
+      "id": "ID",
+      "switchLabel": "Change language"
+      },
+      "hero": {
+      "line1": "Build.",
+      "line2": "Grow.",
+      "line3": "Go further.",
+      "lead": "We turn ideas into thoughtfully crafted digital experiences—combining strong visuals, modern technology, optimal performance, and functionality designed around your needs.",
+      "scroll": "Explore",
+      "scrollHint": "Explore our services and work",
+      "proposalDownload": "Download Proposal",
+      "proposalLoading": "Loading proposal…",
+      "proposalError": "Failed to load proposal.",
+      "proposalClose": "Close preview",
+      "proposalChooseLanguage": "Choose language",
+      "proposalChooseClose": "Close language selector",
+      "proposalLanguageId": "Indonesian",
+      "proposalLanguageEn": "English"
+      },
+      "cta": {
+      "eyebrow": "Call to action",
+      "heading": "Have a great idea? Let's turn it into something real!",
+      "action": "Discuss your project",
+      "ready": "Ready to get started?"
+      },
+      "about": {
+      "eyebrow": "About",
+      "title": "About DwiStudio",
+      "metaTitle": "About DwiStudio — Web Development & Digital Studio",
+      "metaDescription": "Discover DwiStudio, a digital studio focused on developing websites, web applications, and digital solutions tailored to business and personal needs.",
+      "lead": "DwiStudio is a digital studio helping businesses, brands, and individuals build professional, functional, and intuitive digital experiences designed to evolve with their needs.",
+      "storyTitle": "Journey",
+      "workTitle": "Work Experience",
+      "educationTitle": "Education",
+      "periodLabel": "Period",
+      "roleLabel": "Role",
+      "institutionLabel": "Institution",
+      "skillsTitle": "Skills",
+      "certificationsTitle": "Certifications",
+      "valuesTitle": "Work Principles",
+      "cvPreview": "View CV",
+      "cvDownload": "Download CV",
+      "cvLoading": "Loading CV…",
+      "cvError": "Failed to load CV.",
+      "cvClose": "Close preview",
+      "values": {
       "one": {
-        "title": "Read before writing",
-        "body": "We trace the whole requirement before touching the keyboard. The fastest fix in the wrong place is just a second problem."
+      "title": "Understand Before Building",
+      "body": "Every project begins with a thorough understanding of its requirements. We make sure every solution addresses the right problem rather than simply adding more features."
       },
       "two": {
-        "title": "As small as it goes",
-        "body": "The smallest change that actually holds beats a tidy abstraction nobody needed yet."
+      "title": "Simple, Purposeful, and Sustainable",
+      "body": "We prioritize effective and maintainable solutions without introducing unnecessary complexity."
       },
       "three": {
-        "title": "Hand over something you can run",
-        "body": "Every project ships with its own CMS. You never need to call us to change a sentence."
+      "title": "You Stay in Control",
+      "body": "Every project is designed to be easy to manage. With an integrated CMS, you can update your content independently without always relying on a developer."
       }
-    },
-    "mediaTitle": "Music & Film",
-    "musicTitle": "Music",
-    "filmTitle": "Film"
-  },
-  "projects": {
-    "eyebrow": "Portfolio",
-    "title": "Selected projects.",
-    "metaTitle": "Website & Web Development Portfolio | DwiStudio",
-    "metaDescription": "See a selection of websites and digital systems built by DwiStudio, focused on design, performance, user experience, and the right technology.",
-    "lead": "A selection of websites and digital systems built with a focus on business needs, user experience, and the right technology choices.",
-    "role": "Role",
-    "year": "Year",
-    "client": "Client",
-    "visitSite": "Visit website",
-    "back": "Back to projects",
-    "openHint": "Double click / double tap a panel to open its case study",
-    "readMore": "Read more",
-    "detailsLabel": "Project details",
-    "overviewLabel": "Overview",
-    "galleryLabel": "Gallery"
-  },
-  "contact": {
-    "eyebrow": "Contact",
-    "title": "Let's talk about your project.",
-    "metaTitle": "Website Development Consultation | DwiStudio",
-    "metaDescription": "Discuss your website, landing page, e-commerce, ERP, e-learning, or custom web application needs with DwiStudio.",
-    "lead": "Tell us about the website or system you want to build. DwiStudio will help scope the requirements and the right development approach.",
-    "breadcrumb": "Contact / Consultation",
-    "point1": "Tell us the project goal and who it is for",
-    "point2": "DwiStudio replies with a clear scope, timeline, and estimate",
-    "point3": "You receive the site plus a CMS you can run yourself",
-    "trustedBy": "What clients say",
-    "privacy": "By submitting this form you agree your details are stored only to answer this message. They are not shared with anyone else, and never used for marketing.",
-    "infoSocialTitle": "Elsewhere",
-    "infoLocationTitle": "Location & status",
-    "infoReplyTitle": "Response time",
-    "infoReplyBody": "Every message is read and answered directly, usually within one to two working days.",
-    "qrFallback": "Buy me a coffee"
-  },
-  "services": {
-    "eyebrow": "Services",
-    "title": "Web solutions for every need.",
-    "metaTitle": "Website Development Services | DwiStudio",
-    "metaDescription": "DwiStudio's website development services cover landing pages, company profiles, e-commerce, digital invitations, ERP, e-learning, and custom web applications.",
-    "lead": "Choose the service that fits your needs. Every website is built responsive, well-structured, and adaptable to business or personal requirements.",
-    "priceFrom": "Starting from",
-    "explore": "Explore",
-    "builder": "Web Development",
-    "digitalProduct": "Digital Products"
-  },
-  "products": {
-    "eyebrow": "Digital products",
-    "title": "Premium accounts, ready to use.",
-    "lead": "Subscription accounts sold through Lynk.id. Pick one, check out there, and your access details follow.",
-    "explore": "Explore"
-  },
-  "contactForm": {
-    "name": "Name",
-    "email": "Email",
-    "whatsapp": "WhatsApp",
-    "subject": "Subject",
-    "message": "Message",
-    "send": "Send message",
-    "sending": "Sending…",
-    "success": "Thanks — your message has been received and will be reviewed shortly.",
-    "errorRequired": "Please fill in every required field.",
-    "errorEmail": "Please enter a valid email address.",
-    "errorWhatsapp": "Please enter a valid WhatsApp number.",
-    "errorRate": "Too many requests from this connection. Please try again shortly.",
-    "errorGeneric": "Something went wrong while sending your message. Please try again."
-  },
-  "notFound": {
-    "eyebrow": "404",
-    "title": "Page not found",
-    "lead": "The page you're looking for isn't available or may have moved.",
-    "action": "Back to home"
-  },
-  "footer": {
-    "statement": "Building websites and digital solutions designed for real business needs.",
-    "rights": "All rights reserved.",
-    "builtWith": "Built with",
-    "terms": "Terms of Service",
-    "privacy": "Privacy Policy"
-  },
-  "features": {
-    "eyebrow": "Process",
-    "title": "How the work runs.",
-    "back": "Back to home",
-    "explore": "Explore"
-  },
-  "benefits": {
-    "eyebrow": "Why us",
-    "title": "Why work with us.",
-    "scrollHint": "Scroll to open"
-  },
-  "legal": {
-    "eyebrow": "Legal",
-    "updated": "Last updated 23 August 2026",
-    "terms": {
+      },
+      "mediaTitle": "Curation",
+      "musicTitle": "Music",
+      "filmTitle": "Film"
+      },
+      "projects": {
+      "eyebrow": "All Projects",
+      "title": "Digital Work",
+      "metaTitle": "Website & Web Development Portfolio | DwiStudio",
+      "metaDescription": "Explore selected websites and digital systems created by DwiStudio with careful attention to design, performance, user experience, and the unique needs of every project.",
+      "lead": "A selection of websites and digital systems built through a focused approach—bringing together business needs, user experience, design, and the right technology.",
+      "role": "Role",
+      "year": "Year",
+      "client": "Client",
+      "visitSite": "Visit website",
+      "back": "Back to projects",
+      "openHint": "Double-click / double-tap a panel to open the case study",
+      "readMore": "View more",
+      "detailsLabel": "Project details",
+      "overviewLabel": "Overview",
+      "galleryLabel": "Gallery"
+      },
+      "contact": {
+      "eyebrow": "Proposals & Partnerships",
+      "title": "Let's Build a Meaningful Collaboration",
+      "metaTitle": "Project Proposals & Partnerships | DwiStudio",
+      "metaDescription": "Discuss project requirements, service proposals, or partnership opportunities with DwiStudio. We are ready to deliver the right digital solutions for your business and development needs.",
+      "lead": "Share your requirements, project plans, or partnership opportunities with us. We will carefully review them and provide an approach, scope, and proposal aligned with the goals you want to achieve.",
+      "breadcrumb": "Contact / Partnership",
+      "point1": "Ready to deliver the right digital solutions for your needs and objectives",
+      "point2": "Open to professional partnerships and collaborations that create mutual value",
+      "point3": "100% free initial consultation to understand your needs and determine the best next steps",
+      "trustedBy": "Client Trust",
+      "privacy": "The information you submit is used solely for communication, consultation, and proposal follow-up. Your information is kept confidential and will not be used for promotional purposes without your consent.",
+      "infoSocialTitle": "Connect With Us",
+      "infoLocationTitle": "Location & Availability",
+      "infoReplyTitle": "Response Time",
+      "infoReplyBody": "We prioritize fast and responsive communication. Every message will be reviewed and answered as soon as possible.",
+      "qrFallback": "Support DwiStudio"
+      },
+      "services": {
+      "eyebrow": "Services",
+      "title": "Digital Solutions Built Around Your Needs",
+      "metaTitle": "Website Development & Web Development Services | DwiStudio",
+      "metaDescription": "DwiStudio provides landing pages, company profiles, e-commerce websites, digital invitations, ERP systems, e-learning platforms, and responsive custom web applications designed to evolve with your needs.",
+      "lead": "Choose the service that best aligns with your goals. Every solution is designed to be responsive, well-structured, intuitive, and flexible enough to grow with your business or personal needs.",
+      "priceFrom": "Starting from",
+      "explore": "Explore",
+      "builder": "Web Development",
+      "digitalProduct": "Premium Apps"
+      },
+      "products": {
+      "eyebrow": "Digital Products",
+      "title": "Affordable Premium Apps with Warranty",
+      "lead": "Digital products and premium app access at competitive prices, with fast processing and service warranty for a secure and reliable transaction experience.",
+      "explore": "Explore"
+      },
+      "contactForm": {
+      "name": "Name",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send message",
+      "sending": "Sending…",
+      "success": "Thank you. Your message has been received and will be reviewed as soon as possible.",
+      "errorRequired": "Please complete all required fields.",
+      "errorEmail": "Please enter a valid email address.",
+      "errorWhatsapp": "Please enter a valid WhatsApp number.",
+      "errorRate": "Too many requests from this connection. Please try again in a few moments.",
+      "errorGeneric": "Something went wrong while sending your message. Please try again."
+      },
+      "notFound": {
+      "eyebrow": "404",
+      "title": "Page not found",
+      "lead": "The page you're looking for is unavailable, has been moved, or may no longer exist.",
+      "action": "Back to home"
+      },
+      "footer": {
+      "statement": "Creating websites and digital solutions designed with purpose, crafted with attention to detail, and built to support growth.",
+      "rights": "All rights reserved.",
+      "builtWith": "Built with",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+      },
+      "features": {
+      "eyebrow": "Process",
+      "title": "How Projects Are Delivered.",
+      "back": "Back to home",
+      "explore": "Explore"
+      },
+      "benefits": {
+      "eyebrow": "Benefits",
+      "title": "Why DwiStudio?",
+      "scrollHint": "Scroll to explore"
+      },
+      "legal": {
+      "eyebrow": "Legal",
+      "updated": "Last updated August 23, 2026",
+      "terms": {
       "title": "Terms of Service",
-      "lead": "What you agree to when you use this site or commission work from DwiStudio.",
+      "lead": "The terms that apply when you use this website or work with DwiStudio.",
       "sections": [
-        {
-          "heading": "Who you are dealing with",
-          "body": "DwiStudio is a one-person design and development practice in Banjarmasin, Indonesia, run by M. Dwi Cahya Winantio. Everything on this site is written, designed, and built by one hand."
-        },
-        {
-          "heading": "Using this site",
-          "body": "Read it, share it, link to it. The writing, photographs, code, and design belong to the studio - do not republish them as your own, and ask first before using them to train a model."
-        },
-        {
-          "heading": "Prices are starting points",
-          "body": "The figures on the Services page are where projects start, not fixed quotes. A real quote follows a conversation about what you need, and it names the scope, the timeline, and the price before any work begins."
-        },
-        {
-          "heading": "Payment",
-          "body": "Projects open with a deposit and settle on handover unless we agree otherwise in writing. The exact terms live in your quote, not on this page."
-        },
-        {
-          "heading": "Revisions and timelines",
-          "body": "Every quote states how many revision rounds it includes. Timelines assume your content and feedback arrive when they are due; if they arrive late, the delivery date moves by the same amount."
-        },
-        {
-          "heading": "Who owns the finished work",
-          "body": "Once the final invoice is paid, the work is yours. The studio keeps the right to show it in its portfolio unless you ask otherwise. Third-party fonts, photography, and plugins stay under their own licences, which the quote names."
-        },
-        {
-          "heading": "What you provide",
-          "body": "You are responsible for the text, images, and logos you send, and for holding the rights to use them."
-        },
-        {
-          "heading": "Limits",
-          "body": "Work is built carefully and tested before it ships, but no site can be guaranteed free of faults or downtime. The studio is not liable for indirect or consequential loss. Nothing here removes rights you hold under Indonesian consumer law."
-        },
-        {
-          "heading": "Changes to these terms",
-          "body": "These terms can change. The date at the top tells you when they last did, and a change never applies backwards to work already quoted."
-        },
-        {
-          "heading": "Questions",
-          "body": "Write through the contact page. The reply comes from the studio, not a helpdesk."
-        }
+      {
+      "heading": "About DwiStudio",
+      "body": "DwiStudio is an independent design and development practice based in Banjarmasin, Indonesia, operated by M. Dwi Cahya Winantio. All content, design, and development on this website are produced directly by the studio."
+      },
+      {
+      "heading": "Using This Website",
+      "body": "You are welcome to read, share, and link to this website. The writing, photographs, code, and designs remain the property of the studio; do not republish them as your own, and please request permission before using them to train a model."
+      },
+      {
+      "heading": "Prices Are Starting Points",
+      "body": "Prices shown on the Services page are starting prices, not final quotations. A formal proposal is provided after the project requirements have been discussed and will include the scope, estimated timeline, and cost before work begins."
+      },
+      {
+      "heading": "Payment",
+      "body": "Projects begin after the required deposit has been paid and are completed with final payment upon handover, unless otherwise agreed in writing. The applicable payment terms will be stated in the project proposal."
+      },
+      {
+      "heading": "Revisions and Timelines",
+      "body": "Each proposal specifies the number of revision rounds included within the project scope. Project timelines depend on the timely delivery of materials and client feedback; delays in either may result in a corresponding adjustment to the delivery schedule."
+      },
+      {
+      "heading": "Ownership of Final Work",
+      "body": "Once the final invoice has been paid in full, the completed work becomes yours. The studio retains the right to feature the project in its portfolio unless you request otherwise. Third-party fonts, photography, plugins, and other assets remain subject to their respective licenses as specified in the proposal."
+      },
+      {
+      "heading": "Materials You Provide",
+      "body": "You are responsible for the text, images, logos, and other materials provided to the studio, including ensuring that you have the appropriate rights to use them."
+      },
+      {
+      "heading": "Limitation of Liability",
+      "body": "Every project is carefully built and tested before handover; however, no website can be guaranteed to remain completely free from errors or interruptions. The studio is not liable for indirect or consequential losses. Nothing in these terms removes any rights you may have under Indonesian consumer protection law."
+      },
+      {
+      "heading": "Changes to These Terms",
+      "body": "These terms may be updated from time to time. The date shown above indicates the most recent update, and any changes will not apply retroactively to work that has already been agreed upon."
+      },
+      {
+      "heading": "Questions",
+      "body": "For questions regarding these terms, please contact DwiStudio through the contact page."
+      }
       ]
-    },
-    "privacy": {
+      },
+      "privacy": {
       "title": "Privacy Policy",
-      "lead": "What this site collects, why it collects it, and how long it is kept.",
+      "lead": "An explanation of the data this website collects, why it is collected, and how long it is retained.",
       "sections": [
-        {
-          "heading": "The short version",
-          "body": "No advertising, no tracking pixels, no third-party analytics. The only personal data this site collects is what you type into the contact form."
-        },
-        {
-          "heading": "What the contact form collects",
-          "body": "Your name, email address, subject, and message - with the date it arrived and whether it has been read. Nothing else is stored, and nothing is inferred about you."
-        },
-        {
-          "heading": "Why it is collected",
-          "body": "To read your message and answer it. That is the only purpose. Your details are never sold, never shared with anyone else, and never used for marketing."
-        },
-        {
-          "heading": "How long it is kept",
-          "body": "Messages are kept while the conversation is still useful and deleted when it is not. Ask for yours to be deleted sooner and it will be."
-        },
-        {
-          "heading": "Where it is stored",
-          "body": "In this site's own database, on hosting the studio controls. The hosting provider processes it on the studio's behalf and under contract, and uses it for nothing else."
-        },
-        {
-          "heading": "Cookies",
-          "body": "Browsing the public site sets no cookies. A session cookie exists only inside the admin area, which is for the studio's own sign-in - not for visitors."
-        },
-        {
-          "heading": "Your rights",
-          "body": "You can ask what is held about you, ask for a copy, ask for a correction, or ask for it to be deleted. Write in and it will be acted on."
-        },
-        {
-          "heading": "Changes to this policy",
-          "body": "If this policy changes, the date at the top changes with it."
-        },
-        {
-          "heading": "Contact",
-          "body": "Reach the studio through the contact page."
-        }
+      {
+      "heading": "In Short",
+      "body": "This website does not use advertising, tracking pixels, or third-party analytics. The only personal data collected comes from information you submit through the contact form."
+      },
+      {
+      "heading": "Information Collected Through the Contact Form",
+      "body": "The contact form stores your name, email address, subject, message, date received, and whether the message has been read. No other information is stored or inferred about you."
+      },
+      {
+      "heading": "Purpose of Data Collection",
+      "body": "Your information is used solely to read and respond to your message. Your data is not sold, shared with third parties, or used for marketing activities."
+      },
+      {
+      "heading": "Data Retention",
+      "body": "Messages are retained for as long as they remain relevant to the communication and are deleted when they are no longer required. You may also request earlier deletion."
+      },
+      {
+      "heading": "Where Your Data Is Stored",
+      "body": "Data is stored in the website's database within a hosting environment managed by the studio. The hosting provider processes the data on behalf of the studio as part of the services provided and is not intended to use it for any other purpose."
+      },
+      {
+      "heading": "Cookies",
+      "body": "The public website does not use cookies. A session cookie is used only within the admin area for the studio's internal authentication and is not used for visitors."
+      },
+      {
+      "heading": "Your Rights",
+      "body": "You may request information about the data stored about you, obtain a copy, request corrections, or request deletion. Requests can be submitted through the contact page."
+      },
+      {
+      "heading": "Changes to This Policy",
+      "body": "If this policy is updated, the revision date displayed at the top of the page will be updated accordingly."
+      },
+      {
+      "heading": "Contact",
+      "body": "For privacy-related questions, please contact DwiStudio through the contact page."
+      }
       ]
-    }
-  }
-}
+      }
+      }
+      }

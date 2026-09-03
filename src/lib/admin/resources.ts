@@ -220,7 +220,7 @@ export const RESOURCES: Resource[] = [
       ...bilingual("subtitle", "Subtitle", "text"),
       ...bilingual("description", "Description"),
       { name: "image", label: "Image", type: "image" },
-      { name: "link", label: "Lynk.id Link", type: "url", required: true },
+      { name: "link", label: "Link", type: "url", required: true },
       orderField,
     ],
     columns: ["title", "link", "order"],
