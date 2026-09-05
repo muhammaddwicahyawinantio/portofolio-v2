@@ -1370,10 +1370,6 @@ main .hero-heading {
 }
 
 .card-glow img {
-  filter: grayscale(1) contrast(1.04);
-}
-
-.card-glow img {
   transition:
     filter 0.45s ease,
     transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);

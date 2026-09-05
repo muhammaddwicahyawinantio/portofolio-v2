@@ -152,24 +152,24 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                   w-full, teks yang tak muat memilih baris kedua DI DALAM
                   pilnya sendiri — bukan meluber ke luar. Di md ke atas kolom
                   sudah longgar, jadi dikembalikan ke w-auto + center biasa. */}
-<ul className="relative z-[1] grid grid-cols-2 items-center justify-items-stretch gap-2 sm:grid-cols-3 sm:gap-2.5 md:justify-items-center md:gap-3.5">
-  {WORK_BADGES.map(({ Icon, en, id }) => (
-    <li
-      key={en}
-      className="border-line bg-card/70 text-ink/80 flex min-h-9 w-full items-center justify-center gap-1.5 rounded-full border px-3 py-2 sm:min-h-10 sm:px-3.5 md:w-auto md:gap-2.5 md:px-6 md:py-3"
-    >
-      <Icon
-        aria-hidden
-        className="h-3.5 w-3.5 shrink-0 md:h-5 md:w-5"
-        strokeWidth={1.6}
-      />
+              <ul className="relative z-[1] grid grid-cols-2 items-center justify-items-stretch gap-2 sm:grid-cols-3 sm:gap-2.5 md:justify-items-center md:gap-3.5">
+                {WORK_BADGES.map(({ Icon, en, id }) => (
+                  <li
+                    key={en}
+                    className="border-line bg-card/70 text-ink/80 flex min-h-9 w-full items-center justify-center gap-1.5 rounded-full border px-3 py-2 sm:min-h-10 sm:px-3.5 md:w-auto md:gap-2.5 md:px-6 md:py-3"
+                  >
+                    <Icon
+                      aria-hidden
+                      className="h-3.5 w-3.5 shrink-0 md:h-5 md:w-5"
+                      strokeWidth={1.6}
+                    />
 
-      <span className="font-mono text-center text-[10px] leading-tight font-medium tracking-[0.03em] md:font-rampart-one md:font-display md:text-base md:leading-none md:font-normal md:tracking-normal">
-        {locale === "id" ? id : en}
-      </span>
-    </li>
-  ))}
-</ul>     
+                    <span className="font-mono text-center text-[10px] leading-tight font-medium tracking-[0.03em] md:font-rampart-one md:font-display md:text-base md:leading-none md:font-normal md:tracking-normal">
+                      {locale === "id" ? id : en}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </Container>
 
             <FeatureShowcase locale={locale} />
