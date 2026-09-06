@@ -21,6 +21,7 @@ type ExploreItem = {
   id: string;
   title: string;
   description: string;
+  priceLabel?: string;
   image: string | null;
   /** Dipakai kalau belum ada gambar: emoji (Services) atau monogram (Products). */
   fallback: string;
@@ -60,6 +61,11 @@ function ExploreCard({ item, exploreLabel }: { item: ExploreItem; exploreLabel: 
         <p className="text-ink-soft line-clamp-2 text-[11px] leading-[1.6] text-pretty">
           {item.description}
         </p>
+        {item.priceLabel ? (
+          <p className="text-ink-soft font-mono text-[10px] leading-tight font-bold tracking-[0.04em]">
+            {item.priceLabel}
+          </p>
+        ) : null}
         {/* Ikon, bukan kata. Dua belas tombol "EXPLORE" identik berjejer di satu
             layar membuat labelnya berhenti berarti — yang tersisa cuma dua belas
             baris huruf kapital yang sama persis. Keranjang menyampaikan hal yang
@@ -149,6 +155,7 @@ export default async function ExploreColumns({
     id: row.id,
     title: id ? row.name_id : row.name_en,
     description: id ? row.description_id : row.description_en,
+    priceLabel: row.priceLabel,
     image: row.image,
     fallback: row.icon,
     // SATU tujuan untuk seluruh kolom, bukan `row.link` per baris. Kolom ini

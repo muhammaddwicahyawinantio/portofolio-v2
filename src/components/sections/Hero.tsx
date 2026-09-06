@@ -154,7 +154,6 @@ export default async function Hero({ locale }: { locale: string }) {
             </h1>
 
             <div className="text-ink/75 mt-6 flex items-center gap-3 font-mono text-[11px] tracking-[0.18em] uppercase md:mt-8">
-              <span aria-hidden className="bg-ink/40 h-px w-10" />
               <p>{subheadline}</p>
             </div>
           </div>

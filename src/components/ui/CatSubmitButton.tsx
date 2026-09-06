@@ -44,12 +44,10 @@ export default function CatSubmitButton({ pending, ariaLabel, className }: CatSu
       src: "/rive/cat-botton.riv",
       stateMachines: STATE_MACHINE,
       autoplay: true,
-      // BottomCenter, bukan Center: artboard-nya menyediakan ruang kosong di
-      // ATAS tombol supaya kucing muat muncul ke sana. Center menaruh tombol
-      // idle-nya melayang di tengah kotak (banyak ruang kosong di atas MAUPUN
-      // di bawah) — BottomCenter menjejakkan tombolnya ke dasar kotak, ruang
-      // kosongnya cuma di atas dan dipakai sungguhan begitu kucingnya muncul.
-      layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
+      // Cover + Center memotong ruang kosong artboard di sekitar tombol.
+      // Tombol tetap memakai state machine yang sama, tapi canvas tidak lagi
+      // membuat celah besar di layout form.
+      layout: new Layout({ fit: Fit.Cover, alignment: Alignment.Center }),
       shouldDisableRiveListeners: true,
     },
     { shouldResizeCanvasToContainer: true, useDevicePixelRatio: true },
@@ -149,26 +147,16 @@ export default function CatSubmitButton({ pending, ariaLabel, className }: CatSu
       onBlur={onBlur}
       onClick={onClick}
       className={cn(
-        // Artboard aslinya 400x300 (4:3, dicek via rive.artboardWidth/Height),
-        // dan wadah di sini dibuat PERSIS 4:3 — bukan sekadar "dekat" seperti
-        // ukuran lama (210x135 = 1.56, 260x170 = 1.53). Fit.Contain mengecilkan
-        // artwork sampai sisi paling sempit muat: pada kotak yang lebih lebar
-        // dari 4:3, tinggi jadi pembatasnya dan sisa lebarnya jadi ruang kosong
-        // kiri-kanan yang terbuang — 210px lebar dulu cuma terpakai 180px.
-        // Dengan rasio yang sama persis, artwork mengisi penuh kotaknya, jadi
-        // kucing + tombolnya membesar dua kali: dari kotak yang lebih besar DAN
-        // dari ruang yang tidak lagi terbuang.
-        //
-        // 240x180 (mobile) muat di viewport tersempit yang diuji: 360px dikurangi
-        // padding Container (px-5) dan padding kartu form (p-4) menyisakan ~288px.
-        // mx-auto: tombol jadi pusat perhatian yang disengaja, bukan nempel kiri.
-        "mx-auto block h-[180px] w-[240px] shrink-0 touch-manipulation overflow-visible select-none sm:h-[240px] sm:w-[320px]",
+        // Rasio wadah mengikuti bentuk tombol yang terlihat, bukan artboard
+        // 4:3 penuh milik file Rive. Fit.Cover mengisi wadah ini dan memotong
+        // area kosong, jadi teks privacy di bawahnya bisa rapat.
+        "mx-auto block h-[88px] w-[220px] shrink-0 touch-manipulation overflow-visible select-none sm:h-[96px] sm:w-[252px]",
         "disabled:cursor-not-allowed disabled:opacity-60",
         className,
       )}
       style={{ WebkitTapHighlightColor: "transparent" }}
     >
-      <RiveComponent className="block h-full w-full" />
+      <RiveComponent className="block h-full w-full scale-[1.3]" />
     </button>
   );
 }

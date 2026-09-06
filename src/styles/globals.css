@@ -1574,31 +1574,8 @@ main .hero-heading {
 }
 
 /* Heading pilihan di homepage. Aturan global Rampart One sengaja mengecilkan
-   judul dekoratif secara umum; lima class ini adalah pengecualian eksplisit
+   judul dekoratif secara umum; empat class ini adalah pengecualian eksplisit
    untuk heading yang menjadi penanda section. */
-/* Turun dari clamp(5rem, 22vw, 18rem): itu dikalibrasi untuk "Portofolio"
-   (eyebrow lama). Wordmark "Dwi Studio" yang menggantikannya butuh langit-langit
-   jauh lebih rendah — di layar lebar 18rem meluber keluar Container (lihat
-   riwayat commit). Diperkecil sedikit lagi dari clamp(2.75rem, 10vw, 8rem):
-   kartu dwi.png di bawahnya sekarang diperbesar, jadi judul turun satu
-   tingkat supaya kartu jadi fokus yang lebih besar dibanding sebelumnya. */
-main .home-work-heading {
-  font-size: clamp(2.5rem, 9vw, 7rem) !important;
-}
-
-/* Foto panel "Work" (lihat page.tsx): dulu dibingkai kartu (border + shadow +
-   rounded), sekarang background-like — bingkainya dibuang, dan tepi persegi
-   panjangnya sendiri dilarutkan lewat mask radial supaya foto terasa menyatu
-   ke kertas, bukan tertempel sebagai kotak UI di atasnya. Pola mask yang sama
-   dengan fade grid .interior-page::before, cuma bentuknya radial (foto ini
-   dikelilingi kertas di keempat sisi) bukan linear (grid itu cuma pudar ke
-   bawah). 60% opaque penuh, sisanya melarut ke transparan di 100% — bukan
-   0%/100% tegas, supaya transisinya lembut, bukan garis potong. */
-.home-work-photo {
-  -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 60%, transparent 100%);
-  mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 60%, transparent 100%);
-}
-
 main .home-benefits-heading {
   font-size: clamp(2.1rem, 5.4vw, 4.25rem) !important;
 }

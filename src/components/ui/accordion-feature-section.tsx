@@ -72,10 +72,18 @@ export function AccordionFeatureSection({ features }: { features: AccordionFeatu
         >
           {features.map((feature) => (
             <AccordionItem key={feature.id} value={String(feature.id)}>
-              <AccordionTrigger className="font-display text-ink text-base font-medium tracking-[-0.005em] md:py-5 md:text-[clamp(1.35rem,1.8vw,1.8rem)] md:data-[state=closed]:text-ink-soft md:data-[state=open]:text-ink md:data-[state=open]:font-semibold lg:py-6">
+              <AccordionTrigger
+                id={`feature-${feature.id}-trigger`}
+                aria-controls={`feature-${feature.id}-content`}
+                className="font-display text-ink text-base font-medium tracking-[-0.005em] md:py-5 md:text-[clamp(1.35rem,1.8vw,1.8rem)] md:data-[state=closed]:text-ink-soft md:data-[state=open]:text-ink md:data-[state=open]:font-semibold lg:py-6"
+              >
                 {feature.title}
               </AccordionTrigger>
-              <AccordionContent className="text-ink-soft text-sm leading-[1.7] text-pretty md:text-base md:leading-[1.65] lg:text-lg">
+              <AccordionContent
+                id={`feature-${feature.id}-content`}
+                aria-labelledby={`feature-${feature.id}-trigger`}
+                className="text-ink-soft text-sm leading-[1.7] text-pretty md:text-base md:leading-[1.65] lg:text-lg"
+              >
                 {feature.description}
               </AccordionContent>
             </AccordionItem>

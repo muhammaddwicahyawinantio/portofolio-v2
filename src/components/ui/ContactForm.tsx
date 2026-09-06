@@ -103,11 +103,11 @@ export default function ContactForm({
         </p>
       ) : null}
 
-      <div>
+      <div className="mt-4">
         <CatSubmitButton pending={pending} ariaLabel={pending ? t("sending") : t("send")} />
       </div>
 
-      <p className="text-ink-soft text-xs leading-[1.6]">{privacy}</p>
+      <p className="text-ink-soft mt-1 text-xs leading-[1.6]">{privacy}</p>
 
       {qrImage ? (
         // mt-auto DIBUANG (lihat komentar h-full di atas): pada praktiknya

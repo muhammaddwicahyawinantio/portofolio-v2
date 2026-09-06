@@ -2,19 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import {
-  DM_Mono,
-  DM_Sans,
-  IBM_Plex_Mono,
-  Rampart_One,
-  Space_Grotesk,
-} from "next/font/google";
+import { DM_Mono, DM_Sans, IBM_Plex_Mono, Rampart_One, Space_Grotesk } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { SocialFab } from "@/components/layout/SocialFab";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import CustomCursor from "@/components/animations/CustomCursor";
-import Intro from "@/components/animations/Intro";
 import { DwiAiTrigger } from "@/components/dwiai/DwiAiTrigger";
 import VisitorTracker from "@/components/analytics/VisitorTracker";
 import { routing } from "@/i18n/routing";
@@ -166,11 +159,7 @@ export default async function LocaleLayout({
         />
         <NextIntlClientProvider messages={messages}>
           <CustomCursor />
-          {/* Intro wajib di dalam SmoothScroll: ia memanggil useLenis() untuk
-              menghentikan smooth-scroll selama tirai masih tertutup, dan hook
-              itu hanya mengembalikan instance di dalam context ReactLenis. */}
           <SmoothScroll>
-            <Intro />
             <Header />
             <main className="relative">{children}</main>
             <Footer />

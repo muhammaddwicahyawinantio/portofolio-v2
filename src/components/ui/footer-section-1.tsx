@@ -22,7 +22,7 @@ const WORDMARK = ["DwiStudio"];
  * nama produk tidak diterjemahkan. Hanya labelnya ("Built with") yang lewat
  * i18n, karena itu memang kalimat.
  */
-const STACK = ["Next.js", "React", "TypeScript", "Tailwind CSS", "Prisma"];
+const STACK = ["Next.js", "React", "Tailwind CSS", "Prisma", "GSAP", "Motion", "Rive", "Grok AI"];
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -53,7 +53,7 @@ const NO_JS_FALLBACK =
   ".shuffle-parent{visibility:visible!important}";
 
 /** Baris utilitas di dasar footer: mono, satu ukuran, dipakai kiri dan kanan. */
-const UTILITY = "font-mono text-[13px] leading-[1.7] tracking-[0.06em]";
+const UTILITY = "font-mono text-[11px] leading-[1.7] tracking-[0.06em]";
 
 export default function Footer1({
   navLinks,
