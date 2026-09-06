@@ -15,6 +15,9 @@ import { SITE_URL, alternates, localePath } from "@/lib/seo";
 import { getSocialLinks } from "@/lib/social-links";
 import "@/styles/globals.css";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /** DM Sans untuk body dan isi deskripsi di seluruh halaman publik. */
 const body = DM_Sans({
   subsets: ["latin"],
@@ -125,7 +128,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
 
-  // Wajib sebelum render supaya halaman tetap bisa di-prerender statis.
+  // Set locale sebelum membaca translations pada server.
   setRequestLocale(locale);
   const [messages, socials, t] = await Promise.all([
     getMessages(),
