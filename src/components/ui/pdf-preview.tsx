@@ -203,7 +203,7 @@ const PdfPreview = forwardRef<
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto">
+        <div className="flex min-h-0 flex-1 overflow-hidden">
           {isOpen && state === "ready" && blobUrl ? (
             // <iframe>, bukan <object type="application/pdf">: object/embed
             // mengandalkan plugin PDF milik browser, dan mobile Safari/Chrome
@@ -212,16 +212,33 @@ const PdfPreview = forwardRef<
             // berhasil dimuat, cuma tidak ada apa pun yang merendernya). iframe
             // memakai jalur navigasi biasa, yang tempat browser mobile
             // benar-benar menyalakan penampil PDF bawaannya.
-            <iframe src={blobUrl} className="h-full w-full border-0" title={previewLabel} />
+            //
+            // Perubahan: Menghapus items-center/justify-center dari container dan
+            // mengubah overflow-y-auto menjadi overflow-hidden di container, dengan
+            // scrolling="yes" pada iframe itu sendiri. Ini memastikan iframe dapat
+            // menampilkan SEMUA halaman PDF dengan scroll vertikal di dalam iframe,
+            // bukan hanya halaman pertama. min-h-0 di container memastikan flex-1
+            // dapat menyusut dibawah content height, membiarkan iframe mengontrol
+            // scroll-nya sendiri.
+            <iframe
+              src={blobUrl}
+              className="w-full border-0"
+              title={previewLabel}
+              scrolling="yes"
+            />
           ) : state === "error" ? (
-            <p role="alert" className="text-danger text-sm">
-              {errorLabel}
-            </p>
+            <div className="flex flex-1 items-center justify-center">
+              <p role="alert" className="text-danger text-sm">
+                {errorLabel}
+              </p>
+            </div>
           ) : (
-            <p className="text-ink-soft inline-flex items-center gap-3 text-sm">
-              <Loader2 aria-hidden className="size-4 motion-safe:animate-spin" />
-              {loadingLabel}
-            </p>
+            <div className="flex flex-1 items-center justify-center">
+              <p className="text-ink-soft inline-flex items-center gap-3 text-sm">
+                <Loader2 aria-hidden className="size-4 motion-safe:animate-spin" />
+                {loadingLabel}
+              </p>
+            </div>
           )}
         </div>
       </dialog>
