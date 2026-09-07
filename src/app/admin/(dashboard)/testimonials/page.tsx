@@ -5,6 +5,9 @@ import TestimonialAdminForm from "@/components/admin/TestimonialAdminForm";
 import TestimonialDeleteForm from "@/components/admin/TestimonialDeleteForm";
 import DetailDialog from "@/components/admin/DetailDialog";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function formatDate(date: Date) {
   return date.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" });
 }

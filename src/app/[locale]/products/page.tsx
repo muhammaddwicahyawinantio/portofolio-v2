@@ -7,6 +7,9 @@ import PageHeader from "@/components/ui/PageHeader";
 import Container from "@/components/ui/Container";
 import ProductList from "@/components/sections/ProductList";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({
   params,
 }: {

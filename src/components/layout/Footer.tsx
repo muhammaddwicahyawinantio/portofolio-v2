@@ -5,6 +5,9 @@ import { getFooterContent } from "@/lib/footer-content";
 import { getSocialLinks } from "@/lib/social-links";
 import Footer1 from "@/components/ui/footer-section-1";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Footer() {
   const [t, locale, socials, footerContent] = await Promise.all([
     getTranslations("footer"),

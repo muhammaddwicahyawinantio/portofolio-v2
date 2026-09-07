@@ -2,6 +2,9 @@ import Link from "next/link";
 import { listInvitations } from "@/lib/wedding/queries";
 import { togglePublish, deleteInvitation } from "@/lib/wedding/actions";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function WeddingInvitationsPage() {
   const rows = await listInvitations();
   return (

@@ -3,6 +3,9 @@ import { routing } from "@/i18n/routing";
 import { SITE_URL, localePath } from "@/lib/seo";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const PATHS = [
   "",
   "/about",

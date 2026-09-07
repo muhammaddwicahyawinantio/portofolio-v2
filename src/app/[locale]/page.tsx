@@ -13,6 +13,9 @@ import BenefitGrid from "@/components/sections/BenefitGrid";
 import ContactPanel from "@/components/sections/ContactPanel";
 import ReadyPanel from "@/components/sections/ReadyPanel";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   setRequestLocale(locale);

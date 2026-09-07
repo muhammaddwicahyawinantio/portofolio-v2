@@ -6,6 +6,9 @@ import { deleteRecord, toggleMessageRead } from "@/lib/admin/actions";
 import ResourceForm from "@/components/admin/ResourceForm";
 import DetailDialog from "@/components/admin/DetailDialog";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /** Nilai apa pun dari Prisma dijadikan sesuatu yang aman untuk ditaruh di sel tabel. */
 function renderCell(value: unknown): string {
   if (value === null || value === undefined) return "—";

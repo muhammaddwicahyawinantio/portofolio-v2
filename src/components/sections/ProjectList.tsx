@@ -1,4 +1,6 @@
 import "server-only";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { Link } from "@/i18n/navigation";

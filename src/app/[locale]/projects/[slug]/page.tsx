@@ -4,6 +4,9 @@ import { use } from "react";
 import { alternates } from "@/lib/seo";
 import ProjectDetail, { getProject } from "@/components/sections/ProjectDetail";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({
   params,
 }: {

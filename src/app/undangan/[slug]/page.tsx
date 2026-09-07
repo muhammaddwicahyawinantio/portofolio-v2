@@ -3,6 +3,9 @@ import { getPublishedInvitation } from "@/lib/wedding/queries";
 import WeddingTemplateRenderer from "@/components/wedding/template-renderer";
 import { cleanText } from "@/lib/wedding/validation";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const inv = await getPublishedInvitation(slug);

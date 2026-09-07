@@ -7,6 +7,9 @@ import Container from "@/components/ui/Container";
 import Section from "@/components/ui/Section";
 import ContactForm from "@/components/ui/ContactForm";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({
   params,
 }: {

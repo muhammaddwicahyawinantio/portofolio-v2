@@ -1,4 +1,6 @@
 import "server-only";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { getTranslations } from "next-intl/server";
 import { Download } from "lucide-react";
 import { prisma } from "@/lib/prisma";

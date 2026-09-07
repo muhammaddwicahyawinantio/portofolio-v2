@@ -16,6 +16,10 @@ import GiftForm from "@/components/wedding/admin/GiftForm";
 import ChildList from "@/components/wedding/admin/ChildList";
 import PreviewSplit from "@/components/wedding/admin/PreviewSplit";
 import { weddingFontVars } from "@/lib/wedding/fonts-next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import {
   Field,
   TextInput,

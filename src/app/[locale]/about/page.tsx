@@ -14,6 +14,9 @@ import SkillMarquee from "@/components/sections/SkillMarquee";
 import MediaShowcase from "@/components/sections/MediaShowcase";
 import DriftWall from "@/components/ui/drift-wall";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({
   params,
 }: {

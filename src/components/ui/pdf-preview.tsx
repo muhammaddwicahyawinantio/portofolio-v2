@@ -116,7 +116,7 @@ const PdfPreview = forwardRef<
 
     setState("loading");
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setBlobUrl(URL.createObjectURL(await res.blob()));
       setState("ready");

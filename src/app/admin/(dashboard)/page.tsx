@@ -22,6 +22,7 @@ import AdminClock from "@/components/admin/AdminClock";
 // Data admin (pesan, testimonial baru, dll) harus selalu terbaru — jangan
 // pernah disajikan dari cache statis/ISR.
 export const dynamic = "force-dynamic";
+  export const revalidate = 0;
 
 const ACCENT = {
   blue: "#2563eb",

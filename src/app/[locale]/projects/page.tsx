@@ -9,6 +9,9 @@ import Section from "@/components/ui/Section";
 import Container from "@/components/ui/Container";
 import ProjectList from "@/components/sections/ProjectList";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({
   params,
 }: {

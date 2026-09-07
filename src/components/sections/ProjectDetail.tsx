@@ -1,4 +1,6 @@
 import "server-only";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { cache } from "react";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
