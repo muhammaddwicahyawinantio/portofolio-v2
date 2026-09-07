@@ -178,7 +178,7 @@ const PdfPreview = forwardRef<
           menyalakan flex saat atribut open benar-benar ada. */}
       <dialog
         ref={dialogRef}
-        className="bg-card text-ink border-line backdrop:bg-charcoal/50 pointer-events-auto m-auto hidden h-[90svh] w-[min(92vw,900px)] flex-col overflow-hidden border p-0 open:flex"
+        className="bg-card text-ink border-line backdrop:bg-charcoal/50 pointer-events-auto m-auto hidden h-[90svh] w-[min(92vw,900px)] flex-col overflow-auto border p-0 open:flex"
       >
         <div className="border-line flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b px-5 py-4">
           <p className="eyebrow">{previewLabel}</p>
