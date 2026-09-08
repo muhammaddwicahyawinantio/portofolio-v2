@@ -203,7 +203,7 @@ const PdfPreview = forwardRef<
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto">
+        <div className="flex min-h-0 flex-1 overflow-y-auto">
           {isOpen && state === "ready" && blobUrl ? (
             // <iframe>, bukan <object type="application/pdf">: object/embed
             // mengandalkan plugin PDF milik browser, dan mobile Safari/Chrome
@@ -212,16 +212,31 @@ const PdfPreview = forwardRef<
             // berhasil dimuat, cuma tidak ada apa pun yang merendernya). iframe
             // memakai jalur navigasi biasa, yang tempat browser mobile
             // benar-benar menyalakan penampil PDF bawaannya.
-            <iframe src={blobUrl} className="h-full w-full border-0" title={previewLabel} />
+            //
+            // FIX: Tambahkan h-full agar iframe mengisi penuh kontainer yang
+            // sudah punya flex-1. Container menggunakan overflow-y-auto agar
+            // bisa scroll ketika PDF lebih panjang dari viewport. scrolling="yes"
+            // untuk memastikan iframe bisa scroll internal. Kombinasi ini bekerja
+            // di Safari iOS, Chrome Android, dan desktop browsers.
+            <iframe
+              src={blobUrl}
+              className="h-full w-full border-0"
+              title={previewLabel}
+              scrolling="yes"
+            />
           ) : state === "error" ? (
-            <p role="alert" className="text-danger text-sm">
-              {errorLabel}
-            </p>
+            <div className="flex flex-1 items-center justify-center">
+              <p role="alert" className="text-danger text-sm">
+                {errorLabel}
+              </p>
+            </div>
           ) : (
-            <p className="text-ink-soft inline-flex items-center gap-3 text-sm">
-              <Loader2 aria-hidden className="size-4 motion-safe:animate-spin" />
-              {loadingLabel}
-            </p>
+            <div className="flex flex-1 items-center justify-center">
+              <p className="text-ink-soft inline-flex items-center gap-3 text-sm">
+                <Loader2 aria-hidden className="size-4 motion-safe:animate-spin" />
+                {loadingLabel}
+              </p>
+            </div>
           )}
         </div>
       </dialog>
