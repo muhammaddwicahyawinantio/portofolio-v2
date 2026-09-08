@@ -178,7 +178,7 @@ const PdfPreview = forwardRef<
           menyalakan flex saat atribut open benar-benar ada. */}
       <dialog
         ref={dialogRef}
-        className="bg-card text-ink border-line backdrop:bg-charcoal/50 pointer-events-auto m-auto hidden h-[90svh] w-[min(92vw,900px)] flex-col overflow-auto border p-0 open:flex"
+        className="bg-card text-ink border-line backdrop:bg-charcoal/50 pointer-events-auto m-auto hidden h-[90svh] w-[min(92vw,900px)] flex-col overflow-hidden border p-0 open:flex"
       >
         <div className="border-line flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-b px-5 py-4">
           <p className="eyebrow">{previewLabel}</p>
@@ -203,7 +203,7 @@ const PdfPreview = forwardRef<
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 overflow-hidden">
+        <div className="flex min-h-0 flex-1 overflow-y-auto">
           {isOpen && state === "ready" && blobUrl ? (
             // <iframe>, bukan <object type="application/pdf">: object/embed
             // mengandalkan plugin PDF milik browser, dan mobile Safari/Chrome
@@ -213,16 +213,14 @@ const PdfPreview = forwardRef<
             // memakai jalur navigasi biasa, yang tempat browser mobile
             // benar-benar menyalakan penampil PDF bawaannya.
             //
-            // Perubahan: Menghapus items-center/justify-center dari container dan
-            // mengubah overflow-y-auto menjadi overflow-hidden di container, dengan
-            // scrolling="yes" pada iframe itu sendiri. Ini memastikan iframe dapat
-            // menampilkan SEMUA halaman PDF dengan scroll vertikal di dalam iframe,
-            // bukan hanya halaman pertama. min-h-0 di container memastikan flex-1
-            // dapat menyusut dibawah content height, membiarkan iframe mengontrol
-            // scroll-nya sendiri.
+            // FIX: Tambahkan h-full agar iframe mengisi penuh kontainer yang
+            // sudah punya flex-1. Container menggunakan overflow-y-auto agar
+            // bisa scroll ketika PDF lebih panjang dari viewport. scrolling="yes"
+            // untuk memastikan iframe bisa scroll internal. Kombinasi ini bekerja
+            // di Safari iOS, Chrome Android, dan desktop browsers.
             <iframe
               src={blobUrl}
-              className="w-full border-0"
+              className="h-full w-full border-0"
               title={previewLabel}
               scrolling="yes"
             />
