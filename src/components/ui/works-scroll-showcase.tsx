@@ -425,7 +425,7 @@ export function WorksScrollShowcase({
           </p>
 
           <h2 className="font-rampart-one font-display text-ink mt-2 text-[clamp(2.8rem,6vw,5.5rem)] leading-none font-medium tracking-[-0.025em]">
-            Projects
+            Selected Projects
           </h2>
         </div>
 
@@ -492,7 +492,7 @@ export function WorksScrollShowcase({
     <div className="overflow-hidden px-3 py-10 sm:px-4 md:px-8 md:py-14">
       <div className="mb-10 flex items-end justify-between gap-4 md:mb-14">
         <h2 className="font-rampart-one font-display text-ink text-[clamp(2.4rem,12vw,4rem)] leading-[0.85] font-medium tracking-[-0.025em]">
-          WORKS
+          Selected Projects
         </h2>
 
         <p className="text-ink-soft pb-1 font-mono text-[10px] tracking-[0.16em]">
